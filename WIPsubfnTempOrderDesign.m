@@ -1,4 +1,4 @@
-function [Trials, Events] = WIPsubfnTempOrderDesign(NRepeats)
+function [Trials, Events] = WIPsubfnTempOrderDesign(NRepeats, VariableDuration)
 
 Events = {};
 Events{1}.name = 'V1A1';
@@ -70,14 +70,32 @@ Events{8}.Auditory.onset  = 0;
 TrialOrder = repmat([1:length(Events)],1,NRepeats)';
 NTrials = length(TrialOrder);
 TrialOrder = TrialOrder(randperm(NTrials));
-
+if VariableDuration
+    VarDur = rand(NTrials,1)*0.5 - 0.25;
+    SplitTime = rand(NTrials,1);
+else
+    VarDur = zeros(NTrials,2);
+end
+% This makes sure that the added time to the trials is uniformly
+% distributed
+VarDur = [VarDur.*SplitTime VarDur.*(1-SplitTime)];
 
 Trials = cell(NTrials,1);
 for i = 1:NTrials
-    Trials{i} = Events{TrialOrder(i)};
+    tempTrial = Events{TrialOrder(i)};
+    if strfind(tempTrial.name,'V')>strfind(tempTrial.name,'A')
+        % Visual first
+        tempTrial.Visual.duration = tempTrial.Visual.duration + VarDur(i,1);
+        tempTrial.Auditory.onset = tempTrial.Visual.duration;
+        tempTrial.Auditory.duration = tempTrial.Auditory.duration + VarDur(i,2);
+        Trials{i} = tempTrial;
+    else
+        tempTrial.Visual.duration = tempTrial.Visual.duration + VarDur(i,2);
+        tempTrial.Auditory.onset = tempTrial.Visual.duration;
+        tempTrial.Auditory.duration = tempTrial.Auditory.duration + VarDur(i,1);
+        Trials{i} = tempTrial;
+    end
 end
-
-
 
 
 

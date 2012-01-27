@@ -98,7 +98,7 @@ function Run1_Callback(hObject, eventdata, handles)
 % hObject    handle to Run1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-RunType = 'Fixed'
+RunType = 'Best'
 [medRT propCor Trials] = TemporalOrderv2(RunType,handles.demog);
 Str = sprintf('Median RT: %0.2f\n Prop. Correct: %0.2f\n',medRT,propCor);
 set(handles.text1,'String',Str);
@@ -176,7 +176,7 @@ function Run2_Callback(hObject, eventdata, handles)
 % hObject    handle to Run2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-RunType = 'Variable'
+RunType = 'Best'
 [medRT propCor Trials] = TemporalOrderv2(RunType);
 Str = sprintf('Median RT: %0.2f\n Prop. Correct: %0.2f\n',medRT,propCor);
 set(handles.text2,'String',Str);

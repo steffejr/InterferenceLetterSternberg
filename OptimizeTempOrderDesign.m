@@ -1,9 +1,9 @@
 % Intro OFF Time in seconds
 IntroOff = 12;
 % how many blocks of the four trials types are to be presented
-NRepeats = 10;
+NRepeats = 5;
 % Create the trials in random order
-[Trials Events] = subfnTempOrderDesign(NRepeats);
+[Trials Events] = WIPsubfnTempOrderDesign(NRepeats,1);
 % How many trials were created, this will be 4*NRepeats
 NTrials = length(Trials);
 % create the ITI time array
@@ -27,7 +27,7 @@ TrialDuration = 4;
 %% Different trial orders
 for i = 1:200
     fprintf(1,'Trial: %3d\n',i);
-    [Trials Events] = subfnTempOrderDesign_VarDur(NRepeats);
+    [Trials Events] = WIPsubfnTempOrderDesign(NRepeats,1);
     % Different distributions of ITIs
     for j = 1:200
         ITI = subfnTemporalOrderITI(NTrials,G,offset);
@@ -60,7 +60,7 @@ TotalTime
 TotalTime/60
 TotalEff
 figure(1)
-plot(X(:,1:4));
+plot(X(:,1:8));
 %%
 
 %fprintf(1,'Total eff: %0.2f, Total Time: %0.0f sec, %0.2f min\n',TotalEff,TotalTime,TotalTime/60)

@@ -86,8 +86,8 @@ mainScreen=0;	     % 0 is the main window
 
 TopLeft = [30 30];
 WindowSize = [400 300];
-%MainWindowRect = []; % Full screen
-MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+MainWindowRect = []; % Full screen
+%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 [mainWindow,mainRect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 ScreenSize = mainRect(3:4);
 Screen('Flip',mainWindow,0);
@@ -248,19 +248,22 @@ IntroOff = 10;
 HideCursor;
 % Load Design
 switch RunType
-    case 'Fixed'
-        TrialDuration = 3;
-        load('C:\Users\steffener\Desktop\SteffenerColumbia\Grants\K\TaskDesign\LetterSternbergWithInterference/OptimizedTempOrder');
+    case 'Best'
+%         TrialDuration = 3;
+        load BestTemporalOrderDesign_012712
+        Trials = BestTrials;
+        ITI = BestITI;
         NTrials = length(Trials);
-    case 'Variable'
+%         load('C:\Users\steffener\Desktop\SteffenerColumbia\Grants\K\TaskDesign\LetterSternbergWithInterference/OptimizedTempOrder');
+%         NTrials = length(Trials);
     case 'New'
         %% SETUP DESIGN
         % Intro OFF Time in seconds
         IntroOff = 12;
         % how many blocks of the four trials types are to be presented
-        NRepeats = 1;
+        NRepeats = 5;
         % Create the trials in random order
-        [Trials Events] = WIPsubfnTempOrderDesign(NRepeats);
+        [Trials Events] = WIPsubfnTempOrderDesign(NRepeats,1);
         % How many trials were created, this will be 4*NRepeats
         NTrials = length(Trials);
         % create the ITI time array
@@ -288,6 +291,7 @@ if strcmp(RunType, 'Instructions')
 else
     try
         % Intro off time
+        Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
         startTime=Screen('flip',mainWindow)
         WaitSecs(IntroOff);
         % Start the trials
@@ -299,10 +303,6 @@ else
                 VisTrialStartTime = subfnPresentVisualv2(VisualData, Trials{j}.Visual.duration);
                 % present auditory stimulus
                 AudTrialStartTime = subfnPresentAuditory(pahandle,Trials{j}.Auditory.duration);
-                % prepare screen with red fixation cross
-                Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
-                [nx, ny, bbox] = DrawFormattedText(mainWindow, '+', mainRect(3)/2-FontSize*0.36,mainRect(4)/2-FontSize*0.71, [255 0 0],[],[],[],[LineSpacing]);
-                
                 % Make sure to wiat for the auditory cue to stop playing before
                 % presenting the red cross hair
                 WaitSecs(Trials{j}.Auditory.duration - (GetSecs - AudTrialStartTime));
@@ -316,7 +316,7 @@ else
                 % present visual stimulus
                 VisTrialStartTime = subfnPresentVisualv2(VisualData, Trials{j}.Visual.duration);
             end
-            % Prepare teh cross hair screen
+            % Prepare the cross hair screen
             Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
             [nx, ny, bbox] = DrawFormattedText(mainWindow, '+', mainRect(3)/2-FontSize*0.36,mainRect(4)/2-FontSize*0.71, [255 0 0],[],[],[],[LineSpacing]);
 

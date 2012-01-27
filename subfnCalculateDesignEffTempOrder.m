@@ -42,7 +42,7 @@ end
 X = [X ones(length(X),1)];
 
 % contrasts
-c = eye(4);
+c = eye(Nreg);
 c = [c zeros(Nreg,1)];
 eff = zeros(1,Nreg);
 for i = 1:size(c,1)
