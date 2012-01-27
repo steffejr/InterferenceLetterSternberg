@@ -6,7 +6,7 @@ ElapsedTime = IntroOff;
 % this is enough time for the 1sec Vis + 1sec Aud + 2 sec RT
 % Then is the ITI 
 for i = 1:NTrials
-    Trials{i}.Visual.ExpectedOn = ElapsedTime;
-    Trials{i}.Auditory.ExpectedOn = ElapsedTime + Trials{i}.Visual.duration;
+    Trials{i}.Visual.ExpectedOn = ElapsedTime + Trials{i}.Visual.onset;
+    Trials{i}.Auditory.ExpectedOn = ElapsedTime + Trials{i}.Auditory.onset;
     ElapsedTime = ElapsedTime + TrialDuration + ITI(i);
 end

@@ -86,8 +86,8 @@ mainScreen=0;	     % 0 is the main window
 
 TopLeft = [30 30];
 WindowSize = [400 300];
-MainWindowRect = []; % Full screen
-%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+%MainWindowRect = []; % Full screen
+MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 [mainWindow,mainRect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 ScreenSize = mainRect(3:4);
 Screen('Flip',mainWindow,0);
@@ -243,37 +243,44 @@ VisualData.FlashRate = FlashRate;
 VisualData.ScreenSize = ScreenSize;
 VisualData.FontSize = FontSize;
 VisualData.rect2 = rect2;
-% %% SETUP DESIGN
-% % Intro OFF Time in seconds
-% IntroOff = 12;
-% % how many blocks of the four trials types are to be presented
-% NRepeats = 5;
-% % Create the trials in random order
-% [Trials Events] = subfnTempOrderDesign(NRepeats);
-% % How many trials were created, this will be 4*NRepeats
-% NTrials = length(Trials);
-% % create the ITI time array
-% ITI = subfnTemporalOrderITI(NTrials);
-% %ITI = ones(NTrials,1);
-% % The maximum time allowed for a response tyo be made. Note that the ITI
-% % for each trial (created above) will have this value ADDED to it.
-% MaxResponseTime = 2; % Seconds
-% % Add the ITI times to the Trial structure along with expected times. Then
-% % add the actual times to teh Trials which will alow for a check of actual
-% % versus expected for any time delays
-% [Trials] = subfnAddTemporalOrderTiming(IntroOff,MaxResponseTime, Trials,ITI);
 % %%
 IntroOff = 10;
 HideCursor;
 % Load Design
-if strcmp(RunType,'Fixed')
-    TrialDuration = 3;
-    load('C:\Users\steffener\Desktop\SteffenerColumbia\Grants\K\TaskDesign\LetterSternbergWithInterference/OptimizedTempOrder');
-    NTrials = length(Trials);
-elseif strcmp(RunType,'Variable')
-    TrialDuration = 3.5;
-    load('C:\Users\steffener\Desktop\SteffenerColumbia\Grants\K\TaskDesign\LetterSternbergWithInterference/OptimizedTempOrder_VAR');
-    NTrials = length(Trials);
+switch RunType
+    case 'Fixed'
+        TrialDuration = 3;
+        load('C:\Users\steffener\Desktop\SteffenerColumbia\Grants\K\TaskDesign\LetterSternbergWithInterference/OptimizedTempOrder');
+        NTrials = length(Trials);
+    case 'Variable'
+    case 'New'
+        %% SETUP DESIGN
+        % Intro OFF Time in seconds
+        IntroOff = 12;
+        % how many blocks of the four trials types are to be presented
+        NRepeats = 1;
+        % Create the trials in random order
+        [Trials Events] = WIPsubfnTempOrderDesign(NRepeats);
+        % How many trials were created, this will be 4*NRepeats
+        NTrials = length(Trials);
+        % create the ITI time array
+        % This is related to the spread in the gamma distribution of ITI
+        G = 1.5;
+        % This is the maximum time allowed to respond for each trial and the
+        % minimum ITI.
+        offset = 2; % Seconds
+        ITI = subfnTemporalOrderITI(NTrials,G,offset);
+        
+        %ITI = ones(NTrials,1);
+        % The maximum time allowed for a response tyo be made. Note that the ITI
+        % for each trial (created above) will have this value ADDED to it.
+        MaxResponseTime = 2; % Seconds
+        % Add the ITI times to the Trial structure along with expected times. Then
+        % add the actual times to teh Trials which will alow for a check of actual
+        % versus expected for any time delays
+        TrialDuration = 2;
+        Trials = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,TrialDuration);
+        
 end
 
 if strcmp(RunType, 'Instructions')
@@ -285,19 +292,36 @@ else
         WaitSecs(IntroOff);
         % Start the trials
         for j = 1:NTrials
-            % present visual stimulus
-            VisTrialStartTime = subfnPresentVisualv2(VisualData, Trials{j}.Visual.duration);
-            % present auditory stimulus
-            AudTrialStartTime = subfnPresentAuditory(pahandle,Trials{j}.Auditory.duration);
-            
-            % prepare screen with red fixation cross
+            % Decide whether this is a VISUAL first or AUDITORY first trial
+            if strfind(Trials{j}.name,'V')>strfind(Trials{j}.name,'A')
+                % Visual first
+                % present visual stimulus
+                VisTrialStartTime = subfnPresentVisualv2(VisualData, Trials{j}.Visual.duration);
+                % present auditory stimulus
+                AudTrialStartTime = subfnPresentAuditory(pahandle,Trials{j}.Auditory.duration);
+                % prepare screen with red fixation cross
+                Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
+                [nx, ny, bbox] = DrawFormattedText(mainWindow, '+', mainRect(3)/2-FontSize*0.36,mainRect(4)/2-FontSize*0.71, [255 0 0],[],[],[],[LineSpacing]);
+                
+                % Make sure to wiat for the auditory cue to stop playing before
+                % presenting the red cross hair
+                WaitSecs(Trials{j}.Auditory.duration - (GetSecs - AudTrialStartTime));
+            else
+                % Auditory first
+                % present auditory stimulus
+                AudTrialStartTime = subfnPresentAuditory(pahandle,Trials{j}.Auditory.duration);
+                % Make sure to wiat for the auditory cue to stop playing before
+                % presenting the red cross hair
+                WaitSecs(Trials{j}.Auditory.duration - (GetSecs - AudTrialStartTime));
+                % present visual stimulus
+                VisTrialStartTime = subfnPresentVisualv2(VisualData, Trials{j}.Visual.duration);
+            end
+            % Prepare teh cross hair screen
             Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
             [nx, ny, bbox] = DrawFormattedText(mainWindow, '+', mainRect(3)/2-FontSize*0.36,mainRect(4)/2-FontSize*0.71, [255 0 0],[],[],[],[LineSpacing]);
+
             % reset the timer for this trial
             timeSecs = 0;
-            % Make sure to wiat for the auditory cue to stop playing before
-            % presenting the red cross hair
-            WaitSecs(Trials{j}.Auditory.duration - (GetSecs - AudTrialStartTime));
             % present the checkerboard with the red fixation cross and record
             % the time
             time = Screen('flip',mainWindow);
@@ -322,11 +346,13 @@ else
             % Use a flag to say that a key was pressed.
             KeyPressFlag = 0;
             % Set NO response to be -99
+            Key = '-99';
             RT = -99;
             % Only look for responses during the MaxResponse Time allowed
             % Max Response time is a function of the actual trial. The trial
             % duration is being fixed regardless of what is being presented.
-            MaxResponseTime = TrialDuration - (Trials{j}.Visual.duration + Trials{j}.Auditory.duration);
+%            MaxResponseTime = TrialDuration - (Trials{j}.Visual.duration + Trials{j}.Auditory.duration);
+            MaxResponseTime = 2;
             while  time + MaxResponseTime > timeSecs
                 [ keyIsDown, timeSecs, keyCode ] = KbCheck;
                 if keyIsDown & ~KeyPressFlag
@@ -346,7 +372,10 @@ else
                     end
                 end
             end
-            
+            % Flip the screen if no button was pressed
+            if KeyPressFlag == 0
+                 time = Screen('flip',mainWindow);
+            end
             % Store the response to the trial
             Trials{j}.ResponseKey = Key;
             Trials{j}.ResponseTime = RT;
@@ -355,9 +384,12 @@ else
             % response time has elapsed
             % Check to see how much time is lost for each trial and make an
             % adjustment to the ITI
-            TimeDelay = Trials{j}.Visual.ActualOn - Trials{j}.Visual.ExpectedOn;
-            fprintf(1,'Trial %d, Delay: %0.4f seconds\n',j,TimeDelay);
-            WaitSecs(ITI(j)-TimeDelay);
+            ExpectedDuration = Trials{j}.Visual.ExpectedOn + Trials{j}.Auditory.ExpectedOn + MaxResponseTime;
+            TimeLeftOver = ExpectedDuration - (Trials{j}.Visual.ActualOn + Trials{j}.Auditory.ActualOn);
+
+%            TimeDelay = Trials{j}.Visual.ActualOn - Trials{j}.Visual.ExpectedOn;
+%            fprintf(1,'Trial %d, Delay: %0.4f seconds\n',j,TimeDelay);
+            WaitSecs(ITI(j)+TimeLeftOver);
             
         end
         % Present Thank you screen
