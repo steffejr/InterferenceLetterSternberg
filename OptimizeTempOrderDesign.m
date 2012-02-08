@@ -3,7 +3,7 @@ IntroOff = 12;
 % how many blocks of the four trials types are to be presented
 NRepeats = 5;
 % Create the trials in random order
-[Trials Events] = WIPsubfnTempOrderDesign(NRepeats,1);
+[Trials Events] = subfnTempOrderDesign(NRepeats,1);
 % How many trials were created, this will be 4*NRepeats
 NTrials = length(Trials);
 % create the ITI time array
@@ -24,12 +24,13 @@ BestTrials = {};
 BestTotalEff = 0;
 BestEff = zeros(1,4);
 TrialDuration = 4;
+MaxResponseTime = 2;
 %% Different trial orders
-for i = 1:200
+for i = 1:100
     fprintf(1,'Trial: %3d\n',i);
-    [Trials Events] = WIPsubfnTempOrderDesign(NRepeats,1);
+    [Trials Events] = subfnTempOrderDesign(NRepeats,1);
     % Different distributions of ITIs
-    for j = 1:200
+    for j = 1:100
         ITI = subfnTemporalOrderITI(NTrials,G,offset);
         %ITI = ones(NTrials,1);
         % The maximum time allowed for a response tyo be made. Note that the ITI
@@ -38,7 +39,8 @@ for i = 1:200
         % Add the ITI times to the Trial structure along with expected times. Then
         % add the actual times to teh Trials which will alow for a check of actual
         % versus expected for any time delays
-        [Trials] = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,TrialDuration);
+        %[Trials] = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,TrialDuration);
+         Trials = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,MaxResponseTime);
         Trials = subfnCreateRandomResponseTimes(Trials);
         [names onsets durations] = subfnCreateRegressors(Trials, Events);
         [eff tempTotalEff X TotalTime] = subfnCalculateDesignEffTempOrder(names,durations,onsets,Trials,hrf);

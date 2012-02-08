@@ -123,12 +123,14 @@ for trialIndex = 1:NTrials
         if ~isempty(Trials{trialIndex}.LetterResponseButton{j})
             ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}(1));
             % See if the button was Yes
-            if ~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse))
-                Trials{trialIndex}.LetterResponseCode = 'Y';
-            elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
-                Trials{trialIndex}.LetterResponseCode = 'N';
-            else
-                Trials{trialIndex}.LetterResponseCode = '?';
+            if isempty(strfind(ThisTrialLetterResponse,EP.RunConditions.MRITrigger))
+                if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
+                    Trials{trialIndex}.LetterResponseCode = 'Y';
+                elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
+                    Trials{trialIndex}.LetterResponseCode = 'N';
+                else
+                    Trials{trialIndex}.LetterResponseCode = '?';
+                end
             end
         else
             break;
@@ -260,13 +262,15 @@ for trialIndex = 1:NTrials
         
         if ~isempty(Trials{trialIndex}.NumberResponseButton{j})
             ThisTrialNumberResponse = char(Trials{trialIndex}.NumberResponseButton{j}(1));
-            % See if the button was Yes
-            if ~isempty(strfind(char(Buttons.NumberYes),ThisTrialNumberResponse))
-                Trials{trialIndex}.NumberResponseCode = 'Y';
-            elseif ~isempty(strfind(char(Buttons.NumberNo),ThisTrialNumberResponse))
-                Trials{trialIndex}.NumberResponseCode = 'N';
-            else
-                Trials{trialIndex}.NumberResponseCode = '?';
+            if isempty(strfind(ThisTrialNumberResponse,EP.RunConditions.MRITrigger))
+                % See if the button was Yes
+                if ~isempty(strfind(char(Buttons.NumberYes),ThisTrialNumberResponse))
+                    Trials{trialIndex}.NumberResponseCode = 'Y';
+                elseif ~isempty(strfind(char(Buttons.NumberNo),ThisTrialNumberResponse))
+                    Trials{trialIndex}.NumberResponseCode = 'N';
+                else
+                    Trials{trialIndex}.NumberResponseCode = '?';
+                end
             end
         else
             break;

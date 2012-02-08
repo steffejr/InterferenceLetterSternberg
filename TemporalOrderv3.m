@@ -1,4 +1,4 @@
-function [medRT propCor Trials] = TemporalOrderv2(RunType,demog)
+function [medRT propCor Trials] = TemporalOrderv3(RunType,demog)
 %% ToDo
 % Add instructions
 % Add Thank you screen
@@ -244,13 +244,15 @@ VisualData.ScreenSize = ScreenSize;
 VisualData.FontSize = FontSize;
 VisualData.rect2 = rect2;
 % %%
-IntroOff = 10;
+
 HideCursor;
 % Load Design
+IntroOff = 12;
+EndOff = 10;
 switch RunType
     case 'Best'
 %         TrialDuration = 3;
-        load BestTemporalOrderDesign_012712
+        load BestTemporalOrderDesign_013012
         Trials = BestTrials;
         ITI = BestITI;
         NTrials = length(Trials);
@@ -259,7 +261,7 @@ switch RunType
     case 'New'
         %% SETUP DESIGN
         % Intro OFF Time in seconds
-        IntroOff = 12;
+
         % how many blocks of the four trials types are to be presented
         NRepeats = 1;
         % Create the trials in random order
@@ -274,7 +276,7 @@ switch RunType
         offset = 2; % Seconds
         ITI = subfnTemporalOrderITI(NTrials,G,offset);
         
-        %ITI = ones(NTrials,1);
+        ITI = ones(NTrials,1);
         % The maximum time allowed for a response tyo be made. Note that the ITI
         % for each trial (created above) will have this value ADDED to it.
         MaxResponseTime = 2; % Seconds
@@ -282,7 +284,7 @@ switch RunType
         % add the actual times to teh Trials which will alow for a check of actual
         % versus expected for any time delays
         %TrialDuration = 2;
-        Trials = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI);
+        Trials = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,MaxResponseTime);
         
 end
 
@@ -322,25 +324,11 @@ else
             % Prepare the cross hair screen
             Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
             [nx, ny, bbox] = DrawFormattedText(mainWindow, '+', mainRect(3)/2-FontSize*0.36,mainRect(4)/2-FontSize*0.71, [255 0 0],[],[],[],[LineSpacing]);
-
-            % reset the timer for this trial
-            timeSecs = 0;
-            % present the checkerboard with the red fixation cross and record
-            % the time
             time = Screen('flip',mainWindow);
-            %%% NOTE %%%
-            % As of this point in time the subject is instructed to respond to
-            % the stimulus. But if we assume that the fastest the subject can
-            % respond is 300 milliseconds or so, then there is "plenty" of time
-            % to prepare other steps. These are the fixation circle for after
-            % a rersponse is made and also to fill in thge Trial structure with
-            % the actual on times for later comparison to the expected on
-            % times.
-            %
+            StartTimeCrosshair = time;
             Trials{j}.Visual.ActualOn = VisTrialStartTime - startTime;
             Trials{j}.Auditory.ActualOn = AudTrialStartTime - startTime;
-            % store the time to a new variable
-            StartTimeCrosshair = time;
+            
             % Prepare the screen with the fixation CIRCLE for presenting when
             % a response is made
             Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
@@ -356,18 +344,22 @@ else
             % duration is being fixed regardless of what is being presented.
 %            MaxResponseTime = TrialDuration - (Trials{j}.Visual.duration + Trials{j}.Auditory.duration);
             MaxResponseTime = 2;
+            timeSecs = 0;
+            fprintf(1,'EndStim: %0.3f',GetSecs)
             while  time + MaxResponseTime > timeSecs
                 [ keyIsDown, timeSecs, keyCode ] = KbCheck;
                 if keyIsDown & ~KeyPressFlag
-                    % if a key is pressed present the black circle fixation
-                    % point
-                    time = Screen('flip',mainWindow);
-                    % calculate this trials response time
-                    RT = time - StartTimeCrosshair;
                     % What key was pressed
                     Key = KbName(find(keyCode));
-                    % set the flag to stop checking the keys
-                    KeyPressFlag = 1;
+                    if char(Key(1)) ~= Trigger2
+                        % if a key is pressed present the black circle fixation
+                        % point
+                        time = Screen('flip',mainWindow);
+                        % calculate this trials response time
+                        RT = time - StartTimeCrosshair;
+                        % set the flag to stop checking the keys
+                        KeyPressFlag = 1;
+                    end
                     % Break if the ESCAPE ket is pressed
                     if ~isempty(strmatch(Key,'ESCAPE'))
                         sca
@@ -375,27 +367,37 @@ else
                     end
                 end
             end
-            % Flip the screen if no button was pressed
+            
+            % Flip the screen if no button wtttttttttttas pressed
             if KeyPressFlag == 0
                  time = Screen('flip',mainWindow);
             end
             % Store the response to the trial
             Trials{j}.ResponseKey = Key;
             Trials{j}.ResponseTime = RT;
-            RT
+            fprintf(1,', EndRespPeriod: %0.3f\n',GetSecs)
             % Add the response to the Trial
             % wait for the ITI, but note that this is the ITI AFTER the max
             % response time has elapsed
             % Check to see how much time is lost for each trial and make an
             % adjustment to the ITI
             ExpectedDuration = Trials{j}.Visual.duration + Trials{j}.Auditory.duration + MaxResponseTime;
+            
            % TimeLeftOver = ExpectedDuration - (Trials{j}.Visual.ActualOn + Trials{j}.Auditory.ActualOn);
-            TimeLeftOver = GetSecs - (TrialStartTime + ExpectedDuration)
+            ActualTrialDuration = GetSecs - TrialStartTime;
+            
 %            TimeDelay = Trials{j}.Visual.ActualOn - Trials{j}.Visual.ExpectedOn;
 %            fprintf(1,'Trial %d, Delay: %0.4f seconds\n',j,TimeDelay);
-            WaitSecs(ITI(j)+TimeLeftOver);
+            fprintf(1,'ExpDur: %0.3f, ActDur: %0.3f, ExpOn: %0.3f, ActOn: %0.3f\n',ExpectedDuration,ActualTrialDuration,Trials{j}.Visual.ExpectedOn,Trials{j}.Visual.ActualOn);
+            fprintf(1,'Trial ITI: %0.3f,  Actual ITI: %0.3f\n', ITI(j),ITI(j) + ExpectedDuration - ActualTrialDuration);
+            WaitSecs(ITI(j) + ExpectedDuration - ActualTrialDuration);
+
+            
             
         end
+        WaitSecs(EndOff)
+        endTime = GetSecs;
+        TotalScanTime = endTime - startTime;
         % Present Thank you screen
         text = 'Thank you'
         [nx, ny, bbox] = DrawFormattedText(mainWindow, text, 'center', 'center', 0,[],[],[],[LineSpacing]);
@@ -416,6 +418,7 @@ else
         TempOrderData.propCor = propCor;
         str =  ['save(OutFilePath,''TempOrderData'')'];
         eval(str)
+        fprintf(1,'Total Scan Time: %0.2f\n',TotalScanTime);
 % ------------
     catch me
         me

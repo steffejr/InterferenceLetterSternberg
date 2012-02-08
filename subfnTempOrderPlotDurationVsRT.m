@@ -39,7 +39,8 @@ LongIncorrect = find((Accuracy == -1)&(Rating == 1));
 
 plot(Durations(ShortCorrect),RT(ShortCorrect),'bo');
 plot(Durations(LongCorrect),RT(LongCorrect),'ro');
-plot(Durations(ShortIncorrect),RT(ShortIncorrect),'gx');
-plot(Durations(LongIncorrect),RT(LongIncorrect),'gx');
+plot(Durations(ShortIncorrect),RT(ShortIncorrect),'bx');
+plot(Durations(LongIncorrect),RT(LongIncorrect),'rx');
+legend('Short, Correct','Long, Correct','Short, Incorrect','Long, Incorrect')
 xlabel('Duration');
 ylabel('RT');

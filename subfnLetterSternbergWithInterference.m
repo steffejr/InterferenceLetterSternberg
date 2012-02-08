@@ -541,16 +541,19 @@ for trialIndex = 1:NTrials
     while (TrialTimes(trialIndex + 2,3) + RetentionTime) > timeSecs
         [ keyIsDown, timeSecs, keyCode ] = KbCheck;
         if keyIsDown
-            Trials{trialIndex}.NumberResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,3);
-            Trials{trialIndex}.NumberResponseButton{PressCount} = KbName(keyCode);
-            % Break if the ESCAPE ket is pressed
-            F = find(keyCode);
-            for mm = 1:length(F)
-                if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
-                    sca
-                    error('ESCAPE Pressed');
+             Key = KbName(find(keyCode));
+             if char(Key(1)) ~= Trigger2
+                Trials{trialIndex}.NumberResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,3);
+                Trials{trialIndex}.NumberResponseButton{PressCount} = KbName(keyCode);
+                % Break if the ESCAPE ket is pressed
+                F = find(keyCode);
+                for mm = 1:length(F)
+                    if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                        sca
+                        error('ESCAPE Pressed');
+                    end
                 end
-            end
+             end
             % If the user holds down a key, KbCheck will report multiple events.
             % To condense multiple 'keyDown' events into a single event, we wait until all
             % keys have been released.            
@@ -589,27 +592,30 @@ for trialIndex = 1:NTrials
     while (TrialTimes(trialIndex + 2,5) + ProbeTime) > timeSecs
         [ keyIsDown, timeSecs, keyCode ] = KbCheck;
         if keyIsDown
-            Trials{trialIndex}.LetterResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,5);
-            Trials{trialIndex}.LetterResponseButton{PressCount} = KbName(keyCode);
-            % Break if the ESCAPE ket is pressed
-            F = find(keyCode);
-            for mm = 1:length(F)
-                if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
-                    sca
-                    error('ESCAPE Pressed');
-                end
-            end
-            % If the user holds down a key, KbCheck will report multiple events.
-            % To condense multiple 'keyDown' events into a single event, we wait until all
-            % keys have been released.            
-            while KbCheck; end
-            PressCount = PressCount + 1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%            
-            % If a key is pressed take away the probe letter
-            if ~MontpelierFlag
-                Screen('Flip',mainWindow);
-            end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            Key = KbName(find(keyCode));
+             if char(Key(1)) ~= Trigger2
+                 Trials{trialIndex}.LetterResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,5);
+                 Trials{trialIndex}.LetterResponseButton{PressCount} = KbName(keyCode);
+                 % Break if the ESCAPE ket is pressed
+                 F = find(keyCode);
+                 for mm = 1:length(F)
+                     if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                         sca
+                         error('ESCAPE Pressed');
+                     end
+                 end
+                 % If the user holds down a key, KbCheck will report multiple events.
+                 % To condense multiple 'keyDown' events into a single event, we wait until all
+                 % keys have been released. 
+                 while KbCheck; end
+                 PressCount = PressCount + 1;
+                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                 % If a key is pressed take away the probe letter
+                 if ~MontpelierFlag
+                     Screen('Flip',mainWindow);
+                 end
+                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+             end
         end
         
         
@@ -705,6 +711,7 @@ ExperimentParameters.RunConditions.FeedbackFlag = FeedbackFlag;
 ExperimentParameters.RunConditions.NumberListLength = NumberListLength;
 ExperimentParameters.RunConditions.NRepeats = NRepeats;
 ExperimentParameters.RunConditions.NoNumbersFlag = NoNumbersFlag;
+ExperimentParameters.RunConditions.MRITrigger = Trigger2;
 ExperimentParameters.Buttons = Buttons;
 ExperimentParameters.Design = Design;
 ExperimentParameters.OutFilePath = OutFilePath;

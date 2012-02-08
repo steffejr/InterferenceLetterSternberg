@@ -42,8 +42,6 @@ gui_State = struct('gui_Name',       mfilename, ...
  end
  %End initialization code - DO NOT EDIT
 
-nargin 
-varargin
 % --- Executes just before RunTempOrder is made visible.
 function RunTempOrder_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -99,7 +97,8 @@ function Run1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 RunType = 'Best'
-[medRT propCor Trials] = TemporalOrderv2(RunType,handles.demog);
+handles.demog.Tag = 'Run1';
+[medRT propCor Trials] = TemporalOrderv3(RunType,handles.demog);
 Str = sprintf('Median RT: %0.2f\n Prop. Correct: %0.2f\n',medRT,propCor);
 set(handles.text1,'String',Str);
 set(handles.button1,'value',1);
@@ -120,10 +119,10 @@ function Done_Callback(hObject, eventdata, handles)
 % hObject    handle to Done (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-ExitQuestion = questdlg('Are you sure you want to exit?','','Yes','No','No');
-if ~isempty(strmatch(ExitQuestion,'Yes'))
+%ExitQuestion = questdlg('Are you sure you want to exit?','','Yes','No','No');
+%if ~isempty(strmatch(ExitQuestion,'Yes'))
     close(RunTempOrder(1));
-end
+%end
 
 
 function errors_Callback(hObject, eventdata, handles)
@@ -177,7 +176,8 @@ function Run2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 RunType = 'Best'
-[medRT propCor Trials] = TemporalOrderv2(RunType);
+handles.demog.Tag = 'Run2';
+[medRT propCor Trials] = TemporalOrderv3(RunType,handles.demog);
 Str = sprintf('Median RT: %0.2f\n Prop. Correct: %0.2f\n',medRT,propCor);
 set(handles.text2,'String',Str);
 set(handles.button2,'value',1);
