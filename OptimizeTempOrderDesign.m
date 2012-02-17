@@ -6,7 +6,7 @@ NRepeats = 10;
 %[Trials Events] = subfnTempOrderDesign(NRepeats,1);
 
 %[TrialsAV EventsAV] = subfnTempOrderDesign(NRepeats,1);
-[Trials Events] = subfnTempOrderDesign(NRepeats,1);
+[Trials Events] = subfnTempOrderDesignVA(NRepeats,1);
 
 % How many trials were created, this will be 4*NRepeats
 NTrials = length(Trials);
@@ -32,7 +32,7 @@ MaxResponseTime = 2;
 %% Different trial orders
 for i = 1:100
     fprintf(1,'Trial: %3d\n',i);
-    [Trials Events] = subfnTempOrderDesign(NRepeats,1);
+    [Trials Events] = subfnTempOrderDesignAV(NRepeats,1);
     % Different distributions of ITIs
     for j = 1:100
         ITI = subfnTemporalOrderITI(NTrials,G,offset);
@@ -66,7 +66,7 @@ TotalTime
 TotalTime/60
 TotalEff
 figure(1)
-plot(X(:,1:8));
+plot(X(:,1:4));
 %%
 
 %fprintf(1,'Total eff: %0.2f, Total Time: %0.0f sec, %0.2f min\n',TotalEff,TotalTime,TotalTime/60)
