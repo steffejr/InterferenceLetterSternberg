@@ -59,6 +59,9 @@ for i = 1:100
 end
 
 %% Inspect the best Design
+dt = 0.01;
+hrf = spm_hrf(dt);
+
 [names onsets durations] = subfnCreateRegressors(BestTrials, Events);
 [eff TotalEff X TotalTime] = subfnCalculateDesignEffTempOrder(names,durations,onsets,BestTrials,hrf);
 eff
