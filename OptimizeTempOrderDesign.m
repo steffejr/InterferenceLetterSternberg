@@ -32,7 +32,7 @@ MaxResponseTime = 2;
 %% Different trial orders
 for i = 1:100
     fprintf(1,'Trial: %3d\n',i);
-    [Trials Events] = subfnTempOrderDesignAV(NRepeats,1);
+    [Trials Events] = subfnTempOrderDesignVA(NRepeats,1);
     % Different distributions of ITIs
     for j = 1:100
         ITI = subfnTemporalOrderITI(NTrials,G,offset);
