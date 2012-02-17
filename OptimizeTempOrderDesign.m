@@ -1,9 +1,13 @@
 % Intro OFF Time in seconds
 IntroOff = 12;
 % how many blocks of the four trials types are to be presented
-NRepeats = 5;
+NRepeats = 10;
 % Create the trials in random order
+%[Trials Events] = subfnTempOrderDesign(NRepeats,1);
+
+%[TrialsAV EventsAV] = subfnTempOrderDesign(NRepeats,1);
 [Trials Events] = subfnTempOrderDesign(NRepeats,1);
+
 % How many trials were created, this will be 4*NRepeats
 NTrials = length(Trials);
 % create the ITI time array
@@ -40,7 +44,7 @@ for i = 1:100
         % add the actual times to teh Trials which will alow for a check of actual
         % versus expected for any time delays
         %[Trials] = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,TrialDuration);
-         Trials = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,MaxResponseTime);
+        Trials = subfnAddTemporalOrderTiming(IntroOff, Trials,ITI,MaxResponseTime);
         Trials = subfnCreateRandomResponseTimes(Trials);
         [names onsets durations] = subfnCreateRegressors(Trials, Events);
         [eff tempTotalEff X TotalTime] = subfnCalculateDesignEffTempOrder(names,durations,onsets,Trials,hrf);
