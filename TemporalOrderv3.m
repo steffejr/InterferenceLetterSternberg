@@ -258,6 +258,18 @@ switch RunType
         NTrials = length(Trials);
 %         load('C:\Users\steffener\Desktop\SteffenerColumbia\Grants\K\TaskDesign\LetterSternbergWithInterference/OptimizedTempOrder');
 %         NTrials = length(Trials);
+    case 'BestVA'
+        load BestTemporalOrderDesignVA_021712
+        Trials = BestTrials;
+        ITI = BestITI;
+        NTrials = length(Trials);
+
+    case 'BestAV'
+        load BestTemporalOrderDesignVA_021712
+        Trials = BestTrials;
+        ITI = BestITI;
+        NTrials = length(Trials);
+
     case 'New'
         %% SETUP DESIGN
         % Intro OFF Time in seconds
