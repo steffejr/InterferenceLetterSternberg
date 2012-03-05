@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 05-Mar-2012 10:50:02
+% Last Modified by GUIDE v2.5 05-Mar-2012 14:15:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -77,7 +77,14 @@ set(handles.subidText,'String','');
 set(handles.Run1Text,'String','');
 
 %% Read Config File
-[handles] = subfnReadConfigFile('iLS_Config.txt',handles)
+s='';
+eval('s=which(''RuniLSv4'');');
+% check top make sure the output file is there, if not then create it
+ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
+
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'iLS_Config.txt'),handles);
 guidata(hObject, handles);
 % Set up the initial values
 switch handles.Location
@@ -1896,6 +1903,9 @@ function textNumBlock1_CreateFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-
 % --------------------------------------------------------------------
-
+function Reload_Config_Callback(hObject, eventdata, handles)
+% hObject    handle to Reload_Config (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    RuniLSv4_OpeningFcn(hObject, eventdata, handles)

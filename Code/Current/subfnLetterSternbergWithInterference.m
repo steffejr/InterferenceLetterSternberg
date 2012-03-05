@@ -231,6 +231,7 @@ PreRetTime =        handles.PreRetTime;
 RetentionTime =     handles.RetentionTime;
 PostRetTime =       handles.PostRetTime;
 ProbeTime =         handles.ProbeTime;
+FinalDelay =          handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
 % Create the ITIs
@@ -240,14 +241,17 @@ ExpectedMeanITI = mean(ITI);
 %%% Using a gamma distributed set of ITIs that have a sum for 32 trials
 %%% to be 81 seconds.
 %ITI = (randg(ones(NTrials,1))*2);
-if NTrials == 32
+% See if an optimal set of ITIs is included for this run
+OptimalITIName = ['iLS_' handles.Location '_' handles.Function '_ITI.mat']
+OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
+if exist(OptimalITIs)
     clear ITI
-    load('iLS_ITI.mat')
-    % Shuffle the ITI order
-    ITI = ITI(randperm(length(ITI)));
+    load(OptimalITIs)
 else
     ITI = (round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
 end
+% Set ITI{1} equal to zero
+ITI(1) = 0;
 ExpectedMeanITI = mean(ITI);
 
 
@@ -292,7 +296,7 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % The end period will be set based on the expected ITI values and the number of
 % trials.
 ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
-ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI);
+ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
 % Check to make sure that the ITI parameters were not changed without
 % changing the expectedMeanITI
 if ExpectedDuration < ActualDuration
@@ -376,7 +380,7 @@ priorityLevel = MaxPriority([mainWindow],['PeekBlanking'],['GetSecs'],['kbCheck'
 % Start Experiment
 % ----------------------------------------------------------------------
 %ShowCursor
-HideCursor;
+%HideCursor;
 
 % % -----------------------------------------------------------------------
 % % 			Start Trials
@@ -564,7 +568,7 @@ for trialIndex = 1:NTrials
     Screen('TextFont',mainWindow,FontName2);
     % The font Cursif is much larger in the up-down direction and needs to
     % be adjusted.
-    if FontName2 == 'Cursif'
+    if strcmp(FontName2, 'Cursif')
         [nx, ny, bbox] = DrawFormattedText(mainWindow, LetProbeString, 'center',ScreenSize(2)/2-FontSize/2, 0);
     else
         [nx, ny, bbox] = DrawFormattedText(mainWindow, LetProbeString, 'center','center', 0);
