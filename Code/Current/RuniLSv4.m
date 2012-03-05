@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 26-Jan-2012 21:03:39
+% Last Modified by GUIDE v2.5 05-Mar-2012 10:50:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,8 +62,8 @@ guidata(hObject, handles);
 % uiwait(handles.figure1);
 handles.output = hObject;
 % Set some FIXED parameters
-handles.FontSize = 60;
-handles.Trigger = '';
+% NOW IN CONFIG FILE handles.FontSize = 60;
+% NOW IN CONFIG FILE handles.Trigger = '';
 % Get the number and letter lists from the pull down menus
 handles.NumList = get(handles.NumLen1,'String');
 handles.LetList = get(handles.LetLoad1,'String');
@@ -76,36 +76,22 @@ guidata(hObject,handles);
 set(handles.subidText,'String','');
 set(handles.Run1Text,'String','');
 
-
-%% Config File
-if exist('iLS_Config.txt')
-    fprintf(1,'Found Config File');
-    D=textread('iLS_Config.txt','%s');
-    if strmatch(D{1},'[Trigger]')
-        handles.Trigger = D{2};
-    else 
-        errordlg('Problem with Config File');
-    end
-    if strmatch(D{3},'[Location]')
-        handles.Location = D{4};
-    else 
-        errordlg('Problem with Config File');
-    end    
-else
-    errordlg('Cannot find Config file');
-    close
-end
+%% Read Config File
+[handles] = subfnReadConfigFile('iLS_Config.txt',handles)
+guidata(hObject, handles);
 % Set up the initial values
 switch handles.Location
     case 'Columbia'
         DefaultInterferenceDIR(handles);
         set(handles.InterferencePilot,'Checked','on')
-    case 'Montpelier'
-        DefaultMontpelierDIR(handles)
-        set(handles.Montpelier,'Checked','on')
+    case 'Montpellier'
+        DefaultMontpellierDIR(handles)
+        set(handles.Montpellier,'Checked','on')
     otherwise
         DefaultZeroValues(handles)
 end
+set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
+
 
 %% Setup date of birth selector
 %jPanel = com.jidesoft.combobox.DateComboBox;
@@ -135,12 +121,12 @@ function Run1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 try
     % try to run the experiment
-    
+    set(handles.MessageBox,'String','');
     demog = {};
     demog.subid = get(handles.subidText,'String');
     %demog.Age = get(handles.Age,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'Train1';
     if ~isempty(demog.subid)
@@ -152,7 +138,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen1,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks1,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad1,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run1Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -164,7 +150,8 @@ catch me
     if strcmp(me.message,'ESCAPE Pressed');
         set(handles.MessageBox,'String','Escape pressed, user exit');
     else
-        ErrorString = ['Internal error: ' me.identifier ' : ' me.message];
+        ErrorString = ['Internal error: ' me.identifier ' : ' me.message ...
+            ', ' me.stack(1).name '; line: ' num2str(me.stack(1).line)];
         set(handles.MessageBox,'String',ErrorString);
         me.stack(1)
     end
@@ -200,7 +187,7 @@ function NumLen1_Callback(hObject, eventdata, handles)
 NumTrials1 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad1,'Value'),...
     get(handles.NumLen1,'Value'),...
     get(handles.NumBlocks1,'Value'));
-handles.Trigger
+handles.Trigger2
 
 set(handles.NumTrials1,'String',num2str(NumTrials1));
 % --- Executes on selection change in NumBlocks1.
@@ -228,8 +215,8 @@ try
     % try to run the experiment
     demog = {};
     demog.subid = get(handles.subidText,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'Train2';
     if ~isempty(demog.subid)
@@ -241,7 +228,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen2,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks2,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad2,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run2Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -312,8 +299,8 @@ try
     % try to run the experiment
     demog = {};
     demog.subid = get(handles.subidText,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'Train3';
     if ~isempty(demog.subid)
@@ -325,7 +312,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen3,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks3,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad3,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run3Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -394,8 +381,8 @@ try
     % try to run the experiment
     demog = {};
     demog.subid = get(handles.subidText,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'Train4';
     if ~isempty(demog.subid)
@@ -407,7 +394,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen4,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks4,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad4,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run4Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -470,8 +457,8 @@ try
     % try to run the experiment
     demog = {};
     demog.subid = get(handles.subidText,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'MRI1';
     if ~isempty(demog.subid)
@@ -483,7 +470,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen5,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks5,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad5,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run5Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -551,8 +538,8 @@ try
     % try to run the experiment
     demog = {};
     demog.subid = get(handles.subidText,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'MRI2';
     if ~isempty(demog.subid)
@@ -564,7 +551,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen6,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks6,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad6,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run6Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -628,8 +615,8 @@ try
     % try to run the experiment
     demog = {};
     demog.subid = get(handles.subidText,'String');
-    demog.Age = CalculateAge(handles)
-    demog.Sex = handles.SexList{get(handles.Sex,'Value')}
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
     demog.dob = returnDOB(handles);
     demog.Tag = 'MRI3';
     if ~isempty(demog.subid)
@@ -641,7 +628,7 @@ try
         NumLen = str2num(char(handles.NumList(get(handles.NumLen7,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks7,'Value'))));
         LetLoad = str2num(char(handles.LetList(get(handles.LetLoad7,'Value'))));
-        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, handles.FontSize,...
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run7Text,'String',OutString);
         % if all goes well, report a summary of performance and update the push button
@@ -828,7 +815,7 @@ function LetLoad1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 2.7 13 1.6])
+
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -841,7 +828,6 @@ function NumLen1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[14 2.8 10 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -854,7 +840,6 @@ function NumBlocks1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 0.15 13 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -946,7 +931,6 @@ function LetLoad2_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 2.7 13 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -1129,7 +1113,6 @@ function LetLoad3_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 2.7 13 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -1220,7 +1203,6 @@ function LetLoad7_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 2.7 13 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -1487,18 +1469,18 @@ function InterferencePilot_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 set(handles.InterferencePilot,'Checked','on')
-set(handles.Montpelier,'Checked','off')
+set(handles.Montpellier,'Checked','off')
 
 DefaultInterferenceDIR(handles)
 
 % --------------------------------------------------------------------
-function Montpelier_Callback(hObject, eventdata, handles)
-% hObject    handle to Montpelier (see GCBO)
+function Montpellier_Callback(hObject, eventdata, handles)
+% hObject    handle to Montpellier (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-DefaultMontpelierDIR(handles)
-set(handles.Montpelier,'Checked','on')
+DefaultMontpellierDIR(handles)
+set(handles.Montpellier,'Checked','on')
 set(handles.InterferencePilot,'Checked','off')
 % --------------------------------------------------------------------
 function ZeroAll_Callback(hObject, eventdata, handles)
@@ -1507,7 +1489,7 @@ function ZeroAll_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 DefaultZeroValues(handles)
 set(handles.InterferencePilot,'Checked','off')
-set(handles.Montpelier,'Checked','off')
+set(handles.Montpellier,'Checked','off')
 
 
 
@@ -1545,7 +1527,6 @@ function NumLen4_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[14 2.8 10 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -1652,7 +1633,6 @@ function NumBlocks6_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 0.15 13 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -1666,7 +1646,6 @@ function LetLoad4_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-set(hObject,'Position',[1 2.7 13 1.6])
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -1888,7 +1867,6 @@ function FB1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to FB1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-set(hObject,'Position',[14 0.15 15 1.6])
 
 
 % --- Executes during object creation, after setting all properties.
@@ -1896,7 +1874,6 @@ function Instr1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to Instr1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-set(hObject,'Position',[27 0.15 15 1.6])
 
 
 % --- Executes during object creation, after setting all properties.
@@ -1918,3 +1895,7 @@ function textNumBlock1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to textNumBlock1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --------------------------------------------------------------------
+

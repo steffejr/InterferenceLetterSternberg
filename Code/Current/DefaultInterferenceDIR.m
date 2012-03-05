@@ -47,6 +47,8 @@ NumTrials4 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad4,'Value'),...
     get(handles.NumBlocks4,'Value'));
 set(handles.NumTrials4,'String',num2str(NumTrials4));
 %set(handles.Run4Text,'String', {'','!!! DO NOT PERFORM THIS RUN !!!'});
+    set(handles.Run4,'Enable','on')
+
 
 
 set(handles.LetLoad5,'Value',3);

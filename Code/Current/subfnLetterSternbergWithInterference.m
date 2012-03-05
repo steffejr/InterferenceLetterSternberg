@@ -1,4 +1,4 @@
-function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, FontSize, PresentInstructionsFlag,FeedbackFlag,NumberListLength,NRepeats,LoadLevels,handles)
+function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog,  PresentInstructionsFlag,FeedbackFlag,NumberListLength,NRepeats,LoadLevels,handles)
 %% Task description for Letter Sternberg
 % The LS task will have two load levels of 2 and 6 letters along with a
 % retention period and a probe phase. The retention phase will have
@@ -125,27 +125,37 @@ KbName('UnifyKeyNames');
 % --------------------------------------------------------
 % What are the button responses
 % --------------------------------------------------------
-Buttons.NumberNo       = {'1234z'};
-Buttons.NumberYes        = {'5678/'};
-Buttons.LetterNo       = {'1234z'};
-Buttons.LetterYes        = {'5678/'};
+Buttons.NumberNo       = handles.Buttons_NumberNo;
+Buttons.NumberYes        = handles.Buttons_NumberYes;
+Buttons.LetterNo       = handles.Buttons_LetterNo;
+Buttons.LetterYes        = handles.Buttons_LetterYes;
+% --------------------------------------------------------
+% What are the triggers
+% --------------------------------------------------------
+Trigger1 = handles.Trigger1;
+Trigger2 = handles.Trigger2;
+TriggerText1 = handles.TriggerText1;
+TriggerText2  = handles.TriggerText2;
 % --------------------------------------------------------
 % Should the probe letter be removed after a button press:
 % YES for iLS
-% NO for Montpelier
-if strcmp(get(handles.Montpelier,'Checked'),'on')
-    MontpelierFlag = 1;
+% NO for Montpellier
+if strcmp(handles.Location,'Montpellier')
+%if strcmp(get(handles.Montpellier,'Checked'),'on')
+    MontpellierFlag = 1;
 else
-    MontpelierFlag = 0;
+    MontpellierFlag = 0;
 end
 % --------------------------------------------------------
 % Prepare output file name
 % --------------------------------------------------------
 % Find the calling directory
 s='';
-eval('s=which(''RuniLSv2'');');
+eval('s=which(''RuniLSv4'');');
 % check top make sure the output file is there, if not then create it
 ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
 if ~exist(fullfile(ProgramPath,'Results'))
     mkdir(fullfile(ProgramPath,'Results'));
 end
@@ -187,14 +197,18 @@ NTrials = length(Trials);
 % --------------------------------------------------------
 % Setup Font and screen sizes
 % --------------------------------------------------------
-FontName = 'Courier New';
+%FontName1 = 'Courier New';
+FontName1 = handles.Font1;
+FontName2 = handles.Font2;
+FontSize = handles.FontSize;
+
 LineSpacing = 1;
- ScreenPos = [30 50];
- width = 800;
- ScreenSize = [width 0.025*width];
+ScreenPos = [30 50];
+width = 800;s
+ScreenSize = [width 0.025*width];
 
  
-% Create FontSize based on a proportion of the Window size
+% Create handles.FontSize based on a proportion of the Window size
 
 % --------------------------------------------------------
 % Timings
@@ -210,44 +224,32 @@ LineSpacing = 1;
 % 10^(-7) seconds.
 % 
 % The timings will adjust based on teh study selected
-if strcmp(get(handles.Montpelier,'Checked'),'on')
-    % This is the standard Letter Sternberg timing we have been working
-    % with in the past.
-    IntroDelay =        8.000;
-    % Encode/PreRet/Retion/PostRet/Probe/ITI
-    EncodeTime =        3.000; % seconds
-    PreRetTime =        0.500;
-    RetentionTime =     6.000;
-    PostRetTime =       0.500;
-    ProbeTime =         3.000;
-    % Wait time for instructions
-    WaitTime = 6;   
-    % Create the ITIs 
-    ITI = subfnCreateITI(NTrials);
-    ExpectedMeanITI = mean(ITI);
+
+IntroDelay =        handles.IntroDelay;
+EncodeTime =        handles.EncodeTime;
+PreRetTime =        handles.PreRetTime;
+RetentionTime =     handles.RetentionTime;
+PostRetTime =       handles.PostRetTime;
+ProbeTime =         handles.ProbeTime;
+% Wait time for instructions
+WaitTime = handles.WaitTime;
+% Create the ITIs
+ITI = subfnCreateITI(NTrials);
+ExpectedMeanITI = mean(ITI);
+
+%%% Using a gamma distributed set of ITIs that have a sum for 32 trials
+%%% to be 81 seconds.
+%ITI = (randg(ones(NTrials,1))*2);
+if NTrials == 32
+    clear ITI
+    load('iLS_ITI.mat')
+    % Shuffle the ITI order
+    ITI = ITI(randperm(length(ITI)));
 else
-    IntroDelay =        5.000;
-    % Encode/PreRet/Retion/PostRet/Probe/ITI
-    EncodeTime =        3.000; % seconds
-    PreRetTime =        0.500;
-    RetentionTime =     5.000;
-    PostRetTime =       0.500;
-    ProbeTime =         3.000;
-    % Wait time for instructions
-    WaitTime = 6;
-    %%% Using a gamma distributed set of ITIs that have a sum for 32 trials
-    %%% to be 81 seconds.
-    %ITI = (randg(ones(NTrials,1))*2);
-    if NTrials == 32
-        clear ITI
-        load('iLS_ITI.mat')
-        % Shuffle the ITI order
-        ITI = ITI(randperm(length(ITI)));
-    else
-        ITI = (round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
-    end
-    ExpectedMeanITI = mean(ITI);
+    ITI = (round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
 end
+ExpectedMeanITI = mean(ITI);
+
 
 % --------------------------------------------------------
 % Populate the Trials structure to be ready for the timing information.
@@ -332,8 +334,14 @@ CharactersBetweenLetters = '  '; % for the number list display, either spaces or
 %rect = [ScreenPos ScreenSize]; % USE THIS FOR JUST A WINDOW
 rect = []; %    USE THSI FOR THE FULL SCREEN
 screenNumber = max(Screen('Screens'));
-[mainWindow,rect] = Screen(mainScreen,'OpenWindow',grey,rect);
-%% COMMENT OUT THE FOLLOWING LINE TO MAKE A SMALLER SCREEN
+
+TopLeft = [30 30];
+WindowSize = [400 300];
+MainWindowRect = []; % Full screen
+MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+[mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
+
+%[mainWindow,rect] = Screen(mainScreen,'OpenWindow',grey,rect);
 ScreenSize = rect(3:4);
 
 %round(0.1*ScreenSize(2));
@@ -373,7 +381,7 @@ HideCursor;
 % % -----------------------------------------------------------------------
 % % 			Start Trials
 % % -----------------------------------------------------------------------
-  Screen('TextFont',mainWindow,FontName);
+  Screen('TextFont',mainWindow,FontName1);
   Screen('TextSize',mainWindow,FontSize);
     
 %
@@ -381,52 +389,35 @@ HideCursor;
 % Present Instructions
 % --------------------------------------------------------
 if PresentInstructionsFlag
-    subfnInstructionsv2(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharactersBetweenLetters,mainWindow,Buttons,FontSize,LoadLevels);
+    if MontpellierFlag
+        subfnInstructionsFrench(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharactersBetweenLetters,mainWindow,handles,LoadLevels);
+    else
+        subfnInstructionsEnglish(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharactersBetweenLetters,mainWindow,handles,LoadLevels);
+    end
 end
 % --------------------------------------------------------
 % EncodeStart/PreRetStart/RetStart/PostRetStart/ProbeStart/
 TrialTimes = zeros(5 + 1,6);
 % --------------------------------------------------------
 % Prepare the trigger
-%% Config File
-if exist('iLS_Config.txt')
-    fprintf(1,'Found Config File');
-    D=textread('iLS_Config.txt','%s');
-    if strmatch(D{1},'[Trigger]')
-        Trigger2 = D{2};
-    else 
-        errordlg('Problem with Config File');
-    end
-else
-    errordlg('Cannot find Config file');
-    close
-end
-ERRfid = fopen('ERRORLOG.txt','w');
-Trigger1 = 'r';
 if Trigger2 == Trigger1
     Trigger1 = 'd';
 end
-fprintf(ERRfid,'Loaded Trigger from file\n')
 
-text=['Press "' Trigger1 '"\nthen "' Trigger2 '" to start'];
-[nx, ny, bbox] = DrawFormattedText(mainWindow, text, 'center', 'center', 0,[],[],[],[LineSpacing]);
+%text=['Press "' Trigger1 '"\nthen "' Trigger2 '" to start'];
+
+[nx, ny, bbox] = DrawFormattedText(mainWindow, TriggerText1, 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow,0);
 % Trigger 1
 [keyIsDown,secs,keycode]=KbCheck;
  while isempty(strfind(KbName(keycode),Trigger1))
      [keyIsDown,secs,keycode]=KbCheck;
  end;
- 
-% while isempty(find(find(keycode) == double(Trigger1)))
-% %while strcmp(KbName(keycode),Trigger2)==0	
-%     % wait for button press = 'r'
-%     KbName(keycode)
-%     [keyIsDown,secs,keycode]=KbCheck;
-%     
-% end;
-text=['Waiting for \n"' Trigger2 '" to start'];
-[nx, ny, bbox] = DrawFormattedText(mainWindow, text, 'center', 'center', 0,[],[],[],[LineSpacing]);
+
+% text=['Waiting for \n"' Trigger2 '" to start'];
+[nx, ny, bbox] = DrawFormattedText(mainWindow, TriggerText2, 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow,0);					% draw fixation dot
+
 % Trigger 2
 [keyIsDown,secs,keycode]=KbCheck;
  while isempty(strfind(KbName(keycode),Trigger2))
@@ -569,7 +560,17 @@ for trialIndex = 1:NTrials
     % Display the post-retention fixation cross
     Screen('Flip',mainWindow);
     % Prepare Probe text during the Post-Retention display
-    [nx, ny, bbox] = DrawFormattedText(mainWindow, LetProbeString, 'center', 'center', 0);
+    % Change the FONT
+    Screen('TextFont',mainWindow,FontName2);
+    % The font Cursif is much larger in the up-down direction and needs to
+    % be adjusted.
+    if FontName2 == 'Cursif'
+        [nx, ny, bbox] = DrawFormattedText(mainWindow, LetProbeString, 'center',ScreenSize(2)/2-FontSize/2, 0);
+    else
+        [nx, ny, bbox] = DrawFormattedText(mainWindow, LetProbeString, 'center','center', 0);
+    end
+    % Change the FONT Back
+    Screen('TextFont',mainWindow,FontName1);
     % Wait for the post-retention delay time
     % ------------------------------------------------
     % WAIT 5
@@ -611,7 +612,7 @@ for trialIndex = 1:NTrials
                  PressCount = PressCount + 1;
                  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                  % If a key is pressed take away the probe letter
-                 if ~MontpelierFlag
+                 if ~MontpellierFlag
                      Screen('Flip',mainWindow);
                  end
                  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

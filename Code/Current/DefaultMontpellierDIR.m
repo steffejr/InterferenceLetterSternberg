@@ -1,10 +1,10 @@
-function DefaultMontpelierDIR(handles)
+function DefaultMontpellierDIR(handles)
 
 
 % Set up the initial values
 set(handles.LetLoad1,'Value',4);
 set(handles.NumLen1,'Value',1);
-set(handles.NumBlocks1,'Value',5);
+set(handles.NumBlocks1,'Value',3);
 set(handles.FB1,'Value',1);
 set(handles.Instr1,'Value',1);
 set(handles.run1Success,'Value',0);
@@ -12,11 +12,14 @@ NumTrials1 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad1,'Value'),...
     get(handles.NumLen1,'Value'),...
     get(handles.NumBlocks1,'Value'));
 set(handles.NumTrials1,'String',num2str(NumTrials1));
-
+if strcmp(handles.Function, 'MRI')
+    set(handles.Run1,'Enable','off')
+end
+    
 
 set(handles.LetLoad2,'Value',4);
 set(handles.NumLen2,'Value',1);
-set(handles.NumBlocks2,'Value',5);
+set(handles.NumBlocks2,'Value',3);
 set(handles.FB2,'Value',1);
 set(handles.Instr2,'Value',0);
 set(handles.run2Success,'Value',0);
@@ -24,17 +27,23 @@ NumTrials2 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad2,'Value'),...
     get(handles.NumLen2,'Value'),...
     get(handles.NumBlocks2,'Value'));
 set(handles.NumTrials2,'String',num2str(NumTrials2));
+if strcmp(handles.Function, 'MRI')
+    set(handles.Run2,'Enable','off')
+end
 
 set(handles.LetLoad3,'Value',4);
 set(handles.NumLen3,'Value',1);
 set(handles.NumBlocks3,'Value',5);
-set(handles.FB3,'Value',1);
+set(handles.FB3,'Value',0);
 set(handles.Instr3,'Value',0);
 set(handles.run3Success,'Value',0);
 NumTrials3 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad3,'Value'),...
     get(handles.NumLen3,'Value'),...
     get(handles.NumBlocks3,'Value'));
 set(handles.NumTrials3,'String',num2str(NumTrials3));
+if strcmp(handles.Function, 'MRI')
+    set(handles.Run3,'Enable','off')
+end
 
 set(handles.LetLoad4,'Value',4);
 set(handles.NumLen4,'Value',1);
@@ -46,19 +55,25 @@ NumTrials4 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad4,'Value'),...
     get(handles.NumLen4,'Value'),...
     get(handles.NumBlocks4,'Value'));
 set(handles.NumTrials4,'String',num2str(NumTrials4));
-%set(handles.Run4Text,'String', {'','!!! DO NOT PERFORM THIS RUN !!!'});
+set(handles.uipanel22,'Visible','off')
+if strcmp(handles.Function, 'MRI')
+    set(handles.Run4,'Enable','off')
+end
 
 
 set(handles.LetLoad5,'Value',4);
 set(handles.NumLen5,'Value',1);
 set(handles.NumBlocks5,'Value',5);
 set(handles.FB5,'Value',0);
-set(handles.Instr5,'Value',0);
+set(handles.Instr5,'Value',1);
 set(handles.run5Success,'Value',0);
 NumTrials5 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad5,'Value'),...
     get(handles.NumLen5,'Value'),...
     get(handles.NumBlocks5,'Value'));
 set(handles.NumTrials5,'String',num2str(NumTrials5));
+if strcmp(handles.Function, 'Training')
+    set(handles.Run5,'Enable','off')
+end
 
 set(handles.LetLoad6,'Value',4);
 set(handles.NumLen6,'Value',1);
@@ -70,6 +85,9 @@ NumTrials6 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad6,'Value'),...
     get(handles.NumLen6,'Value'),...
     get(handles.NumBlocks6,'Value'));
 set(handles.NumTrials6,'String',num2str(NumTrials6));
+if strcmp(handles.Function, 'Training')
+    set(handles.Run6,'Enable','off')
+end
 
 set(handles.LetLoad7,'Value',4);
 set(handles.NumLen7,'Value',1);
@@ -81,3 +99,6 @@ NumTrials7 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad7,'Value'),...
     get(handles.NumLen7,'Value'),...
     get(handles.NumBlocks7,'Value'));
 set(handles.NumTrials7,'String',num2str(NumTrials7));
+if strcmp(handles.Function, 'Training')
+    set(handles.Run7,'Enable','off')
+end
