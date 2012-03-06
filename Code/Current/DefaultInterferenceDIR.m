@@ -38,7 +38,7 @@ set(handles.NumTrials3,'String',num2str(NumTrials3));
 
 set(handles.LetLoad4,'Value',3);
 set(handles.NumLen4,'Value',5);
-set(handles.NumBlocks4,'Value',1);
+set(handles.NumBlocks4,'Value',2);
 set(handles.FB4,'Value',0);
 set(handles.Instr4,'Value',0);
 set(handles.run4Success,'Value',0);
@@ -47,7 +47,7 @@ NumTrials4 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad4,'Value'),...
     get(handles.NumBlocks4,'Value'));
 set(handles.NumTrials4,'String',num2str(NumTrials4));
 %set(handles.Run4Text,'String', {'','!!! DO NOT PERFORM THIS RUN !!!'});
-    set(handles.Run4,'Enable','on')
+set(handles.Run4,'Enable','on')
 
 
 

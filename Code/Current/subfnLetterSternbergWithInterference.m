@@ -191,7 +191,7 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 % Setup Experiment
 % --------------------------------------------------------
-[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels);
+[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
 NTrials = length(Trials);
 
 % --------------------------------------------------------
@@ -235,14 +235,14 @@ FinalDelay =          handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
 % Create the ITIs
-ITI = subfnCreateITI(NTrials);
-ExpectedMeanITI = mean(ITI);
+% ITI = subfnCreateITI(NTrials);
+% ExpectedMeanITI = mean(ITI);
 
 %%% Using a gamma distributed set of ITIs that have a sum for 32 trials
 %%% to be 81 seconds.
 %ITI = (randg(ones(NTrials,1))*2);
 % See if an optimal set of ITIs is included for this run
-OptimalITIName = ['iLS_' handles.Location '_' handles.Function '_ITI.mat']
+OptimalITIName = ['iLS_' handles.Location '_' demog.Tag(1:end-1) '_ITI.mat'];
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
 if exist(OptimalITIs)
     clear ITI
@@ -295,14 +295,14 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % --------------------------------------------------------
 % The end period will be set based on the expected ITI values and the number of
 % trials.
-ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
-ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
-% Check to make sure that the ITI parameters were not changed without
-% changing the expectedMeanITI
-if ExpectedDuration < ActualDuration
-    error('The ITI distributions need to be fixed!');
-end
-EndDelay = ExpectedDuration - ActualDuration;
+ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
+%ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
+% % Check to make sure that the ITI parameters were not changed without
+% % changing the expectedMeanITI
+% if ExpectedDuration < ActualDuration
+%     error('The ITI distributions need to be fixed!');
+% end
+% EndDelay = ExpectedDuration - ActualDuration;
 % --------------------------------------------------------
 % Check Computer Type
 % --------------------------------------------------------
@@ -342,7 +342,7 @@ screenNumber = max(Screen('Screens'));
 TopLeft = [30 30];
 WindowSize = [400 300];
 MainWindowRect = []; % Full screen
-MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 [mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 
 %[mainWindow,rect] = Screen(mainScreen,'OpenWindow',grey,rect);
@@ -380,7 +380,7 @@ priorityLevel = MaxPriority([mainWindow],['PeekBlanking'],['GetSecs'],['kbCheck'
 % Start Experiment
 % ----------------------------------------------------------------------
 %ShowCursor
-%HideCursor;
+HideCursor;
 
 % % -----------------------------------------------------------------------
 % % 			Start Trials
@@ -683,14 +683,14 @@ for trialIndex = 1:NTrials
     end
 end
 %% Final delay period
-  WaitSecs('UntilTime',TrialTimes(1,1) + EndDelay);
+WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
+
 % Clear the screen
 %  Screen('Flip',mainWindow);
-  WaitSecs(3);
 %% Display thank you screen for five seconds.
 ThankYouText = 'Thank You';
 [nx, ny, bbox] = DrawFormattedText(mainWindow, ThankYouText, 'center', 'center', 0);
-Screen('Flip',mainWindow);
+ActualDuration = Screen('Flip',mainWindow);
 WaitSecs(3)
 Screen('Flip',mainWindow);
 clc
@@ -710,6 +710,9 @@ ExperimentParameters.Timings.PreRetTime = PreRetTime;
 ExperimentParameters.Timings.RetentionTime = RetentionTime;
 ExperimentParameters.Timings.PostRetTime = PostRetTime;
 ExperimentParameters.Timings.ProbeTime = ProbeTime;
+ExperimentParameters.Timings.FinalDelay = FinalDelay;
+ExperimentParameters.Timings.ExpectedTotalDuration = ExpectedDuration;
+ExperimentParameters.Timings.ActualTotalDuration = ActualDuration - TrialTimes(1,1);
 ExperimentParameters.RunConditions = {};
 ExperimentParameters.RunConditions.PresentInstructionsFlag = PresentInstructionsFlag;
 ExperimentParameters.RunConditions.FeedbackFlag = FeedbackFlag;
