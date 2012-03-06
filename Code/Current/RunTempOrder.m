@@ -55,6 +55,16 @@ handles.output = hObject;
 handles.demog = varargin{1};
 % Update handles structure
 guidata(hObject, handles);
+%% Read Config File
+s='';
+eval('s=which(''RunTempOrder'');');
+% check top make sure the output file is there, if not then create it
+ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
+
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'iLS_Config.txt'),handles);
+guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -98,7 +108,7 @@ function Run1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 RunType = 'BestAV'
 handles.demog.Tag = 'BestAV';
-[medRT propCor Trials] = TemporalOrderv3(RunType,handles.demog);
+[medRT propCor Trials] = TemporalOrderv3(RunType,handles);
 Str = sprintf('Median RT: %0.2f\n Prop. Correct: %0.2f\n',medRT,propCor);
 set(handles.text1,'String',Str);
 set(handles.button1,'value',1);
@@ -177,7 +187,7 @@ function Run2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 RunType = 'BestVA'
 handles.demog.Tag = 'BestVA';
-[medRT propCor Trials] = TemporalOrderv3(RunType,handles.demog);
+[medRT propCor Trials] = TemporalOrderv3(RunType,handles);
 Str = sprintf('Median RT: %0.2f\n Prop. Correct: %0.2f\n',medRT,propCor);
 set(handles.text2,'String',Str);
 set(handles.button2,'value',1);
@@ -197,8 +207,9 @@ function Instructions_Callback(hObject, eventdata, handles)
 % hObject    handle to Instructions (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+handles.demog.Tag = 'Instr';
 RunType = 'Instructions'
-[medRT propCor Trials] = TemporalOrderv2(RunType);
+[medRT propCor Trials] = TemporalOrderv3(RunType,handles);
 
 
 % --- Executes during object creation, after setting all properties.

@@ -5,6 +5,9 @@ function subfnInstructionsEnglish(WaitTime,ScreenSize,NumberListLength,Character
 % user has made regarding teh number and letter loads.
 %
 %
+%% HARD CODED FOR NOW
+NumberListLength = 4
+%%
 Buttons.NumberNo       = handles.Buttons_NumberNo;
 Buttons.NumberYes        = handles.Buttons_NumberYes;
 Buttons.LetterNo       = handles.Buttons_LetterNo;
