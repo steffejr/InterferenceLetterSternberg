@@ -191,7 +191,7 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 % Setup Experiment
 % --------------------------------------------------------
-[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels);
+[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
 NTrials = length(Trials);
 
 % --------------------------------------------------------

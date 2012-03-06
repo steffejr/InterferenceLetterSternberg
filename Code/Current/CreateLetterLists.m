@@ -1,4 +1,4 @@
-function [LetLists] = CreateLetterLists
+function [LetLists] = CreateLetterLists(handles)
 % Create list of letters for letter sternberg
 % I am thinkiong that this should be modified so that it does not create a
 % full structure containing all the diffewrent letter list lengths. It
@@ -7,14 +7,14 @@ function [LetLists] = CreateLetterLists
 % Create the full alphabet
 LetRange = 65:90;
 % Here is a list of letters to EXCLUDE
-LetToExc = ['AEIOUCPSVWXZ'];
+LetToExclude = handles.LetToExclude;%['AEIOUCPSVWXZ'];
 %LetToInc = ['LCTRMJSDZVHK'];
 % we will create a list of leters to INCLUDE
 LetToInc = [];
 for i = 1:length(LetRange)
     flag = 0;
-    for j = 1:length(LetToExc)
-        if (LetRange(i) == double(LetToExc(j)))
+    for j = 1:length(LetToExclude)
+        if (LetRange(i) == double(LetToExclude(j)))
             flag = 1;
         end
     end

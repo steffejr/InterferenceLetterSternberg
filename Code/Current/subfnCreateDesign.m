@@ -1,4 +1,4 @@
-function [Trials Design] = subfnCreateDesign(NRepeats, NumberListLength, LoadLevels)
+function [Trials Design] = subfnCreateDesign(NRepeats, NumberListLength, LoadLevels, handles)
 % The following is so that the user can specify that they ant no numbers
 % presented. So since this is done at the level where the display is
 % created then a "dummy" list of numbers is created but they are never
@@ -43,7 +43,7 @@ else
     [NumLists] = CreateNumberLists(1);
 end
 
-[LetLists] = CreateLetterLists;
+[LetLists] = CreateLetterLists(handles);
 
 % LetHigh/NumHigh/LetPOS/NumPOS
 % LetHigh/NumHigh/LetPOS/NumNEG
