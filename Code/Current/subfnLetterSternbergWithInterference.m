@@ -342,7 +342,7 @@ screenNumber = max(Screen('Screens'));
 TopLeft = [30 30];
 WindowSize = [400 300];
 MainWindowRect = []; % Full screen
-MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 [mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 
 %[mainWindow,rect] = Screen(mainScreen,'OpenWindow',grey,rect);
@@ -380,7 +380,7 @@ priorityLevel = MaxPriority([mainWindow],['PeekBlanking'],['GetSecs'],['kbCheck'
 % Start Experiment
 % ----------------------------------------------------------------------
 %ShowCursor
-%HideCursor;
+HideCursor;
 
 % % -----------------------------------------------------------------------
 % % 			Start Trials
