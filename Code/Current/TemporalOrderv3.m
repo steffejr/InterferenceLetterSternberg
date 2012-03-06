@@ -1,4 +1,4 @@
-function [medRT propCor Trials] = TemporalOrderv3(RunType,demog)
+function [medRT propCor Trials] = TemporalOrderv3(RunType,handles)
 %% ToDo
 % Add instructions
 % Add Thank you screen
@@ -29,20 +29,33 @@ KbName('UnifyKeyNames');
 % --------------------------------------------------------
 % What are the button responses
 % --------------------------------------------------------
-Buttons.NumberNo       = {'1234z'};
-Buttons.NumberYes        = {'5678/'};
-Buttons.LetterNo       = {'1234z'};
-Buttons.LetterYes        = {'5678/'};
+Buttons.NumberNo       = handles.Buttons_NumberNo;
+Buttons.NumberYes        = handles.Buttons_NumberYes;
+Buttons.LetterNo       = handles.Buttons_LetterNo;
+Buttons.LetterYes        = handles.Buttons_LetterYes;
 % --------------------------------------------------------
-FontName = 'Courier New';
-FontSize = 60;
+% What are the triggers
+% --------------------------------------------------------
+Trigger1 = handles.Trigger1;
+Trigger2 = handles.Trigger2;
+TriggerText1 = handles.TriggerText1;
+TriggerText2  = handles.TriggerText2;
+% --------------------------------------------------------
+FontName1 = handles.Font1;
+FontName2 = handles.Font2;
+FontSize = handles.FontSize;
+
+demog = handles.demog;
+
 LineSpacing = 1;
 
 % Find the calling directory
 s='';
-eval('s=which(''RuniLSv2'');');
+eval('s=which(''RuniLSv4'');');
 % check top make sure the output file is there, if not then create it
 ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
 if ~exist(fullfile(ProgramPath,'Results'))
     mkdir(fullfile(ProgramPath,'Results'));
 end
@@ -87,13 +100,13 @@ mainScreen=0;	     % 0 is the main window
 TopLeft = [30 30];
 WindowSize = [400 300];
 MainWindowRect = []; % Full screen
-MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 [mainWindow,mainRect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 ScreenSize = mainRect(3:4);
 Screen('Flip',mainWindow,0);
 
 
-Screen('TextFont',mainWindow,FontName);
+Screen('TextFont',mainWindow,FontName1);
 Screen('TextSize',mainWindow,FontSize);
 
 white=WhiteIndex(mainWindow);	                                                                        % white=CLUT index to produce white at current screen depth.
@@ -178,44 +191,42 @@ numAudioLoops=round(2/(.2));
 % ----------------------------------------------------------------------
 %HideCursor;
 
-%% Config File
-if exist('iLS_Config.txt')
-    fprintf(1,'Found Config File');
-    D=textread('iLS_Config.txt','%s');
-    if strmatch(D{1},'[Trigger]')
-        Trigger2 = D{2};
-    else
-        errordlg('Problem with Config File');
-    end
-else
-    errordlg('Cannot find Config file');
-    close
-end
-ERRfid = fopen('ERRORLOG.txt','w');
-Trigger1 = 'r';
+% %% Config File
+% if exist('iLS_Config.txt')
+%     fprintf(1,'Found Config File');
+%     D=textread('iLS_Config.txt','%s');
+%     if strmatch(D{1},'[Trigger]')
+%         Trigger2 = D{2};
+%     else
+%         errordlg('Problem with Config File');
+%     end
+% else
+%     errordlg('Cannot find Config file');
+%     close
+% end
+% ERRfid = fopen('ERRORLOG.txt','w');
+% Trigger1 = 'r';
 if Trigger2 == Trigger1
     Trigger1 = 'd';
 end
-fprintf(ERRfid,'Loaded Trigger from file\n')
-
-text=['Press "' Trigger1 '"\nthen "' Trigger2 '" to start'];
-
-[nx, ny, bbox] = DrawFormattedText(mainWindow, text, 'center', 'center', 0,[],[],[],[LineSpacing]);
+% fprintf(ERRfid,'Loaded Trigger from file\n')
+[nx, ny, bbox] = DrawFormattedText(mainWindow, TriggerText1, 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow,0);
 % Trigger 1
 [keyIsDown,secs,keycode]=KbCheck;
-while isempty(strfind(KbName(keycode),Trigger1))
-    [keyIsDown,secs,keycode]=KbCheck;
-end;
+ while isempty(strfind(KbName(keycode),Trigger1))
+     [keyIsDown,secs,keycode]=KbCheck;
+ end;
 
-text=['Waiting for \n"' Trigger2 '" to start'];
-[nx, ny, bbox] = DrawFormattedText(mainWindow, text, 'center', 'center', 0,[],[],[],[LineSpacing]);
+% text=['Waiting for \n"' Trigger2 '" to start'];
+[nx, ny, bbox] = DrawFormattedText(mainWindow, TriggerText2, 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow,0);					% draw fixation dot
+
 % Trigger 2
 [keyIsDown,secs,keycode]=KbCheck;
-while isempty(strfind(KbName(keycode),Trigger2))
-    %while isempty(find(find(keycode) == double(Trigger2)))
-    %while strcmp(KbName(keycode),Trigger2)==0
+ while isempty(strfind(KbName(keycode),Trigger2))
+%while isempty(find(find(keycode) == double(Trigger2)))
+%while strcmp(KbName(keycode),Trigger2)==0	
     % wait for button press = 'r'
     [keyIsDown,secs,keycode]=KbCheck;
 end;
@@ -380,7 +391,7 @@ else
                 end
             end
             
-            % Flip the screen if no button wtttttttttttas pressed
+            % Flip the screen if no button was pressed
             if KeyPressFlag == 0
                  time = Screen('flip',mainWindow);
             end
@@ -403,9 +414,6 @@ else
             fprintf(1,'ExpDur: %0.3f, ActDur: %0.3f, ExpOn: %0.3f, ActOn: %0.3f\n',ExpectedDuration,ActualTrialDuration,Trials{j}.Visual.ExpectedOn,Trials{j}.Visual.ActualOn);
             fprintf(1,'Trial ITI: %0.3f,  Actual ITI: %0.3f\n', ITI(j),ITI(j) + ExpectedDuration - ActualTrialDuration);
             WaitSecs(ITI(j) + ExpectedDuration - ActualTrialDuration);
-
-            
-            
         end
         WaitSecs(EndOff)
         endTime = GetSecs;
