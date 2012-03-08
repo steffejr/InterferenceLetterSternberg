@@ -1,6 +1,5 @@
 % Lines that start with the percent symbol are ignored
 [Trigger1]
-<<<<<<< HEAD
 r
 [Trigger2]
 t
@@ -10,7 +9,7 @@ Press r\nthen t to start
 Waiting for \n t to start
 [Location]% Options are: Columbia/Montpellier
 Columbia
-[Function]% Options are: Training/MRI/All, The Columbia version currently ignores this
+[Function]% Options are: Training/MRI/All
 All
 [Font1]% Courier New/Cursif
 Courier New
@@ -28,45 +27,12 @@ Courier New
 5678/
 [IntroDelay]       
 7.000
-=======
-p
-[Trigger2]
-5
-[TriggerText1] % This is also ignored
-'Nous allons commencer'
-[TriggerText2]
-'Nous allons commencer'
-[Location]% Options are: Columbia/Montpellier
-Montpellier
-[Function]% Options are: Training/MRI/All
-MRI
-[Font1]% Courier New/Cursif
-Courier New
-[Font2] % Courier New/Cursif
-Cursif
-[FontSize]
-60
-[Buttons_NumberNo]
-4/
-[Buttons_NumberYes]
-1w
-[Buttons_LetterNo]
-4/
-[Buttons_LetterYes]
-1w
-[IntroDelay]       
-8.000
->>>>>>> develop
 [EncodeTime]
 3.000
 [PreRetTime]
 0.500
 [RetentionTime]
-<<<<<<< HEAD
 5.000
-=======
-6.000
->>>>>>> develop
 [PostRetTime]
 0.500
 [ProbeTime]
@@ -76,11 +42,8 @@ Cursif
 [WaitTime]% Wait time for instructions
 6.000
 [LetToExclude] % Letters to exclude
-<<<<<<< HEAD
 AEIOUCPSVWXZ
-=======
-AEIOUYCX
-[ScreenResolution] %Set this to -1 to ignore
+[ScreenResolution]%expected screen resolution. Set this to -1 to ignore
 1280 800
 [FeedbackNumbersCorrect]
 Numbers: Correct
@@ -89,11 +52,10 @@ Numbers: Incorrect
 [FeedbackNumbersTimeout]
 Numbers: Time-out
 [FeedbackLettersCorrect]
-VRAI
+Letters: Correct
 [FeedbackLettersIncorrect]
-FAUX
+Letters: Incorrect
 [FeedbackLettersTimeout]
-Temps dépassé
+Letters: Time-out
 [ThankYouText]
 Thank You
->>>>>>> develop
