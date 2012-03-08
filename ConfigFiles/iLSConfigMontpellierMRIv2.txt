@@ -38,7 +38,7 @@ Cursif
 [ProbeTime]
 3.000
 [FinalDelay]
-10.23
+7
 [WaitTime]% Wait time for instructions
 6.000
 [LetToExclude] % Letters to exclude
@@ -58,4 +58,4 @@ FAUX
 [FeedbackLettersTimeout]
 Temps dépassé
 [ThankYouText]
-Thank You
+Merci

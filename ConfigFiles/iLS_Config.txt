@@ -9,7 +9,7 @@ Press r\nthen t to start
 Waiting for \n t to start
 [Location]% Options are: Columbia/Montpellier
 Columbia
-[Function]% Options are: Training/MRI/All, The Columbia version currently ignores this
+[Function]% Options are: Training/MRI/All
 All
 [Font1]% Courier New/Cursif
 Courier New

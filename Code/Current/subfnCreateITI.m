@@ -1,6 +1,6 @@
 function ITI = subfnCreateITI(NTrials)
 % Create the ITI distribution for the Cognitive Reserve studies
-NITIs = round(NTrials*(140/30)/2)
+NITIs = round(NTrials*(140/30)/2);
 %NITIs = 70;
 %NTrials = 30;
 Limit = 4;

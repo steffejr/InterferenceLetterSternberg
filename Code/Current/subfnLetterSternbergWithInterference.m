@@ -132,8 +132,8 @@ Buttons.LetterYes        = handles.Buttons_LetterYes;
 % --------------------------------------------------------
 % What are the triggers
 % --------------------------------------------------------
-Trigger1 = handles.Trigger1;
-Trigger2 = handles.Trigger2;
+Trigger1 = num2str(handles.Trigger1);
+Trigger2 = num2str(handles.Trigger2);
 TriggerText1 = handles.TriggerText1;
 TriggerText2  = handles.TriggerText2;
 % --------------------------------------------------------
@@ -204,7 +204,7 @@ FontSize = handles.FontSize;
 
 LineSpacing = 1;
 ScreenPos = [30 50];
-width = 800;s
+width = 800;
 ScreenSize = [width 0.025*width];
 
  
@@ -234,21 +234,22 @@ ProbeTime =         handles.ProbeTime;
 FinalDelay =          handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
-% Create the ITIs
-ITI = subfnCreateITI(NTrials);
-ExpectedMeanITI = mean(ITI);
+% % Create the ITIs
+% ITI = subfnCreateITI(NTrials);
+% ExpectedMeanITI = mean(ITI);
 
 %%% Using a gamma distributed set of ITIs that have a sum for 32 trials
 %%% to be 81 seconds.
 %ITI = (randg(ones(NTrials,1))*2);
 % See if an optimal set of ITIs is included for this run
-OptimalITIName = ['iLS_' handles.Location '_' handles.Function '_ITI.mat']
+OptimalITIName = ['iLS_' handles.Location '_' handles.Function '_ITI.mat'];
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
 if exist(OptimalITIs)
     clear ITI
     load(OptimalITIs)
 else
-    ITI = (round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
+    ITI = subfnCreateITI(NTrials);
+    %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
 end
 % Set ITI{1} equal to zero
 ITI(1) = 0;
@@ -295,14 +296,15 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % --------------------------------------------------------
 % The end period will be set based on the expected ITI values and the number of
 % trials.
-ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
-ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
-% Check to make sure that the ITI parameters were not changed without
-% changing the expectedMeanITI
-if ExpectedDuration < ActualDuration
-    error('The ITI distributions need to be fixed!');
-end
-EndDelay = ExpectedDuration - ActualDuration;
+ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
+% ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
+% ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
+% % Check to make sure that the ITI parameters were not changed without
+% % changing the expectedMeanITI
+% if ExpectedDuration < ActualDuration
+%     error('The ITI distributions need to be fixed!');
+% end
+% EndDelay = ExpectedDuration - ActualDuration;
 % --------------------------------------------------------
 % Check Computer Type
 % --------------------------------------------------------
@@ -413,23 +415,37 @@ end
 [nx, ny, bbox] = DrawFormattedText(mainWindow, TriggerText1, 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow,0);
 % Trigger 1
-[keyIsDown,secs,keycode]=KbCheck;
- while isempty(strfind(KbName(keycode),Trigger1))
-     [keyIsDown,secs,keycode]=KbCheck;
- end;
+flag = 1;
+while flag
+    [keyIsDown,secs,keyCode]=KbCheck;
+    F = find(keyCode);
+    for mm = 1:length(F)
+        if ~isempty(strfind(KbName(F(mm)),Trigger1))
+            flag = 0;
+        elseif ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+            sca
+            error('ESCAPE Pressed');
+        end
+    end
+end
 
 % text=['Waiting for \n"' Trigger2 '" to start'];
 [nx, ny, bbox] = DrawFormattedText(mainWindow, TriggerText2, 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow,0);					% draw fixation dot
-
 % Trigger 2
-[keyIsDown,secs,keycode]=KbCheck;
- while isempty(strfind(KbName(keycode),Trigger2))
-%while isempty(find(find(keycode) == double(Trigger2)))
-%while strcmp(KbName(keycode),Trigger2)==0	
-    % wait for button press = 'r'
-    [keyIsDown,secs,keycode]=KbCheck;
-end;
+flag = 1;
+while flag
+    [keyIsDown,secs,keyCode]=KbCheck;
+    F = find(keyCode);
+    for mm = 1:length(F)
+        if ~isempty(strfind(KbName(F(mm)),Trigger2))
+            flag = 0;
+        elseif ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+            sca
+            error('ESCAPE Pressed');
+        end
+    end
+end
 % Prepare the fixation cross
 [FIXnx, FIXny, FIXbbox] = DrawFormattedText(mainWindow, ' ', 'center', 'center', 0,[],[],[],[LineSpacing]);
 Screen('Flip',mainWindow);
@@ -683,17 +699,18 @@ for trialIndex = 1:NTrials
     end
 end
 %% Final delay period
-  WaitSecs('UntilTime',TrialTimes(1,1) + EndDelay);
+WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
 % Clear the screen
 %  Screen('Flip',mainWindow);
-  WaitSecs(3);
+
 %% Display thank you screen for five seconds.
 [nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
-Screen('Flip',mainWindow);
+ActualDuration = Screen('Flip',mainWindow);
 WaitSecs(3)
 Screen('Flip',mainWindow);
 clc
 sca
+
 %% Create experimental descriptions 
 ExperimentParameters = {};
 ExperimentParameters.subid = demog.subid;
@@ -709,6 +726,9 @@ ExperimentParameters.Timings.PreRetTime = PreRetTime;
 ExperimentParameters.Timings.RetentionTime = RetentionTime;
 ExperimentParameters.Timings.PostRetTime = PostRetTime;
 ExperimentParameters.Timings.ProbeTime = ProbeTime;
+ExperimentParameters.Timings.FinalDelay = FinalDelay;
+ExperimentParameters.Timings.ExpectedTotalDuration = ExpectedDuration;
+ExperimentParameters.Timings.ActualTotalDuration = ActualDuration - TrialTimes(1,1);
 ExperimentParameters.RunConditions = {};
 ExperimentParameters.RunConditions.PresentInstructionsFlag = PresentInstructionsFlag;
 ExperimentParameters.RunConditions.FeedbackFlag = FeedbackFlag;
