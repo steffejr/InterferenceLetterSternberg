@@ -98,7 +98,17 @@ switch handles.Location
         DefaultZeroValues(handles)
 end
 set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
-
+% Check the screen resolution
+CurrentScreenRes = get(0,'ScreenSize');
+if handles.ScreenResolution ~= -1
+    if sum(CurrentScreenRes(3:4) == handles.ScreenResolution) == 2
+        % The screen is the right resolution
+    else
+        STR = sprintf('Please change the screen resolution to: %d by %d',...
+            handles.ScreenResolution(1),handles.ScreenResolution(2));
+        warndlg(STR)
+    end
+end
 
 %% Setup date of birth selector
 %jPanel = com.jidesoft.combobox.DateComboBox;

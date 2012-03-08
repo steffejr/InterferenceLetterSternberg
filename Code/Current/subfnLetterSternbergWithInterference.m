@@ -642,18 +642,18 @@ for trialIndex = 1:NTrials
             if temp
                 if (~isempty(strfind(Trials{trialIndex}.NumType,'POS')) & ~isempty(strfind(char(Buttons.NumberNo),NumberResponse))) || ...
                         (~isempty(strfind(Trials{trialIndex}.NumType,'NEG')) & ~isempty(strfind(char(Buttons.NumberYes),NumberResponse)))
-                    DisplayTrialAnswer = 'Numbers: Incorrect';
+                    DisplayTrialAnswer = handles.NumbersIncorrect;
                     [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [255, 0, 0]);
                 elseif (~isempty(strfind(Trials{trialIndex}.NumType,'POS')) & ~isempty(strfind(char(Buttons.NumberYes),NumberResponse))) || ...
                         (~isempty(strfind(Trials{trialIndex}.NumType,'NEG')) & ~isempty(strfind(char(Buttons.NumberNo),NumberResponse)))
-                    DisplayTrialAnswer = 'Numbers: Correct';
+                    DisplayTrialAnswer = handles.NumbersCorrect;
                     [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [0, 255, 0]);
                 else
                     DisplayTrialAnswer = 'Numbers: ??';
                     [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [0, 0, 0]);
                 end
             else
-                DisplayTrialAnswer = 'Numbers: Time-Out';
+                DisplayTrialAnswer = handles.NumbersTimeout;
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [0, 0, 0]);
             end
         end
@@ -665,18 +665,18 @@ for trialIndex = 1:NTrials
         if temp
             if (~isempty(strfind(Trials{trialIndex}.LetType,'POS')) & ~isempty(strfind(char(Buttons.LetterNo),LetterResponse))) || ...
                     (~isempty(strfind(Trials{trialIndex}.LetType,'NEG')) & ~isempty(strfind(char(Buttons.LetterYes),LetterResponse)))
-                DisplayTrialAnswer = 'Letters: Incorrect';
+                DisplayTrialAnswer = handles.LettersIncorrect;
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [255, 0, 0]);
             elseif (~isempty(strfind(Trials{trialIndex}.LetType,'POS')) & ~isempty(strfind(char(Buttons.LetterYes),LetterResponse))) || ...
                     (~isempty(strfind(Trials{trialIndex}.LetType,'NEG')) & ~isempty(strfind(char(Buttons.LetterNo),LetterResponse)))
-                DisplayTrialAnswer = 'Letters: Correct';
+                DisplayTrialAnswer = handles.LettersCorrect;
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [0, 255, 0]);
             else
                 DisplayTrialAnswer = 'Letters: ??';
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [0, 0, 0]);
             end
         else
-            DisplayTrialAnswer = 'Letters: Time-Out';
+            DisplayTrialAnswer = handles.Letters.Timeout;
             [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [0, 0, 0]);
         end
         Screen('Flip',mainWindow,0);
@@ -688,9 +688,14 @@ WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
 % Clear the screen
 %  Screen('Flip',mainWindow);
 %% Display thank you screen for five seconds.
+<<<<<<< HEAD
 ThankYouText = 'Thank You';
 [nx, ny, bbox] = DrawFormattedText(mainWindow, ThankYouText, 'center', 'center', 0);
 ActualDuration = Screen('Flip',mainWindow);
+=======
+[nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
+Screen('Flip',mainWindow);
+>>>>>>> develop
 WaitSecs(3)
 Screen('Flip',mainWindow);
 clc
