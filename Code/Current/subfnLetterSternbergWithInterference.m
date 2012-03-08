@@ -234,11 +234,6 @@ ProbeTime =         handles.ProbeTime;
 FinalDelay =          handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
-<<<<<<< HEAD
-% Create the ITIs
-=======
-% % Create the ITIs
->>>>>>> develop
 % ITI = subfnCreateITI(NTrials);
 % ExpectedMeanITI = mean(ITI);
 
@@ -246,11 +241,7 @@ WaitTime = handles.WaitTime;
 %%% to be 81 seconds.
 %ITI = (randg(ones(NTrials,1))*2);
 % See if an optimal set of ITIs is included for this run
-<<<<<<< HEAD
 OptimalITIName = ['iLS_' handles.Location '_' demog.Tag(1:end-1) '_ITI.mat'];
-=======
-OptimalITIName = ['iLS_' handles.Location '_' handles.Function '_ITI.mat'];
->>>>>>> develop
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
 if exist(OptimalITIs)
     clear ITI
@@ -305,12 +296,8 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % The end period will be set based on the expected ITI values and the number of
 % trials.
 ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
-<<<<<<< HEAD
-%ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
-=======
 % ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
 % ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
->>>>>>> develop
 % % Check to make sure that the ITI parameters were not changed without
 % % changing the expectedMeanITI
 % if ExpectedDuration < ActualDuration
@@ -712,28 +699,13 @@ for trialIndex = 1:NTrials
 end
 %% Final delay period
 WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
-<<<<<<< HEAD
-
-% Clear the screen
-%  Screen('Flip',mainWindow);
-=======
 % Clear the screen
 %  Screen('Flip',mainWindow);
 
 >>>>>>> develop
 %% Display thank you screen for five seconds.
-<<<<<<< HEAD
-ThankYouText = 'Thank You';
-[nx, ny, bbox] = DrawFormattedText(mainWindow, ThankYouText, 'center', 'center', 0);
-ActualDuration = Screen('Flip',mainWindow);
-=======
 [nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
-<<<<<<< HEAD
-Screen('Flip',mainWindow);
->>>>>>> develop
-=======
 ActualDuration = Screen('Flip',mainWindow);
->>>>>>> develop
 WaitSecs(3)
 Screen('Flip',mainWindow);
 clc
