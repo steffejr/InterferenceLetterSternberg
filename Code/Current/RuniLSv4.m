@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 05-Mar-2012 14:15:00
+% Last Modified by GUIDE v2.5 09-Mar-2012 10:23:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1919,3 +1919,41 @@ function Reload_Config_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     RuniLSv4_OpeningFcn(hObject, eventdata, handles)
+
+
+% --------------------------------------------------------------------
+function Tools_Callback(hObject, eventdata, handles)
+% hObject    handle to Tools (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function CheckTiming_Callback(hObject, eventdata, handles)
+% hObject    handle to CheckTiming (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    subfnCheckTiming
+
+
+% --------------------------------------------------------------------
+function DisplayResults_Callback(hObject, eventdata, handles)
+% hObject    handle to DisplayResults (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    
+
+
+% --------------------------------------------------------------------
+function DisplayResultsMRI_Callback(hObject, eventdata, handles)
+% hObject    handle to DisplayResultsMRI (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    subfnDisplayAllResults('MRI')
+
+% --------------------------------------------------------------------
+function DisplayResultsTraining_Callback(hObject, eventdata, handles)
+% hObject    handle to DisplayResultsTraining (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    subfnDisplayAllResults('Train')

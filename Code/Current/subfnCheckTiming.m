@@ -45,6 +45,6 @@ for j = 1:length(D)
     subplot(length(D),2,j*2);
   
     plot(squeeze(Times(1,:,1)) - squeeze(Times(1,:,2)),'.-')
-    ylabel('Difference (seconds)')
+    ylabel('Diff. (s)')
     xlabel('Trial Number');
 end
