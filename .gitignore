@@ -1,5 +1,6 @@
 /Results
 /.svn
+.svn/
 *~
 *.asv
 ERRORLOG.txt
