@@ -1,5 +1,7 @@
-function [names onsets durations] = CreateSPMRegressors(Trials)
-
+function [names onsets durations] = CreateSPMRegressors(Trials,DurTimes)
+if nargin == 1;
+    DurTimes = [3 7 -1 3];
+end
 Phases = {'Stm' 'Ret' 'Pro'};
 LetLoad = {'1' '2'  '3' '6'};
 NumLoad = {'Low' 'High'};
@@ -7,7 +9,7 @@ NumLoad = {'Low' 'High'};
 Response = {'Cor' 'Inc'};
 ProbeType = {'POS' 'NEG'};   
 ProbeType = {''};
-DurTimes = [3 7 -1 3];
+
 
 NPhase = length(Phases);
 NLetLoad = length(LetLoad);
