@@ -106,7 +106,7 @@ if handles.ScreenResolution ~= -1
     else
         STR = sprintf('Please change the screen resolution to: %d by %d',...
             handles.ScreenResolution(1),handles.ScreenResolution(2));
-        warndlg(STR)
+       % warndlg(STR)
     end
 end
 

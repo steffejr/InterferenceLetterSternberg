@@ -241,11 +241,13 @@ WaitTime = handles.WaitTime;
 %%% to be 81 seconds.
 %ITI = (randg(ones(NTrials,1))*2);
 % See if an optimal set of ITIs is included for this run
-OptimalITIName = ['iLS_' handles.Location '_' demog.Tag(1:end-1) '_ITI.mat'];
+OptimalITIName = ['iLS_' handles.Location '_' demog.Tag '_Trials.mat'];
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
 if exist(OptimalITIs)
     clear ITI
-    load(OptimalITIs)
+    tempITI = load(OptimalITIs);
+    ITI = tempITI.OptimalITI;
+    clear tempITI
 else
     ITI = subfnCreateITI(NTrials);
     %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
@@ -702,7 +704,6 @@ WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
 % Clear the screen
 %  Screen('Flip',mainWindow);
 
->>>>>>> develop
 %% Display thank you screen for five seconds.
 [nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
 ActualDuration = Screen('Flip',mainWindow);
