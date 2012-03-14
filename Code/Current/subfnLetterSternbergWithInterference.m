@@ -702,7 +702,6 @@ WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
 % Clear the screen
 %  Screen('Flip',mainWindow);
 
->>>>>>> develop
 %% Display thank you screen for five seconds.
 [nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
 ActualDuration = Screen('Flip',mainWindow);
