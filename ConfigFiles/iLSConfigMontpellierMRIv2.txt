@@ -4,9 +4,9 @@ p
 [Trigger2]
 5
 [TriggerText1] 
-'Nous allons commencer'
+Nous allons commencer
 [TriggerText2]
-'Nous allons commencer'
+Nous allons commencer
 [Location]% Options are: Columbia/Montpellier
 Montpellier
 [Function]% Options are: Training/MRI/All
@@ -44,7 +44,7 @@ Cursif
 [LetToExclude] % Letters to exclude
 AEIOUYCX
 [ScreenResolution] %Set this to -1 to ignore
-1280 800
+-1
 [FeedbackNumbersCorrect]
 Numbers: Correct
 [FeedbackNumbersIncorrect]
