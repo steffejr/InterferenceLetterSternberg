@@ -561,12 +561,18 @@ for trialIndex = 1:NTrials
                 F = find(keyCode);
                 for mm = 1:length(F)
                     if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                        % DUMP the data collected up until now
+                        [PathName FileName] = fileparts(OutFilePath);
+                        OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
+                        str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                        eval(str)
                         sca
                         error('ESCAPE Pressed');
+                        
                     end
                 end
              end
-            % If the user holds down a key, KbCheck will report multiple events.
+             % If the user holds down a key, KbCheck will report multiple events.
             % To condense multiple 'keyDown' events into a single event, we wait until all
             % keys have been released.            
             while KbCheck; end
@@ -622,6 +628,11 @@ for trialIndex = 1:NTrials
                  F = find(keyCode);
                  for mm = 1:length(F)
                      if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                         % DUMP the data collected up until now
+                         [PathName FileName] = fileparts(OutFilePath);
+                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
+                         str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                         eval(str)
                          sca
                          error('ESCAPE Pressed');
                      end
