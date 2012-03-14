@@ -564,7 +564,7 @@ for trialIndex = 1:NTrials
                         % DUMP the data collected up until now
                         [PathName FileName] = fileparts(OutFilePath);
                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
-                        str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                        str =  ['save(OutFilePath,''Trials'', ''TrialTimes'')'];
                         eval(str)
                         sca
                         error('ESCAPE Pressed');
@@ -631,7 +631,7 @@ for trialIndex = 1:NTrials
                          % DUMP the data collected up until now
                          [PathName FileName] = fileparts(OutFilePath);
                          OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
-                         str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                         str =  ['save(OutFilePath,''Trials'', ''TrialTimes'')'];
                          eval(str)
                          sca
                          error('ESCAPE Pressed');
