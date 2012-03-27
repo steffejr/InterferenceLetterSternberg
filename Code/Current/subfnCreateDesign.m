@@ -46,7 +46,7 @@ end
 [LetLists] = CreateLetterLists(handles);
 
 % LetHigh/NumHigh/LetPOS/NumPOS
-% LetHigh/NumHigh/LetPOS/NumNEG
+% LetHigh/NumHigh/LetPOS/NumNEGe
 % LetHigh/NumHigh/LetNEG/NumPOS
 % LetHigh/NumHigh/LetNEG/NumNEG
 % LetHigh/NumLow/LetPOS/NumPOS
@@ -65,7 +65,7 @@ end
 
 % Create a structure for each trial
 Trials = cell(NTrials,1);
-Design = repmat(fullfact(DesignLevels),NRepeats,1);
+Design = repmat(subfnfullfact(DesignLevels),NRepeats,1);
 % Convert the load levels from the default of [1,2,3,4...]
 % to set sizes
 tempCol1 = Design(:,1);

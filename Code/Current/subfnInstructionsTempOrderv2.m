@@ -1,21 +1,21 @@
 function subfnInstructionsTempOrderv2(mainWindow,VisualData,pahandle,mainRect)
 Instr = {};
 count = 1;
-Instr{count} = ['For each trial you will see\na flashing checkerboard\n'...
+Instr{count} = ['For each trial\nyou will see a\nflashing checkerboard\n'...
     'and hear a tone.'];
 count = count + 1;
 % Instr{count} = ['Decide whether they\nare on for a short\nor long time.'];
 % count = count + 1;
-Instr{count} = ['Once the red cross hair apears,\n'...
+Instr{count} = ['Once the red\ncross hair apears,\n'...
     'decide if this was\na short or long trial.']
 count = count + 1;
-Instr{count} = ['press the LEFT button \nif you think the trial\nwas SHORT']
+Instr{count} = ['press the\nLEFT button\nif you think the\ntrial was SHORT']
 count = count + 1;
-Instr{count} = ['press the RIGHT button\nif you think the trial\nwas LONG.'];
+Instr{count} = ['press the\nRIGHT button\nif you think the\ntrial was LONG.'];
 count = count + 1;
-Instr{count} = ['Please make your decision\nas fast as possible.'];
+Instr{count} = ['Please make your\ndecision as\nfast as possible.'];
 count = count + 1;
-Instr{count} = ['Here are some examples.']
+Instr{count} = ['Here are\nsome examples.']
 count = count + 1;
 Instr{count} = ['Now you try.'];
 count = count + 1;
@@ -123,9 +123,9 @@ function [Key RT] = WaitForFeedback(mainWindow,VisualData)
 function PresentFeedback(Key,mainWindow,VisualData,InstrLineSpacing,InstrWaitTime,CorrectKey)
 
     if ~isempty(strfind(char(CorrectKey),Key(1)))
-        Response = 'Correct'
+        Response = '\nCorrect'
     else
-        Response = 'Incorrect'
+        Response = '\nIncorrect'
     end
     Text = [Response]
     Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
@@ -141,7 +141,7 @@ function PresentCrossHair(VisualData,mainWindow,mainRect)
     Screen('Flip',mainWindow);
 
 function PresentTrialTag(Tag,mainWindow,VisualData,InstrLineSpacing,InstrWaitTime)
-    Text = ['That was a ' Tag ' trial.']
+    Text = ['\n\nThat was a\n' Tag ' trial.']
     Screen('DrawTexture', VisualData.mainWindow, VisualData.textureX2);
     Screen(VisualData.mainWindow,'FillOval',[0 0 0],VisualData.rect2);
     [nx, ny, bbox] = DrawFormattedText(mainWindow,Text , 'center',[], [255 255 0],[],[],[],InstrLineSpacing);

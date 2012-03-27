@@ -561,12 +561,18 @@ for trialIndex = 1:NTrials
                 F = find(keyCode);
                 for mm = 1:length(F)
                     if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                        % DUMP the data collected up until now
+                        [PathName FileName] = fileparts(OutFilePath);
+                        OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
+                        str =  ['save(OutFilePath,''Trials'', ''TrialTimes'')'];
+                        eval(str)
                         sca
                         error('ESCAPE Pressed');
+                        
                     end
                 end
              end
-            % If the user holds down a key, KbCheck will report multiple events.
+             % If the user holds down a key, KbCheck will report multiple events.
             % To condense multiple 'keyDown' events into a single event, we wait until all
             % keys have been released.            
             while KbCheck; end
@@ -622,6 +628,11 @@ for trialIndex = 1:NTrials
                  F = find(keyCode);
                  for mm = 1:length(F)
                      if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                         % DUMP the data collected up until now
+                         [PathName FileName] = fileparts(OutFilePath);
+                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
+                         str =  ['save(OutFilePath,''Trials'', ''TrialTimes'')'];
+                         eval(str)
                          sca
                          error('ESCAPE Pressed');
                      end
@@ -659,18 +670,18 @@ for trialIndex = 1:NTrials
             if temp
                 if (~isempty(strfind(Trials{trialIndex}.NumType,'POS')) & ~isempty(strfind(char(Buttons.NumberNo),NumberResponse))) || ...
                         (~isempty(strfind(Trials{trialIndex}.NumType,'NEG')) & ~isempty(strfind(char(Buttons.NumberYes),NumberResponse)))
-                    DisplayTrialAnswer = handles.NumbersIncorrect;
+                    DisplayTrialAnswer = handles.FeedbackNumbersIncorrect;
                     [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [255, 0, 0]);
                 elseif (~isempty(strfind(Trials{trialIndex}.NumType,'POS')) & ~isempty(strfind(char(Buttons.NumberYes),NumberResponse))) || ...
                         (~isempty(strfind(Trials{trialIndex}.NumType,'NEG')) & ~isempty(strfind(char(Buttons.NumberNo),NumberResponse)))
-                    DisplayTrialAnswer = handles.NumbersCorrect;
+                    DisplayTrialAnswer = handles.FeedbackNumbersCorrect;
                     [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [0, 255, 0]);
                 else
                     DisplayTrialAnswer = 'Numbers: ??';
                     [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [0, 0, 0]);
                 end
             else
-                DisplayTrialAnswer = handles.NumbersTimeout;
+                DisplayTrialAnswer = handles.FeedbackNumbersTimeout;
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3-FontSize, [0, 0, 0]);
             end
         end
@@ -682,18 +693,18 @@ for trialIndex = 1:NTrials
         if temp
             if (~isempty(strfind(Trials{trialIndex}.LetType,'POS')) & ~isempty(strfind(char(Buttons.LetterNo),LetterResponse))) || ...
                     (~isempty(strfind(Trials{trialIndex}.LetType,'NEG')) & ~isempty(strfind(char(Buttons.LetterYes),LetterResponse)))
-                DisplayTrialAnswer = handles.LettersIncorrect;
+                DisplayTrialAnswer = handles.FeedbackLettersIncorrect;
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [255, 0, 0]);
             elseif (~isempty(strfind(Trials{trialIndex}.LetType,'POS')) & ~isempty(strfind(char(Buttons.LetterYes),LetterResponse))) || ...
                     (~isempty(strfind(Trials{trialIndex}.LetType,'NEG')) & ~isempty(strfind(char(Buttons.LetterNo),LetterResponse)))
-                DisplayTrialAnswer = handles.LettersCorrect;
+                DisplayTrialAnswer = handles.FeedbackLettersCorrect;
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [0, 255, 0]);
             else
                 DisplayTrialAnswer = 'Letters: ??';
                 [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [0, 0, 0]);
             end
         else
-            DisplayTrialAnswer = handles.Letters.Timeout;
+            DisplayTrialAnswer = handles.FeedbackLettersTimeout;
             [nx, ny, bbox] = DrawFormattedText(mainWindow, DisplayTrialAnswer, 'center', ScreenSize(2)/3+FontSize, [0, 0, 0]);
         end
         Screen('Flip',mainWindow,0);
