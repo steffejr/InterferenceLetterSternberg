@@ -37,7 +37,7 @@ InstText4b = ['\nWith a series of\nnumbers on the\nLEFT of an equal sign'];
 InstText4c = ['\nand a single number\non the RIGHT.'];
 InstText5 = '\nDetermine whether the\nSUM of numbers on the LEFT\n equal the number on the RIGHT';
 %InstText6 = ['\nPress ' Buttons.NumberYes{1} ' for YES\nPress  ' Buttons.NumberNo{1} ' for NO.'];
-InstText6 = ['\nPress / for YES\nPress z for NO.'];
+InstText6 = ['\nPress m for YES\nPress z for NO.'];
 InstText7 = ['\nYou will then see\n a single PROBE letter.\n'];
 InstText8 = ['\nYou are to decide\n whether it was in the\n original study set.'];
     

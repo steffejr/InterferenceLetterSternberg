@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 09-Mar-2012 10:23:16
+% Last Modified by GUIDE v2.5 03-Apr-2013 15:04:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,7 +85,16 @@ ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
 [handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+
+WarnHandle = subfnCheckKeyboardStatus(handles);
+% Once the Config file is loaded disable all keys but those that are ebing
+% checked. This helps to ensure that all other keys are ignored.
+ListOfKeysIgnore = subfnFindNonResponseKeys(handles);
+
+DisableKeysForKbCheck([ListOfKeysIgnore]);
 guidata(hObject, handles);
+
+
 % Set up the initial values
 switch handles.Location
     case 'Columbia'
@@ -109,6 +118,11 @@ if handles.ScreenResolution ~= -1
        % warndlg(STR)
     end
 end
+if WarnHandle ~= -99
+    figure(WarnHandle);
+end
+
+
 
 %% Setup date of birth selector
 %jPanel = com.jidesoft.combobox.DateComboBox;
@@ -1957,3 +1971,11 @@ function DisplayResultsTraining_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     subfnDisplayAllResults('Train')
+
+
+% --- Executes on button press in CheckKeyboard.
+function CheckKeyboard_Callback(hObject, eventdata, handles)
+% hObject    handle to CheckKeyboard (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    subfnCheckKeyboardStatus(handles)
