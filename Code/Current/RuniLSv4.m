@@ -94,6 +94,10 @@ ListOfKeysIgnore = subfnFindNonResponseKeys(handles);
 DisableKeysForKbCheck([ListOfKeysIgnore]);
 guidata(hObject, handles);
 
+if WarnHandle ~= -99
+    figure(WarnHandle);
+end
+
 
 % Set up the initial values
 switch handles.Location
@@ -118,9 +122,7 @@ if handles.ScreenResolution ~= -1
        % warndlg(STR)
     end
 end
-if WarnHandle ~= -99
-    figure(WarnHandle);
-end
+
 
 
 

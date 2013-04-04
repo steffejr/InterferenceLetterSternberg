@@ -17,6 +17,7 @@ ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Trigger1)))) = 0;
 ListOfKeysIgnore(eval(sprintf('''%s''-0', (handles.Trigger2)))) = 0;
 ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Trigger2)))) = 0;
 
-
+% make sure the escape key is still available
+ListOfKeysIgnore(KbName('escape')) = 0;
 % return the list of keys to ignore.
 ListOfKeysIgnore = ListOfKeysIgnore(find(ListOfKeysIgnore));
