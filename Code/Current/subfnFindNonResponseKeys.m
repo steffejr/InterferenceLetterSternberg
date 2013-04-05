@@ -1,23 +1,38 @@
 function ListOfKeysIgnore = subfnFindNonResponseKeys(handles)
 % create a list of all ASCII values
 ListOfKeysIgnore = 1:256;
-% set all response values to zero in this list
-ListOfKeysIgnore(eval(sprintf('''%s''-0', handles.Buttons_LetterNo))) = 0;
-% enusre that UPPERCASE letters are also ignored
-ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Buttons_LetterNo)))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', handles.Buttons_NumberYes))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Buttons_NumberYes)))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', handles.Buttons_NumberYes))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Buttons_NumberYes)))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', handles.Buttons_LetterNo))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Buttons_LetterNo)))) = 0;
-% also make sure to NOT ignore the trigger
-ListOfKeysIgnore(eval(sprintf('''%s''-0', (handles.Trigger1)))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Trigger1)))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', (handles.Trigger2)))) = 0;
-ListOfKeysIgnore(eval(sprintf('''%s''-0', upper(handles.Trigger2)))) = 0;
+%% set all response values to zero in this list
 
-% make sure the escape key is still available
-ListOfKeysIgnore(KbName('escape')) = 0;
-% return the list of keys to ignore.
-ListOfKeysIgnore = ListOfKeysIgnore(find(ListOfKeysIgnore));
+ListOfKeysIgnore(subfnButtonsToIgnore(handles.Buttons_LetterYes)) = 0;
+ListOfKeysIgnore(subfnButtonsToIgnore(handles.Buttons_LetterNo)) = 0;
+ListOfKeysIgnore(subfnButtonsToIgnore(handles.Buttons_NumberYes)) = 0;
+ListOfKeysIgnore(subfnButtonsToIgnore(handles.Buttons_NumberNo)) = 0;
+ListOfKeysIgnore(subfnButtonsToIgnore('ESCAPE')) = 0;
+
+ListOfKeysIgnore(subfnButtonsToIgnore(handles.Trigger1)) = 0;
+ListOfKeysIgnore(subfnButtonsToIgnore(handles.Trigger2)) = 0;
+
+
+ListOfKeysIgnore = find(ListOfKeysIgnore);
+function List = subfnButtonsToIgnore(StringList)
+List = [];
+for i = 1:length(StringList)
+    KeyMappings = KbName('KeyNames');
+    for j = 1:length(KeyMappings)
+        if strfind(KeyMappings{j}, StringList(i))
+            % Make sure it is not a function key with a number in its name
+            if ~isempty(str2num(StringList(i)))
+                if ~length(strfind(KeyMappings{j},'F'))>0 && length(KeyMappings{j})<3
+                    List = [List; j];
+                    fprintf(1,'%s: %d\n',KeyMappings{j},j);
+                end
+            elseif length(KeyMappings{j})<3 % it must be a string
+                fprintf(1,'%s: %d\n',KeyMappings{j},j)
+                List = [List; j];
+            end
+        end
+    end
+end
+
+
+

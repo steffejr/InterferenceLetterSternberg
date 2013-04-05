@@ -1,4 +1,6 @@
-function WarnHandle = subfnCheckKeyboardStatus(handles)
+function subfnCheckKeyboardStatus(handles)
+KbName('UnifyKeyNames')
+% turn beep on
 DisableKeysForKbCheck([]);
 CheckTime = 5; % seconds
 WaitChunk = 2;
@@ -13,6 +15,7 @@ for i = 1:NCheckTime
     while secs - Start < 1/WaitChunk
         [keyIsDown, secs, keyCode, deltaSecs] = KbCheck;
         if keyIsDown
+            beep
             KeyDetectFlag = 1;
         end
     end
@@ -31,15 +34,15 @@ if KeyDetectFlag
         while secs - Start < 1/WaitChunk
             [keyIsDown, secs, keyCode, deltaSecs] = KbCheck;
             if keyIsDown
+                beep
                KeyDetectFlag = 1;
             end
         end
     end
     close(h)
 end
+
 if KeyDetectFlag
-     WarnHandle = warndlg({'One of the response keys is being pressed!','','Please fix and try again.',...
-         'The experiment will not work properly if this is not resolved.'});
-else
-    WarnHandle = -99;
+   uiwait(warndlg({'One of the response keys is being pressed!','','Please fix and try again.',...
+         'The experiment will not work properly if this is not resolved.'}));
 end

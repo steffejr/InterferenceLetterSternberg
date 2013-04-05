@@ -94,10 +94,6 @@ ListOfKeysIgnore = subfnFindNonResponseKeys(handles);
 DisableKeysForKbCheck([ListOfKeysIgnore]);
 guidata(hObject, handles);
 
-if WarnHandle ~= -99
-    figure(WarnHandle);
-end
-
 
 % Set up the initial values
 switch handles.Location
