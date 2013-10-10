@@ -1,4 +1,4 @@
-function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog,  PresentInstructionsFlag,FeedbackFlag,NumberListLength,NRepeats,LoadLevels,handles)
+function [ExperimentParameters, OutString] = subfnLetterSternbergWithInterference(demog,  PresentInstructionsFlag,FeedbackFlag,NumberListLength,NRepeats,LoadLevels,handles)
 %% Task description for Letter Sternberg
 % The LS task will have two load levels of 2 and 6 letters along with a
 % retention period and a probe phase. The retention phase will have
@@ -6,6 +6,9 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 % addtion task where subjects see either 
 %
 %% TO DO LIST
+% 10/10/13
+% Add additional letter set sizes
+% 
 % 10/14/11
 % DONE --Trying to make sure that no consecutive trials have the same letters in
 %   their study sets and that the same probe letter is not consecutive. This
@@ -312,7 +315,7 @@ ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + F
 c=computer;
 if strcmpi(c,'PCWIN')>0 || strcmpi(c,'PCWIN64')>0
     sysDefault=0;
-elseif strcmpi(c,'MAC')>0 || strcmpi(c,'MACI')>0
+elseif ~isempty(strfind(c,'MAC'))
     sysDefault=1;
 else
     disp('System type unknown')
@@ -467,22 +470,31 @@ for trialIndex = 1:NTrials
     % Then present letters
     
     % PREPARE THE ENCODING SET OF LETTERS
-    % Low Letter List
+    % One Letter List
      if length(Trials{trialIndex}.LetList) == 1
          LetEncodeString = ['*' CharactersBetweenLetters Trials{trialIndex}.LetList(1) CharactersBetweenLetters ...
              '*\n\n*' CharactersBetweenLetters '*' CharactersBetweenLetters '*'];
-    end
+     end
+    % Two Letter List
     if length(Trials{trialIndex}.LetList) == 2
          LetEncodeString = ['*' CharactersBetweenLetters Trials{trialIndex}.LetList(1) CharactersBetweenLetters ...
              '*\n\n*' CharactersBetweenLetters Trials{trialIndex}.LetList(2) CharactersBetweenLetters '*'];
     end
+    % Three Letter List
      if length(Trials{trialIndex}.LetList) == 3
         LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
             CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
             '*' CharactersBetweenLetters '*' CharactersBetweenLetters '*'];
     end
-    % High Letter List 
+    % Six Letter List 
     if length(Trials{trialIndex}.LetList) == 6
+        LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
+            CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
+            Trials{trialIndex}.LetList(4) CharactersBetweenLetters Trials{trialIndex}.LetList(5) ...
+            CharactersBetweenLetters Trials{trialIndex}.LetList(6)];
+    end
+    % Eight Letter List 
+    if length(Trials{trialIndex}.LetList) == 8
         LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
             CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
             Trials{trialIndex}.LetList(4) CharactersBetweenLetters Trials{trialIndex}.LetList(5) ...

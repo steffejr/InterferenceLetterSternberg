@@ -21,6 +21,8 @@ function [Trials Design] = subfnCreateDesign(NRepeats, NumberListLength, LoadLev
 % If the number list length is zero this factor is set to ONE as well as
 % the Number probe.
 
+NumberAttemptsToCreateDesign = 15;
+
 fprintf(1,'\n\nMaking the experimental design. Please wait.')
 LetTemp = length(LoadLevels);
 LetTempProbe = 2;
@@ -135,14 +137,14 @@ while madeDesignFlag
         fprintf('Design made successfully!\n');
     catch me
         madeDesignFlag = madeDesignFlag + 1;
-        if madeDesignFlag > 10
-            errordlg({'Ten unsuccessful attempts were made at creating letter lists.'...
+        if madeDesignFlag > NumberAttemptsToCreateDesign
+            errordlg({sprintf('%d unsuccessful attempts were made at creating letter lists.',NumberAttemptsToCreateDesign)...
                 'Please EXCLUDE less letters for creating the lists.'...
                 'See program: CreateLetterLists.m'})
             break
         end
         fprintf(1,'Trouble making letter list: %s\n',me.message);
-        fprintf(1,'Trying again for attempt %d of 10.\n',madeDesignFlag)
+        fprintf(1,'Trying again for attempt %d of %d.\n',madeDesignFlag,NumberAttemptsToCreateDesign)
     end
 end
 % Print out all trials to the screen
