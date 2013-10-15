@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 09-Mar-2012 10:23:16
+% Last Modified by GUIDE v2.5 15-Oct-2013 16:07:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -92,6 +92,9 @@ switch handles.Location
         DefaultInterferenceDIR(handles);
         set(handles.InterferencePilot,'Checked','on')
     case 'Montpellier'
+        DefaultMontpellierDIR(handles)
+        set(handles.Montpellier,'Checked','on')
+    case 'PILOT'
         DefaultMontpellierDIR(handles)
         set(handles.Montpellier,'Checked','on')
     otherwise
@@ -186,7 +189,7 @@ function LetLoad1_Callback(hObject, eventdata, handles)
 % The following updates the text on the GUI showingthe number of trials
 % that result from the choices selected.
 
-NumTrials1 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad1,'Value'),...
+NumTrials1 = sufnCalcNumberOfTrials(handles,handles.LetLoad1,...
     get(handles.NumLen1,'Value'),...
     get(handles.NumBlocks1,'Value'));
 
@@ -201,7 +204,7 @@ function NumLen1_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from NumLen1
 % The following updates the text on the GUI showingthe number of trials
 % that result from the choices selected.
-NumTrials1 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad1,'Value'),...
+NumTrials1 = sufnCalcNumberOfTrials(handles,handles.LetLoad1,...
     get(handles.NumLen1,'Value'),...
     get(handles.NumBlocks1,'Value'));
 handles.Trigger2
@@ -215,7 +218,7 @@ function NumBlocks1_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks1
-NumTrials1 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad1,'Value'),...
+NumTrials1 = sufnCalcNumberOfTrials(handles,handles.LetLoad1,...
     get(handles.NumLen1,'Value'),...
     get(handles.NumBlocks1,'Value'));
 
@@ -273,7 +276,7 @@ function NumBlocks2_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks2 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks2
-NumTrials2 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad2,'Value'),...
+NumTrials2 = sufnCalcNumberOfTrials(handles,handles.LetLoad2,...
     get(handles.NumLen2,'Value'),...
     get(handles.NumBlocks2,'Value'));
 
@@ -286,7 +289,7 @@ function LetLoad2_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns LetLoad2 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from LetLoad2
-NumTrials2 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad2,'Value'),...
+NumTrials2 = sufnCalcNumberOfTrials(handles,handles.LetLoad2,...
     get(handles.NumLen2,'Value'),...
     get(handles.NumBlocks2,'Value'));
 
@@ -299,7 +302,7 @@ function NumLen2_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumLen2 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumLen2
-NumTrials2 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad2,'Value'),...
+NumTrials2 = sufnCalcNumberOfTrials(handles,handles.LetLoad2,...
     get(handles.NumLen2,'Value'),...
     get(handles.NumBlocks2,'Value'));
 
@@ -354,7 +357,7 @@ function LetLoad3_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns LetLoad3 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from LetLoad3
-NumTrials3 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad3,'Value'),...
+NumTrials3 = sufnCalcNumberOfTrials(handles,handles.LetLoad3,...
     get(handles.NumLen3,'Value'),...
     get(handles.NumBlocks3,'Value'));
 
@@ -367,7 +370,7 @@ function NumBlocks3_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks3 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks3
-NumTrials3 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad3,'Value'),...
+NumTrials3 = sufnCalcNumberOfTrials(handles,handles.LetLoad3,...
     get(handles.NumLen3,'Value'),...
     get(handles.NumBlocks3,'Value'));
 
@@ -380,7 +383,7 @@ function NumLen3_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumLen3 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumLen3
-NumTrials3 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad3,'Value'),...
+NumTrials3 = sufnCalcNumberOfTrials(handles,handles.LetLoad3,...
     get(handles.NumLen3,'Value'),...
     get(handles.NumBlocks3,'Value'));
 
@@ -433,7 +436,7 @@ function LetLoad4_Callback(hObject, eventdata, handles)
 % hObject    handle to LetLoad4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-NumTrials4 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad4,'Value'),...
+NumTrials4 = sufnCalcNumberOfTrials(handles,handles.LetLoad4,...
     get(handles.NumLen4,'Value'),...
     get(handles.NumBlocks4,'Value'));
 
@@ -446,7 +449,7 @@ function NumBlocks4_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks5 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks5
-NumTrials4 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad4,'Value'),...
+NumTrials4 = sufnCalcNumberOfTrials(handles,handles.LetLoad4,...
     get(handles.NumLen4,'Value'),...
     get(handles.NumBlocks4,'Value'));
 
@@ -457,7 +460,7 @@ function NumLen4_Callback(hObject, eventdata, handles)
 % hObject    handle to NumLen4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-NumTrials4 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad4,'Value'),...
+NumTrials4 = sufnCalcNumberOfTrials(handles,handles.LetLoad4,...
     get(handles.NumLen4,'Value'),...
     get(handles.NumBlocks4,'Value'));
 
@@ -512,7 +515,7 @@ function NumBlocks5_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks5 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks5
-NumTrials5 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad5,'Value'),...
+NumTrials5 = sufnCalcNumberOfTrials(handles,handles.LetLoad5,...
     get(handles.NumLen5,'Value'),...
     get(handles.NumBlocks5,'Value'));
 
@@ -525,7 +528,7 @@ function NumLen5_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumLen5 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumLen5
-NumTrials5 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad5,'Value'),...
+NumTrials5 = sufnCalcNumberOfTrials(handles,handles.LetLoad5,...
     get(handles.NumLen5,'Value'),...
     get(handles.NumBlocks5,'Value'));
 
@@ -538,7 +541,7 @@ function LetLoad5_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns LetLoad5 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from LetLoad5
-NumTrials5 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad5,'Value'),...
+NumTrials5 = sufnCalcNumberOfTrials(handles,handles.LetLoad5,...
     get(handles.NumLen5,'Value'),...
     get(handles.NumBlocks5,'Value'));
 
@@ -593,7 +596,7 @@ function NumLen6_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumLen6 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumLen6
-NumTrials6 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad6,'Value'),...
+NumTrials6 = sufnCalcNumberOfTrials(handles,handles.LetLoad6,...
     get(handles.NumLen6,'Value'),...
     get(handles.NumBlocks6,'Value'));
 
@@ -604,7 +607,7 @@ function NumBlocks6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % --- Executes on selection change in LetLoad6.
-NumTrials6 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad6,'Value'),...
+NumTrials6 = sufnCalcNumberOfTrials(handles,handles.LetLoad6,...
     get(handles.NumLen6,'Value'),...
     get(handles.NumBlocks6,'Value'));
 
@@ -616,7 +619,7 @@ function LetLoad6_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns LetLoad6 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from LetLoad6
-NumTrials6 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad6,'Value'),...
+NumTrials6 = sufnCalcNumberOfTrials(handles,handles.LetLoad6,...
     get(handles.NumLen6,'Value'),...
     get(handles.NumBlocks6,'Value'));
 
@@ -670,7 +673,7 @@ function NumBlocks7_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks7 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks7
-NumTrials7 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad7,'Value'),...
+NumTrials7 = sufnCalcNumberOfTrials(handles,handles.LetLoad7,...
     get(handles.NumLen7,'Value'),...
     get(handles.NumBlocks7,'Value'));
 
@@ -683,7 +686,7 @@ function LetLoad7_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns LetLoad7 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from LetLoad7
-NumTrials7 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad7,'Value'),...
+NumTrials7 = sufnCalcNumberOfTrials(handles,handles.LetLoad7,...
     get(handles.NumLen7,'Value'),...
     get(handles.NumBlocks7,'Value'));
 
@@ -696,7 +699,7 @@ function NumLen7_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumLen7 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumLen7
-NumTrials7 = sufnCalcNumberOfTrials(handles,get(handles.LetLoad7,'Value'),...
+NumTrials7 = sufnCalcNumberOfTrials(handles,handles.LetLoad7,...
     get(handles.NumLen7,'Value'),...
     get(handles.NumBlocks7,'Value'));
 
@@ -1487,7 +1490,7 @@ function InterferencePilot_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 set(handles.InterferencePilot,'Checked','on')
 set(handles.Montpellier,'Checked','off')
-
+set(handles.PILOT,'Checked','off')
 DefaultInterferenceDIR(handles)
 
 % --------------------------------------------------------------------
@@ -1499,6 +1502,17 @@ function Montpellier_Callback(hObject, eventdata, handles)
 DefaultMontpellierDIR(handles)
 set(handles.Montpellier,'Checked','on')
 set(handles.InterferencePilot,'Checked','off')
+set(handles.PILOT,'Checked','off')
+% --------------------------------------------------------------------
+function PILOT_Callback(hObject, eventdata, handles)
+% hObject    handle to PILOT (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+DefaultPILOTDIR(handles)
+set(handles.Montpellier,'Checked','off')
+set(handles.InterferencePilot,'Checked','off')
+set(handles.PILOT,'Checked','on')
+
 % --------------------------------------------------------------------
 function ZeroAll_Callback(hObject, eventdata, handles)
 % hObject    handle to ZeroAll (see GCBO)

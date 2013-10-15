@@ -1,8 +1,10 @@
-function DefaultInterferenceDIR(handles)
+function DefaultPILOTDIR(handles)
+LetValues = {'[1 2 3 4 5 6]'};
 
 
 % Set up the initial values
-set(handles.LetLoad1,'Value',3);
+set(handles.LetLoad1,'value',1)
+set(handles.LetLoad1,'string',LetValues)
 set(handles.NumLen1,'Value',1);
 set(handles.NumBlocks1,'Value',4);
 set(handles.FB1,'Value',1);
@@ -14,8 +16,10 @@ NumTrials1 = sufnCalcNumberOfTrials(handles,handles.LetLoad1,...
 set(handles.NumTrials1,'String',num2str(NumTrials1));
 
 
-set(handles.LetLoad2,'Value',1);
-set(handles.NumLen2,'Value',5);
+set(handles.LetLoad2,'value',1)
+set(handles.LetLoad2,'string',LetValues)
+
+set(handles.NumLen2,'Value',1);
 set(handles.NumBlocks2,'Value',1);
 set(handles.FB2,'Value',1);
 set(handles.Instr2,'Value',0);
@@ -25,7 +29,9 @@ NumTrials2 = sufnCalcNumberOfTrials(handles,handles.LetLoad2,...
     get(handles.NumBlocks2,'Value'));
 set(handles.NumTrials2,'String',num2str(NumTrials2));
 
-set(handles.LetLoad3,'Value',3);
+set(handles.LetLoad3,'value',1)
+set(handles.LetLoad3,'string',LetValues)
+
 set(handles.NumLen3,'Value',5);
 set(handles.NumBlocks3,'Value',1);
 set(handles.FB3,'Value',1);
