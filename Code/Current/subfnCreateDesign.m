@@ -104,7 +104,7 @@ while madeDesignFlag
     trial = 1; % First trial
     % LETTERS
     % LOW
-    Trials{1} = WIPsubfnFillInDesignWithTrial(Design(trial,:), LetLists{trial}, NumLists{trial});
+    Trials{1} = subfnFillInDesignWithTrial(Design(trial,:), LetLists{trial}, NumLists{trial});
     % Instead of using a random order to pick from pick from the list without
     % replacement. So if a list is eligible use it and remove it. If it is not
     % put it back into the list.
@@ -118,8 +118,8 @@ while madeDesignFlag
             count = 0;
             while ~flag
                 count = count + 1;
-                %tempTrialPick = WIPsubfnFillInDesignWithTrial(Design(trial,:), LetLists{R(count)}, NumLists{R(count)});
-                tempTrialPick = WIPsubfnFillInDesignWithTrial(Design(trial,:), LetLists{count}, NumLists{count});
+                %tempTrialPick = subfnFillInDesignWithTrial(Design(trial,:), LetLists{R(count)}, NumLists{R(count)});
+                tempTrialPick = subfnFillInDesignWithTrial(Design(trial,:), LetLists{count}, NumLists{count});
                 flag = subfnCompareTrials(PreviousTrialOneStep, tempTrialPick);
                 if flag
                     % remove this trial from the list

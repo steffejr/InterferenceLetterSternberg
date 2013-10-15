@@ -457,6 +457,7 @@ TrialTimes(1,1) = GetSecs;
 % Wait for the intro delay to elapse
 TrialTimes(2,:) = WaitSecs('UntilTime',TrialTimes(1,1) + IntroDelay);
 %%
+NumberRows = 2;
 for trialIndex = 1:NTrials 
     % The experiment is created using the sufnCreateDesign. This function
     % outputs a structure of Trials. This part of the script cycles over
@@ -470,6 +471,7 @@ for trialIndex = 1:NTrials
     % Then present letters
     
     % PREPARE THE ENCODING SET OF LETTERS
+    
     % One Letter List
      if length(Trials{trialIndex}.LetList) == 1
          LetEncodeString = ['*' CharactersBetweenLetters Trials{trialIndex}.LetList(1) CharactersBetweenLetters ...
@@ -485,8 +487,15 @@ for trialIndex = 1:NTrials
         LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
             CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
             '*' CharactersBetweenLetters '*' CharactersBetweenLetters '*'];
+     end
+         % Four Letter List 
+    if length(Trials{trialIndex}.LetList) == 4
+        LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
+            CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
+            Trials{trialIndex}.LetList(4) CharactersBetweenLetters Trials{trialIndex}.LetList(5) ...
+            CharactersBetweenLetters Trials{trialIndex}.LetList(6)];
     end
-    % Six Letter List 
+     % Six Letter List
     if length(Trials{trialIndex}.LetList) == 6
         LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
             CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
