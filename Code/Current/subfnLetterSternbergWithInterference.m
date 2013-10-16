@@ -194,7 +194,7 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 % Setup Experiment
 % --------------------------------------------------------
-[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
+rt[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
 NTrials = length(Trials);
 
 % --------------------------------------------------------
@@ -316,6 +316,7 @@ c=computer;
 if strcmpi(c,'PCWIN')>0 || strcmpi(c,'PCWIN64')>0
     sysDefault=0;
 elseif ~isempty(strfind(c,'MAC'))
+    
     sysDefault=1;
 else
     disp('System type unknown')
@@ -346,9 +347,11 @@ rect = []; %    USE THSI FOR THE FULL SCREEN
 screenNumber = max(Screen('Screens'));
 
 TopLeft = [30 30];
-WindowSize = [400 300];
+WindowSize = [600 500];
+
 MainWindowRect = []; % Full screen
-%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+
 [mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 
 %[mainWindow,rect] = Screen(mainScreen,'OpenWindow',grey,rect);
@@ -658,7 +661,8 @@ for trialIndex = 1:NTrials
                         % DUMP the data collected up until now
                         [PathName FileName] = fileparts(OutFilePath);
                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
-                        str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                        str=sprintf('save %s %s %s\n',OutFilePath,'Trials','TrialTimes');
+                        %str =  ['save(OutFilePath,''Trials TrialTimes'')'];
                         eval(str)
                         sca
                         error('ESCAPE Pressed');
@@ -725,7 +729,8 @@ for trialIndex = 1:NTrials
                         % DUMP the data collected up until now
                         [PathName FileName] = fileparts(OutFilePath);
                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
-                        str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                        str=sprintf('save %s %s %s\n',OutFilePath,'Trials','TrialTimes');
+                        %str =  ['save(OutFilePath,''Trials TrialTimes'')'];
                         eval(str)
                         sca
                         error('ESCAPE Pressed');

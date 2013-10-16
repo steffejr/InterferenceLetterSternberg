@@ -1,0 +1,61 @@
+% Lines that start with the percent symbol are ignored
+[Trigger1]
+r
+[Trigger2]
+t
+[TriggerText1] % This is also ignored
+Press r\nthen t to start
+[TriggerText2]
+Waiting for \n t to start
+[Location]% Options are: Columbia/Montpellier
+PILOT
+[Function]% Options are: Training/MRI/All
+All
+[Font1]% Courier New/Cursif
+Courier New
+[Font2] % Courier New/Cursif
+Courier New
+[FontSize]
+60
+[Buttons_NumberNo]
+1234z
+[Buttons_NumberYes]
+5678/
+[Buttons_LetterNo]
+1234z
+[Buttons_LetterYes]
+5678/
+[IntroDelay]       
+3.000
+[EncodeTime]
+2.000
+[PreRetTime]
+0.500
+[RetentionTime]
+1.000
+[PostRetTime]
+0.500
+[ProbeTime]
+2.000
+[FinalDelay]
+10.23
+[WaitTime]% Wait time for instructions
+6.000
+[LetToExclude] % Letters to exclude
+AEIOUCPSVWXZ
+[ScreenResolution]%expected screen resolution. Set this to -1 to ignore
+1280 800
+[FeedbackNumbersCorrect]
+Numbers: Correct
+[FeedbackNumbersIncorrect]
+Numbers: Incorrect
+[FeedbackNumbersTimeout]
+Numbers: Time-out
+[FeedbackLettersCorrect]
+Letters: Correct
+[FeedbackLettersIncorrect]
+Letters: Incorrect
+[FeedbackLettersTimeout]
+Letters: Time-out
+[ThankYouText]
+Thank You

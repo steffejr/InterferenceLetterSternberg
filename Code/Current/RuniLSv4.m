@@ -84,7 +84,9 @@ ProgramPath = fileparts(s);
 ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
-[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_PILOTConfig.txt'),handles);
+
 guidata(hObject, handles);
 % Set up the initial values
 switch handles.Location
@@ -95,8 +97,8 @@ switch handles.Location
         DefaultMontpellierDIR(handles)
         set(handles.Montpellier,'Checked','on')
     case 'PILOT'
-        DefaultMontpellierDIR(handles)
-        set(handles.Montpellier,'Checked','on')
+        DefaultPILOTDIR(handles)
+        set(handles.PILOT,'Checked','on')
     otherwise
         DefaultZeroValues(handles)
 end

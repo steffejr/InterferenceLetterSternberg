@@ -119,6 +119,8 @@ while madeDesignFlag
             while ~flag
                 count = count + 1;
                 %tempTrialPick = subfnFillInDesignWithTrial(Design(trial,:), LetLists{R(count)}, NumLists{R(count)});
+              % This next line causes the error which triggers the end of
+              % this attempt and to create a new list of letters.
                 tempTrialPick = subfnFillInDesignWithTrial(Design(trial,:), LetLists{count}, NumLists{count});
                 flag = subfnCompareTrials(PreviousTrialOneStep, tempTrialPick);
                 if flag
@@ -135,6 +137,7 @@ while madeDesignFlag
         end
         madeDesignFlag = 0;
         fprintf('Design made successfully!\n');
+        
     catch me
         madeDesignFlag = madeDesignFlag + 1;
         if madeDesignFlag > NumberAttemptsToCreateDesign

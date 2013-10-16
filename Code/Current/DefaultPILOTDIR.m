@@ -1,12 +1,17 @@
 function DefaultPILOTDIR(handles)
-LetValues = {'[1 2 3 4 5 6]'};
+
+% The task will not work with 8 letter stimulus sets and only 14 letters to
+% choose from. Therefore, only 7 letters can be used or more letters need
+% to be added to the elibile letters list.
+LetValues = {'[1 2 3 4 5 6 7]'};
 
 
 % Set up the initial values
 set(handles.LetLoad1,'value',1)
 set(handles.LetLoad1,'string',LetValues)
+
 set(handles.NumLen1,'Value',1);
-set(handles.NumBlocks1,'Value',4);
+set(handles.NumBlocks1,'Value',1);
 set(handles.FB1,'Value',1);
 set(handles.Instr1,'Value',1);
 set(handles.run1Success,'Value',0);
