@@ -194,7 +194,7 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 % Setup Experiment
 % --------------------------------------------------------
-rt[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
+[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
 NTrials = length(Trials);
 
 % --------------------------------------------------------
@@ -234,7 +234,7 @@ PreRetTime =        handles.PreRetTime;
 RetentionTime =     handles.RetentionTime;
 PostRetTime =       handles.PostRetTime;
 ProbeTime =         handles.ProbeTime;
-FinalDelay =          handles.FinalDelay;
+FinalDelay =        handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
 % ITI = subfnCreateITI(NTrials);
@@ -300,7 +300,7 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % --------------------------------------------------------
 % The end period will be set based on the expected ITI values and the number of
 % trials.
-ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
+ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay
 % ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
 % ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
 % % Check to make sure that the ITI parameters were not changed without
@@ -816,7 +816,7 @@ WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
 
 %% Display thank you screen for five seconds.
 [nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
-ActualDuration = Screen('Flip',mainWindow);
+ActualDuration = Screen('Flip',mainWindow)
 WaitSecs(3)
 Screen('Flip',mainWindow);
 clc

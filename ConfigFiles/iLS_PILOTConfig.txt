@@ -28,15 +28,15 @@ Courier New
 [IntroDelay]       
 3.000
 [EncodeTime]
-2.000
+3.000
 [PreRetTime]
 0.500
 [RetentionTime]
-1.000
+4.000
 [PostRetTime]
 0.500
 [ProbeTime]
-2.000
+3.000
 [FinalDelay]
 10.23
 [WaitTime]% Wait time for instructions
