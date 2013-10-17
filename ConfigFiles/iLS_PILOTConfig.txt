@@ -12,7 +12,7 @@ PILOT
 [Function]% Options are: Training/MRI/All
 All
 [Font1]% Courier New/Cursif
-Courier New
+Arial
 [Font2] % Courier New/Cursif
 Courier New
 [FontSize]
@@ -26,7 +26,7 @@ Courier New
 [Buttons_LetterYes]
 5678/
 [IntroDelay]       
-3.000
+7.000
 [EncodeTime]
 3.000
 [PreRetTime]
@@ -42,7 +42,7 @@ Courier New
 [WaitTime]% Wait time for instructions
 6.000
 [LetToExclude] % Letters to exclude
-AEIOUCPSVWXZ
+AEIOU
 [ScreenResolution]%expected screen resolution. Set this to -1 to ignore
 1280 800
 [FeedbackNumbersCorrect]

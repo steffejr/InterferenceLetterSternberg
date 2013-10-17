@@ -583,7 +583,18 @@ for trialIndex = 1:NTrials
                 case 3
                     LetEncodeString = sprintf('%s\n\n%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2,LetEncodeStringR3);
             end
-            LetEncodeString
+        case 9
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(4),CharBetLet,Trials{trialIndex}.LetList(5),CharBetLet,Trials{trialIndex}.LetList(6));
+            LetEncodeStringR3 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(7),CharBetLet,Trials{trialIndex}.LetList(8),CharBetLet,Trials{trialIndex}.LetList(9));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2,LetEncodeStringR3);
+            end
     end
     LetProbeString = Trials{trialIndex}.LetProbe;
     %NumString = [Trials{trialIndex}.NumList ' = ' Trials{trialIndex}.NumProbe];
