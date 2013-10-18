@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 05-Apr-2013 07:55:49
+% Last Modified by GUIDE v2.5 18-Oct-2013 11:00:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1976,3 +1976,10 @@ function CheckKeyboard_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     subfnCheckKeyboardStatus(handles)
+
+
+% --------------------------------------------------------------------
+function PILOT_Callback(hObject, eventdata, handles)
+% hObject    handle to PILOT (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
