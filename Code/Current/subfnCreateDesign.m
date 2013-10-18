@@ -93,6 +93,41 @@ Design = Design(randperm(NTrials),:);
 % of the letters.
 % Ensure that the current trial's probe letter WAS NOT included in the
 % previous set.
+%
+% It is also possible that with large letter sets the design itself cannot
+% be fullfilled. An example is 14 possible letters with consecutive trials 
+% of 7 or 8 letter set sizes.
+%
+% With a max letter load of 8 and a 15 leter pool 64 trials can be created
+% but not more.
+%
+%AvailableLetters = 26 - length(handles.LetToExclude);
+%NeededLettersPerTrial = Design(:,1) + 1;
+%LeftOverLetters = AvailableLetters - NeededLettersPerTrial;
+%[Design(2:end,1) LeftOverLetters(1:end-1) NeededLettersPerTrial(2:end)]
+flagDesign = 1;
+DesignCount = 1;
+while flagDesign == 1 && DesignCount < 10000
+    Design = Design(randperm(NTrials),:);
+    AvailableLetters = 26 - length(handles.LetToExclude);
+    NeededLettersPerTrial = Design(:,1) + 1;
+    LeftOverLetters = AvailableLetters - NeededLettersPerTrial;
+
+
+    if ~sum(([LeftOverLetters(1:end-1) - NeededLettersPerTrial(2:end)])<0)>0
+        flagDesign = 0;
+    end
+    DesignCount = DesignCount + 1;
+end
+if DesignCount == 10000
+    errordlg('Tried permuting the design matrix 1000 times and could not find a good trial order.')
+    Design = [];
+    return
+end
+fprintf(1,'\n\nNumber of Design permutations: %d\n',DesignCount);
+%[Design(2:end,1) LeftOverLetters(1:end-1) NeededLettersPerTrial(2:end)]
+
+
 % Create a random list of numbers
 NTotal = min([length(LetLists) length(NumLists)]);
 %R = randperm(NTotal);
@@ -102,8 +137,14 @@ madeDesignFlag = 1;
 while madeDesignFlag
     % Traverse the Let/Num Lists and ensure that successive probes are not in the previous lists.
     trial = 1; % First trial
-    % LETTERS
-    % LOW
+    % Each time this program fails to create a design, select a new order
+    % of load levels and try again.
+    % The restrictions are:
+    %   current probe cannot be in the previous trial letter set
+    %   current trial letter set cannot include letters from the previous
+    %   probe or letter set.
+    %   current probe cannot equal previous probe
+    % 
     Trials{1} = subfnFillInDesignWithTrial(Design(trial,:), LetLists{trial}, NumLists{trial});
     % Instead of using a random order to pick from pick from the list without
     % replacement. So if a list is eligible use it and remove it. If it is not

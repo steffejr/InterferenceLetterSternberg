@@ -1,4 +1,6 @@
-BaseDir = 'C:\Users\steffener\Dropbox\SteffenerColumbia\Scripts\InterferenceLetterSternberg'
+%BaseDir = 'C:\Users\steffener\Dropbox\SteffenerColumbia\Scripts\InterferenceLetterSternberg'
+BaseDir = '/Users/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg';
+
 ConfigFile = fullfile(BaseDir,'ConfigFiles','iLS_PILOTConfig.txt')
 DesignDir = fullfile(BaseDir,'SPMDesignJobs');
 [handles] = subfnReadConfigFile(ConfigFile);
@@ -14,10 +16,10 @@ FinalDelay =          handles.FinalDelay;
 WaitTime = handles.WaitTime;
 
 
-NScan = 374;
-NTrials=48;
-NDesigns = 5;
-NITIs = 100;
+NScan = 320;
+NTrials = 48;
+NDesigns = 1;
+NITIs = 50;
 
 NumberListLength = 0;
 LoadLevels = [1 2 3 4 5 6 7 8];
@@ -30,7 +32,7 @@ OptimalEff = zeros(1,6);
 
 spm_jobman('initcfg')
 AllOptimalTrials = cell(NDesigns,1);
-AllOptimalEff = cell(NDesigns,1);
+AllOptimalEff = [];
 AllOptimalITI = cell(NDesigns,1);
 for j = 1:NDesigns
     fprintf(1,'Working on Design %d of %d\n',j,NDesigns);
@@ -109,10 +111,11 @@ for j = 1:NDesigns
             OptimalITI = ITI;
             OptimalTrials = Trials;
         end
+        AllOptimalEff(k,:) = eff;
     end
     AllOptimalITI{j} = OptimalITI;
     AllOptimalTrials{j} = Trials;
-    AllOptimalEff{j} = OptimalEff;
+    
 end
 
 %             SumEff(kk,mm,jj,1)=sum(eff([7 8 9 10 11 18 19 20 21 22]));
@@ -123,3 +126,4 @@ end
 
 
 sum(Dur)*NTrials+sum(OptimalITI)+IntroDelay+FinalDelay
+OptimalEff

@@ -1,4 +1,4 @@
-function Trials = WIPsubfnFillInDesignWithTrial(DesignRow, LetTrial, NumTrial)
+function Trials = subfnFillInDesignWithTrial(DesignRow, LetTrial, NumTrial)
 % Cycle through the columns of the design matrix and map the load values to
 % the different letter list lengths. Add a feature to also work with letter
 % list lengths of 3

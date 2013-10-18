@@ -84,8 +84,8 @@ ProgramPath = fileparts(s);
 ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
-%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
-[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_PILOTConfig.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_PILOTConfig.txt'),handles);
 
 guidata(hObject, handles);
 % Set up the initial values
