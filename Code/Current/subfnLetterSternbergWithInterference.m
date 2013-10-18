@@ -1,11 +1,14 @@
-function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog,  PresentInstructionsFlag,FeedbackFlag,NumberListLength,NRepeats,LoadLevels,handles)
+function [ExperimentParameters, OutString] = subfnLetterSternbergWithInterference(demog,  PresentInstructionsFlag,FeedbackFlag,NumberListLength,NRepeats,LoadLevels,handles)
 %% Task description for Letter Sternberg
 % The LS task will have two load levels of 2 and 6 letters along with a
 % retention period and a probe phase. The retention phase will have
 % interference in it. The interference will be the presentation of an
-% addtion task where subjects see either 
+% addtion task where subjects see either
 %
 %% TO DO LIST
+% 10/10/13
+% Add additional letter set sizes
+%
 % 10/14/11
 % DONE --Trying to make sure that no consecutive trials have the same letters in
 %   their study sets and that the same probe letter is not consecutive. This
@@ -16,7 +19,7 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 %   seem to fail all the time. This is all done in the subfnCreateDesign.
 
 % * TODO-- Add an ITI for the interference version
-% * TODO -- Add a pull-down for selecting the type of ITI distribution you would like.  
+% * TODO -- Add a pull-down for selecting the type of ITI distribution you would like.
 % * DONE --Work on the ITI distributions so they are the same as for the PsyScope
 % LS version.
 % * DONE -- finish creating and testing the design matrices for SPM.
@@ -24,7 +27,7 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 %   This seems to be the result of the RT modeling of this pahse of the
 %   experiment. I have not been able to come with any improvement.
 %
-% * DONE--Edit Create Design so that it outputs the correct number of trials 
+% * DONE--Edit Create Design so that it outputs the correct number of trials
 %   based on the letter load and the number load instead of blocks of 16.
 % * DONE--Add the ability to enter sex, age and date of birth on the GUI. These
 % values need to be transfered to the saved data file also.
@@ -35,7 +38,7 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 
 % * There is a drift in time, which I believe is due to the feedback check
 % * The subfnCorrectResponses needs to be updated based on all the
-%       changes in the current program, (see Feedback section). 
+%       changes in the current program, (see Feedback section).
 % * Check whether the ITI optimizes the detection ability of the GLM fMRI
 %       design matrix
 % * DONE: Need to add a structure containing experimental details, did they see
@@ -52,7 +55,7 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 %       response furing the main task. During the instruction phase it
 %       only checks before the screen text changes. Therefore, you will
 %       need to press and hold the escape key until the program stops.
-% * DONE: NEED TO DECIDE ON BEST SPACING. 
+% * DONE: NEED TO DECIDE ON BEST SPACING.
 %       Add horizontal space between the letters and numbers when displayed
 % * DONE: Add trigger in beginning
 % * DONE: Figure out why windows 10 and 11 are opened
@@ -75,7 +78,7 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 %       incorporated into a different version of this with changes to the
 %       ITI and wait times.
 % * DONE: Write out results to file
-%       - I would like to write the data out to a MatLab structure that 
+%       - I would like to write the data out to a MatLab structure that
 %       would make it easy to create design matrices out of. To do this I will
 %       append timing and response data to the existing Trials Structure. It
 %       would be nice to know which trials corresponded to each of the
@@ -85,9 +88,9 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 % * Check with Brian about the criteria for choosing the letters.
 % * DONE: How many practice blocks? 6 with feedback, 1 without
 % * How many with feedback, how many without?
-% * DONE: This is not applicable because all letters are visually presented at the same time. 
+% * DONE: This is not applicable because all letters are visually presented at the same time.
 %      Minimize the number of times that the probe is the last item in the
-%      list. See Altamura et al. 2007. 
+%      list. See Altamura et al. 2007.
 % * DONE: I am using a list that Brian provided which excludes X. And I am
 %       using a SERIF font (Courier New) which allows easy distinction of a
 %       lowercase L.
@@ -97,7 +100,7 @@ function [ExperimentParameters OutString] = subfnLetterSternbergWithInterference
 %   each of which has text on it.
 % * DONE: Also make sure that the total task duration is of a fixed duration.
 %   This is an issue because of the random ITI. Any variance in the task
-%   duration will be absorbed with the end delay period. 
+%   duration will be absorbed with the end delay period.
 % * DONE: Add a "Thank you / finished screen at the end.
 %
 % * Known issues
@@ -141,7 +144,7 @@ TriggerText2  = handles.TriggerText2;
 % YES for iLS
 % NO for Montpellier
 if strcmp(handles.Location,'Montpellier')
-%if strcmp(get(handles.Montpellier,'Checked'),'on')
+    %if strcmp(get(handles.Montpellier,'Checked'),'on')
     MontpellierFlag = 1;
 else
     MontpellierFlag = 0;
@@ -161,9 +164,9 @@ if ~exist(fullfile(ProgramPath,'Results'))
 end
 OutPath = fullfile(ProgramPath,'Results');
 
-% --------------------------------------------------    
+% --------------------------------------------------
 % date
-% -------------------------------------------------- 
+% --------------------------------------------------
 p.clock=clock;
 yy=num2str(p.clock(1));yy=yy(3:4);
 mm=num2str(p.clock(2));%mm=mm(3:4);
@@ -207,7 +210,7 @@ ScreenPos = [30 50];
 width = 800;
 ScreenSize = [width 0.025*width];
 
- 
+
 % Create handles.FontSize based on a proportion of the Window size
 
 % --------------------------------------------------------
@@ -222,7 +225,7 @@ ScreenSize = [width 0.025*width];
 % stimuli. Therefore, stimuli for the next task phase are prepared in the
 % previous task phase. This creates timing precision on the order of
 % 10^(-7) seconds.
-% 
+%
 % The timings will adjust based on teh study selected
 
 IntroDelay =        handles.IntroDelay;
@@ -231,7 +234,7 @@ PreRetTime =        handles.PreRetTime;
 RetentionTime =     handles.RetentionTime;
 PostRetTime =       handles.PostRetTime;
 ProbeTime =         handles.ProbeTime;
-FinalDelay =          handles.FinalDelay;
+FinalDelay =        handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
 % ITI = subfnCreateITI(NTrials);
@@ -273,14 +276,14 @@ for i = 1:NTrials
     Trials{i}.LetterResponseButton = cell(1,10);
     % whether this the YES coded button was pressed, the NO button or
     % something unknown
-    Trials{i}.LetterResponseCode = ''; 
+    Trials{i}.LetterResponseCode = '';
     % whether the respsponse was a hit(HT), a miss(MS), a false alarm(FA)
     % or a correct rejection(CR)
-    Trials{i}.LetterResponseAcc = ''; 
+    Trials{i}.LetterResponseAcc = '';
     Trials{i}.NumberResponseTime = ones(1,10)*(-99);
     Trials{i}.NumberResponseButton = cell(1,10);
     Trials{i}.NumberResponseCode = -99;
-    Trials{i}.NumberResponseAcc = ''; 
+    Trials{i}.NumberResponseAcc = '';
 end
 
 ExpectedWithinTrialElaspsedTimes = [];
@@ -297,7 +300,7 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % --------------------------------------------------------
 % The end period will be set based on the expected ITI values and the number of
 % trials.
-ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
+ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay
 % ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
 % ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
 % % Check to make sure that the ITI parameters were not changed without
@@ -312,7 +315,8 @@ ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + F
 c=computer;
 if strcmpi(c,'PCWIN')>0 || strcmpi(c,'PCWIN64')>0
     sysDefault=0;
-elseif strcmpi(c,'MAC')>0 || strcmpi(c,'MACI')>0 || strcmpi(c,'MACI64')>0
+elseif ~isempty(strfind(c,'MAC'))
+    
     sysDefault=1;
 else
     disp('System type unknown')
@@ -336,16 +340,18 @@ color = grey;
 mainScreen = 0;
 
 CharactersBetweenNumbers = '  '; % for the number list display, either spaces or PLUS signs
-CharactersBetweenLetters = '  '; % for the number list display, either spaces or PLUS signs
+CharBetLet = '  '; % for the number list display, either spaces or PLUS signs
 
 %rect = [ScreenPos ScreenSize]; % USE THIS FOR JUST A WINDOW
 rect = []; %    USE THSI FOR THE FULL SCREEN
 screenNumber = max(Screen('Screens'));
 
 TopLeft = [30 30];
-WindowSize = [400 300];
+WindowSize = [600 500];
+
 MainWindowRect = []; % Full screen
-%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+
 [mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 
 %[mainWindow,rect] = Screen(mainScreen,'OpenWindow',grey,rect);
@@ -366,7 +372,7 @@ RectCue 		= CenterRect(RectCueSize,rect);
 
 % Make Erase Text
 Screen('FillRect',mainWindow,grey,RectCue);
-    
+
 % ----------------------------------------------------------------------
 % Misc I DONT KNOW WHAT THIS DOES
 % ----------------------------------------------------------------------
@@ -388,18 +394,18 @@ HideCursor;
 % % -----------------------------------------------------------------------
 % % 			Start Trials
 % % -----------------------------------------------------------------------
-  Screen('TextFont',mainWindow,FontName1);
-  Screen('TextSize',mainWindow,FontSize);
-    
+Screen('TextFont',mainWindow,FontName1);
+Screen('TextSize',mainWindow,FontSize);
+
 %
 % --------------------------------------------------------
 % Present Instructions
 % --------------------------------------------------------
 if PresentInstructionsFlag
     if MontpellierFlag
-        subfnInstructionsFrench(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharactersBetweenLetters,mainWindow,handles,LoadLevels);
+        subfnInstructionsFrench(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharBetLet,mainWindow,handles,LoadLevels);
     else
-        subfnInstructionsEnglish(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharactersBetweenLetters,mainWindow,handles,LoadLevels);
+        subfnInstructionsEnglish(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharBetLet,mainWindow,handles,LoadLevels);
     end
 end
 % --------------------------------------------------------
@@ -454,39 +460,141 @@ TrialTimes(1,1) = GetSecs;
 % Wait for the intro delay to elapse
 TrialTimes(2,:) = WaitSecs('UntilTime',TrialTimes(1,1) + IntroDelay);
 %%
-for trialIndex = 1:NTrials 
+% Decide on the number of letter presentation rows based on the maximum
+% number of letter sto present.
+NLetRows = ceil(max(LoadLevels)/3);
+for trialIndex = 1:NTrials
     % The experiment is created using the sufnCreateDesign. This function
     % outputs a structure of Trials. This part of the script cycles over
     % these trials and presents them.
-    % 
+    %
     % The Encoding Letter Strings should be prepared duting the Inter-trial
     % interval. In order to do this the Initial delay period needs to be
     % appended to the begining of the ITI list.
     % First prepare letters
-    % Then wait 
+    % Then wait
     % Then present letters
     
     % PREPARE THE ENCODING SET OF LETTERS
-    % Low Letter List
-     if length(Trials{trialIndex}.LetList) == 1
-         LetEncodeString = ['*' CharactersBetweenLetters Trials{trialIndex}.LetList(1) CharactersBetweenLetters ...
-             '*\n\n*' CharactersBetweenLetters '*' CharactersBetweenLetters '*'];
-    end
-    if length(Trials{trialIndex}.LetList) == 2
-         LetEncodeString = ['*' CharactersBetweenLetters Trials{trialIndex}.LetList(1) CharactersBetweenLetters ...
-             '*\n\n*' CharactersBetweenLetters Trials{trialIndex}.LetList(2) CharactersBetweenLetters '*'];
-    end
-     if length(Trials{trialIndex}.LetList) == 3
-        LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
-            CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
-            '*' CharactersBetweenLetters '*' CharactersBetweenLetters '*'];
-    end
-    % High Letter List 
-    if length(Trials{trialIndex}.LetList) == 6
-        LetEncodeString = [Trials{trialIndex}.LetList(1) CharactersBetweenLetters Trials{trialIndex}.LetList(2) ...
-            CharactersBetweenLetters Trials{trialIndex}.LetList(3) '\n\n' ...
-            Trials{trialIndex}.LetList(4) CharactersBetweenLetters Trials{trialIndex}.LetList(5) ...
-            CharactersBetweenLetters Trials{trialIndex}.LetList(6)];
+    % Recoding the presentation of letters based on how many rows there
+    % will be and therefore how many stars to include.
+    % One Letter List
+    NLetters = length(Trials{trialIndex}.LetList);
+    switch NLetters
+        case 1
+            LetEncodeString = sprintf('%s%s%s%s%s','*',CharBetLet,Trials{trialIndex}.LetList(1),CharBetLet,'*');
+            switch NLetRows
+                case 1
+                case 2
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s',LetEncodeString,'*',CharBetLet,'*',CharBetLet,'*');
+                case 3
+                    LetEncodeString = sprintf('%s%s%s%s%s\n\n%s','*',CharBetLet,'*',CharBetLet,'*',LetEncodeString);
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s',LetEncodeString,'*',CharBetLet,'*',CharBetLet,'*');
+            end
+            
+            % Two Letter List
+        case 2
+            LetEncodeString = ['*' CharBetLet Trials{trialIndex}.LetList(1) CharBetLet ...
+                '*\n\n*' CharBetLet Trials{trialIndex}.LetList(2) CharBetLet '*'];
+            LetEncodeString = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,'*',CharBetLet,Trials{trialIndex}.LetList(2));
+            switch NLetRows
+                case 1
+                case 2
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s',LetEncodeString,'*',CharBetLet,'*',CharBetLet,'*');
+                case 3
+                    LetEncodeString = sprintf('%s%s%s%s%s\n\n%s','*',CharBetLet,'*',CharBetLet,'*',LetEncodeString);
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s',LetEncodeString,'*',CharBetLet,'*',CharBetLet,'*');
+            end
+            
+            % Three Letter List
+        case 3
+            LetEncodeString = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            switch NLetRows
+                case 1
+                case 2
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s',LetEncodeString,'*',CharBetLet,'*',CharBetLet,'*');
+                case 3
+                    LetEncodeString = sprintf('%s%s%s%s%s\n\n%s','*',CharBetLet,'*',CharBetLet,'*',LetEncodeString);
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s',LetEncodeString,'*',CharBetLet,'*',CharBetLet,'*');
+            end
+            
+            % Four Letter List
+        case 4
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,'*',CharBetLet,Trials{trialIndex}.LetList(2));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(3),CharBetLet,'*',CharBetLet,Trials{trialIndex}.LetList(4));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    LetEncodeString = sprintf('%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2);
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s\n\n%s',LetEncodeStringR1,'*',CharBetLet,'*',CharBetLet,'*',LetEncodeStringR2);
+            end
+            
+            % Five Letter List
+        case 5
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(4),CharBetLet,'*',CharBetLet,Trials{trialIndex}.LetList(5));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    LetEncodeString = sprintf('%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2);
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s\n\n%s',LetEncodeStringR1,'*',CharBetLet,'*',CharBetLet,'*',LetEncodeStringR2);
+            end
+            
+            % Six Letter List
+        case 6
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(4),CharBetLet,Trials{trialIndex}.LetList(5),CharBetLet,Trials{trialIndex}.LetList(6));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    LetEncodeString = sprintf('%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2);
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s%s%s%s%s\n\n%s',LetEncodeStringR1,'*',CharBetLet,'*',CharBetLet,'*',LetEncodeStringR2);
+            end
+            % Seven Letter List
+        case 7
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s','*',CharBetLet,Trials{trialIndex}.LetList(4),CharBetLet,'*');
+            LetEncodeStringR3 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(5),CharBetLet,Trials{trialIndex}.LetList(6),CharBetLet,Trials{trialIndex}.LetList(7));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2,LetEncodeStringR3);
+            end
+            
+            % Eight Letter List
+        case 8
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(4),CharBetLet,'*',CharBetLet,Trials{trialIndex}.LetList(5));
+            LetEncodeStringR3 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(6),CharBetLet,Trials{trialIndex}.LetList(7),CharBetLet,Trials{trialIndex}.LetList(8));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2,LetEncodeStringR3);
+            end
+        case 9
+            LetEncodeStringR1 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(1),CharBetLet,Trials{trialIndex}.LetList(2),CharBetLet,Trials{trialIndex}.LetList(3));
+            LetEncodeStringR2 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(4),CharBetLet,Trials{trialIndex}.LetList(5),CharBetLet,Trials{trialIndex}.LetList(6));
+            LetEncodeStringR3 = sprintf('%s%s%s%s%s',Trials{trialIndex}.LetList(7),CharBetLet,Trials{trialIndex}.LetList(8),CharBetLet,Trials{trialIndex}.LetList(9));
+            switch NLetRows
+                case 1
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 2
+                    error('Mismatch between number of letters to present and allowable rows to present one.')
+                case 3
+                    LetEncodeString = sprintf('%s\n\n%s\n\n%s',LetEncodeStringR1,LetEncodeStringR2,LetEncodeStringR3);
+            end
     end
     LetProbeString = Trials{trialIndex}.LetProbe;
     %NumString = [Trials{trialIndex}.NumList ' = ' Trials{trialIndex}.NumProbe];
@@ -519,16 +627,16 @@ for trialIndex = 1:NTrials
     TrialTimes(trialIndex + 2,1) = WaitSecs('UntilTime',TrialTimes(trialIndex + 1,end) + ITI(trialIndex));
     % Present Encode Letters
     Screen('Flip',mainWindow);
-  
+    
     % Prepare the fixation cross
-     [FIXnx, FIXny, FIXbbox] = DrawFormattedText(mainWindow, ' ', 'center', 'center', 0,[],[],[],[LineSpacing]);
+    [FIXnx, FIXny, FIXbbox] = DrawFormattedText(mainWindow, ' ', 'center', 'center', 0,[],[],[],[LineSpacing]);
     % Wait for the Encoding period
     % ------------------------------------------------
     % WAIT 2
-     TrialTimes(trialIndex + 2,2) = WaitSecs('UntilTime',TrialTimes(trialIndex + 2,1) + ExpectedWithinTrialElaspsedTimes(2));
-     % Display the fixation cross
+    TrialTimes(trialIndex + 2,2) = WaitSecs('UntilTime',TrialTimes(trialIndex + 2,1) + ExpectedWithinTrialElaspsedTimes(2));
+    % Display the fixation cross
     Screen('Flip',mainWindow);
-   
+    
     % ------------------------------------------------
     % Prepare the Display of the Retention period test
     [nx, ny, bbox] = DrawFormattedText(mainWindow, NumString, 'center', 'center', 0);
@@ -537,24 +645,24 @@ for trialIndex = 1:NTrials
     % WAIT 3
     TrialTimes(trialIndex + 2,3) = WaitSecs('UntilTime',TrialTimes(trialIndex + 2,1) + ExpectedWithinTrialElaspsedTimes(3));
     % ------------------------------------------------
-
+    
     % Display the retention test
     Screen('Flip',mainWindow);
     % Prepare the fixation cross
-     [FIXnx, FIXny, FIXbbox] = DrawFormattedText(mainWindow, ' ', 'center', 'center', 0,[],[],[],[LineSpacing]);
-     % Check for user response
+    [FIXnx, FIXny, FIXbbox] = DrawFormattedText(mainWindow, ' ', 'center', 'center', 0,[],[],[],[LineSpacing]);
+    % Check for user response
     % Use a WHILE loop that will continually check for keyboard presses
     % once every 5 millisends, this is built into the KbCCheck function
     % If a button is pressed it is printed to the screen. The WHILE loop
     % will be come false if the time when KbCheck executes exceeds the
-    % ProbeTime. 
+    % ProbeTime.
     timeSecs = 0;
     PressCount = 1;
     while (TrialTimes(trialIndex + 2,3) + RetentionTime) > timeSecs
         [ keyIsDown, timeSecs, keyCode ] = KbCheck;
         if keyIsDown
-             Key = KbName(find(keyCode));
-             if char(Key(1)) ~= Trigger2
+            Key = KbName(find(keyCode));
+            if char(Key(1)) ~= Trigger2
                 Trials{trialIndex}.NumberResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,3);
                 Trials{trialIndex}.NumberResponseButton{PressCount} = KbName(keyCode);
                 % Break if the ESCAPE ket is pressed
@@ -564,26 +672,27 @@ for trialIndex = 1:NTrials
                         % DUMP the data collected up until now
                         [PathName FileName] = fileparts(OutFilePath);
                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
-                        str =  ['save(OutFilePath,''Trials'', ''TrialTimes'')'];
+                        str=sprintf('save %s %s %s\n',OutFilePath,'Trials','TrialTimes');
+                        %str =  ['save(OutFilePath,''Trials TrialTimes'')'];
                         eval(str)
                         sca
                         error('ESCAPE Pressed');
                         
                     end
                 end
-             end
-             % If the user holds down a key, KbCheck will report multiple events.
+            end
+            % If the user holds down a key, KbCheck will report multiple events.
             % To condense multiple 'keyDown' events into a single event, we wait until all
-            % keys have been released.            
+            % keys have been released.
             while KbCheck; end
             PressCount = PressCount + 1;
         end
     end
     TrialTimes(trialIndex + 2,4) = GetSecs;
-     % Wait for Retention Period
+    % Wait for Retention Period
     % ------------------------------------------------
     % WAIT 4
-%     TrialTimes(trialIndex + 2,4) = WaitSecs('UntilTime',TrialTimes(trialIndex + 2,1) + ExpectedWithinTrialElaspsedTimes(4));
+    %     TrialTimes(trialIndex + 2,4) = WaitSecs('UntilTime',TrialTimes(trialIndex + 2,1) + ExpectedWithinTrialElaspsedTimes(4));
     % Display the post-retention fixation cross
     Screen('Flip',mainWindow);
     % Prepare Probe text during the Post-Retention display
@@ -607,48 +716,49 @@ for trialIndex = 1:NTrials
     Screen('Flip',mainWindow);
     % ASSUME that it takes longer to make a response than it does it
     % prepare the fixation cross; therefore, prepare it before starting to
-    % check for responses. 
+    % check for responses.
     [FIXnx, FIXny, FIXbbox] = DrawFormattedText(mainWindow, ' ', 'center', 'center', 0,[],[],[],[LineSpacing]);
     % Check for user response
     % Use a WHILE loop that will continually check for keyboard presses
     % once every 5 millisends, this is built into the KbCCheck function
     % If a button is pressed it is printed to the screen. The WHILE loop
     % will be come false if the time when KbCheck executes exceeds the
-    % ProbeTime. 
+    % ProbeTime.
     timeSecs = 0;
     PressCount = 1;
     while (TrialTimes(trialIndex + 2,5) + ProbeTime) > timeSecs
         [ keyIsDown, timeSecs, keyCode ] = KbCheck;
         if keyIsDown
             Key = KbName(find(keyCode));
-             if char(Key(1)) ~= Trigger2
-                 Trials{trialIndex}.LetterResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,5);
-                 Trials{trialIndex}.LetterResponseButton{PressCount} = KbName(keyCode);
-                 % Break if the ESCAPE ket is pressed
-                 F = find(keyCode);
-                 for mm = 1:length(F)
-                     if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
-                         % DUMP the data collected up until now
-                         [PathName FileName] = fileparts(OutFilePath);
-                         OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
-                         str =  ['save(OutFilePath,''Trials'', ''TrialTimes'')'];
-                         eval(str)
-                         sca
-                         error('ESCAPE Pressed');
-                     end
-                 end
-                 % If the user holds down a key, KbCheck will report multiple events.
-                 % To condense multiple 'keyDown' events into a single event, we wait until all
-                 % keys have been released. 
-                 while KbCheck; end
-                 PressCount = PressCount + 1;
-                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                 % If a key is pressed take away the probe letter
-                 if ~MontpellierFlag
-                     Screen('Flip',mainWindow);
-                 end
-                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-             end
+            if char(Key(1)) ~= Trigger2
+                Trials{trialIndex}.LetterResponseTime(PressCount) = timeSecs - TrialTimes(trialIndex + 2,5);
+                Trials{trialIndex}.LetterResponseButton{PressCount} = KbName(keyCode);
+                % Break if the ESCAPE ket is pressed
+                F = find(keyCode);
+                for mm = 1:length(F)
+                    if ~isempty(strmatch(KbName(F(mm)),'ESCAPE'))
+                        % DUMP the data collected up until now
+                        [PathName FileName] = fileparts(OutFilePath);
+                        OutFilePath = fullfile(PathName, ['DUMP_' FileName]);
+                        str=sprintf('save %s %s %s\n',OutFilePath,'Trials','TrialTimes');
+                        %str =  ['save(OutFilePath,''Trials TrialTimes'')'];
+                        eval(str)
+                        sca
+                        error('ESCAPE Pressed');
+                    end
+                end
+                % If the user holds down a key, KbCheck will report multiple events.
+                % To condense multiple 'keyDown' events into a single event, we wait until all
+                % keys have been released.
+                while KbCheck; end
+                PressCount = PressCount + 1;
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                % If a key is pressed take away the probe letter
+                if ~MontpellierFlag
+                    Screen('Flip',mainWindow);
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            end
         end
         
         
@@ -717,13 +827,13 @@ WaitSecs('UntilTime',TrialTimes(1,1) + ExpectedDuration);
 
 %% Display thank you screen for five seconds.
 [nx, ny, bbox] = DrawFormattedText(mainWindow, handles.ThankYouText, 'center', 'center', 0);
-ActualDuration = Screen('Flip',mainWindow);
+ActualDuration = Screen('Flip',mainWindow)
 WaitSecs(3)
 Screen('Flip',mainWindow);
 clc
 sca
 
-%% Create experimental descriptions 
+%% Create experimental descriptions
 ExperimentParameters = {};
 ExperimentParameters.subid = demog.subid;
 ExperimentParameters.Age = demog.Age;
@@ -772,11 +882,11 @@ ExperimentParameters.Results = Results;
 
 OutString = '';
 for i = 1:length(LoadLevels)
-%     fprintf(1,'%d %-30s %0.2f\n',LoadLevels(i),'letter accuracy',Results{LoadLevels(i)}.LetterAccuracy);
-%     fprintf(1,'%d %-30s %d\n',LoadLevels(i),'letter trials attempted',Results{LoadLevels(i)}.LetterCount);
-%     fprintf(1,'%d %-30s %d\n',LoadLevels(i),'letter trials time-out',Results{LoadLevels(i)}.LetterTO);
-%     fprintf(1,'--------------------------------------\n')
-
+    %     fprintf(1,'%d %-30s %0.2f\n',LoadLevels(i),'letter accuracy',Results{LoadLevels(i)}.LetterAccuracy);
+    %     fprintf(1,'%d %-30s %d\n',LoadLevels(i),'letter trials attempted',Results{LoadLevels(i)}.LetterCount);
+    %     fprintf(1,'%d %-30s %d\n',LoadLevels(i),'letter trials time-out',Results{LoadLevels(i)}.LetterTO);
+    %     fprintf(1,'--------------------------------------\n')
+    
     OutString = [OutString sprintf('%dLet:Acc=%2.0f%%,TO=%2.0f%%; ', LoadLevels(i),100*Results{LoadLevels(i)}.Let_All_Acc,100*Results{LoadLevels(i)}.Let_All_propTO)];
 end
 
@@ -784,7 +894,7 @@ OutString=[OutString sprintf('Low#:Acc=%2.0f%%;',100*Results{99}.Num_Low_All_Acc
 OutString=[OutString sprintf('High#:Acc=%2.0f%%;',100*Results{99}.Num_High_All_Acc)];
 OutString=[OutString sprintf('#Low TO=%2.0f%%',100*Results{99}.Num_Low_All_propTO)];
 OutString=[OutString sprintf('#High TO=%2.0f%%',100*Results{99}.Num_High_All_propTO)];
-% 
+%
 % fprintf(1,'--------------------------------------\n')
 % fprintf(1,'%-32s %0.2f\n','Easy number accuracy',Results{99}.NumberLowAccuracy);
 % fprintf(1,'%-32s %d\n','Easy number attempted',Results{99}.NumberLowCount);
@@ -809,7 +919,7 @@ eval(str)
 %     end
 % end
 % TrialTimes2
-% % 
+% %
 % NumString = '';
 % for i = 1:length(NumLists{1}.HighList)
 %     NumString = [ NumLists{1}.HighList(i) ' '];
