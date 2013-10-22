@@ -1,1 +1,0 @@
-matlab -nosplash -r "run RuniLSv4"
