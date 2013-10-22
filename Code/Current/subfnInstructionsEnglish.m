@@ -73,11 +73,11 @@ InstText3b = ['\nWith a series of\nnumbers on the\nLEFT of an equal sign'];
 InstText3c = ['\nand a single number\non the RIGHT'];
 InstText3d = '\nDetermine whether the\nSUM of numbers on the LEFT\n equal the number on the RIGHT';
 %InstText6 = ['\nPress ' Buttons.NumberYes{1} ' for YES\nPress  ' Buttons.NumberNo{1} ' for NO.'];
-InstText3e = ['\nPress m for YES\nPress z for NO.'];
+InstText3e = ['\nPress / for YES\nPress z for NO.'];
 InstText4 = ['\nAfter a delay period'];
 InstText5a = ['\nYou will  see\n a single PROBE letter\n'];
 InstText5b = ['\nDecide\n whether it was in the\n original study set'];
-InstText5c = ['\nPress m for YES\nPress z for NO'];    
+InstText5c = ['\nPress / for YES\nPress z for NO'];    
 
 Screen('TextSize',mainWindow,InstructionFontSize);
 

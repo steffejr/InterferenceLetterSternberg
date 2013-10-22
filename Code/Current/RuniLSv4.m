@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 18-Oct-2013 11:00:53
+% Last Modified by GUIDE v2.5 15-Oct-2013 16:07:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1545,13 +1545,11 @@ set(handles.Montpellier,'Checked','on')
 set(handles.InterferencePilot,'Checked','off')
 set(handles.PILOT,'Checked','off')
 
-
 % --------------------------------------------------------------------
 function PILOT_Callback(hObject, eventdata, handles)
 % hObject    handle to PILOT (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 DefaultPILOTDIR(handles)
 %set(handles.Montpellier,'Checked','off')
 set(handles.InterferencePilot,'Checked','off')
@@ -2033,4 +2031,3 @@ function DisplayResultsTraining_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     subfnDisplayAllResults('Train')
-
