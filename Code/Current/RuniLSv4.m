@@ -84,24 +84,27 @@ ProgramPath = fileparts(s);
 ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
 [handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
-%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_PILOTConfig.txt'),handles);
-
+DefaultInterferenceDIR(handles)
+set(handles.InterferencePilot,'Checked','on')
+set(handles.PILOT,'Checked','off')
+set(handles.ZeroAll,'Checked','off')
+         
 guidata(hObject, handles);
 % Set up the initial values
-switch handles.Location
-    case 'Columbia'
-        DefaultInterferenceDIR(handles);
-        set(handles.InterferencePilot,'Checked','on')
-    case 'Montpellier'
-        DefaultMontpellierDIR(handles)
-        set(handles.Montpellier,'Checked','on')
-    case 'PILOT'
-        DefaultPILOTDIR(handles)
-        set(handles.PILOT,'Checked','on')
-    otherwise
-        DefaultZeroValues(handles)
-end
+% switch handles.Location
+%     case 'Columbia'
+%         DefaultInterferenceDIR(handles);
+%         set(handles.InterferencePilot,'Checked','on')
+%     case 'Montpellier'
+%         DefaultMontpellierDIR(handles)
+%         set(handles.Montpellier,'Checked','on')
+%     case 'PILOT'
+         
+%     otherwise
+%         DefaultZeroValues(handles)
+% end
 set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
 % Check the screen resolution
 CurrentScreenRes = get(0,'ScreenSize');
@@ -159,7 +162,11 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen1,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks1,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad1,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad1,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad1,'Value'))));
+        %LetLoad = str2num(char(handles.LetList(get(handles.LetLoad1,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run1Text,'String',OutString);
@@ -249,7 +256,10 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen2,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks2,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad2,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad2,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad2,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run2Text,'String',OutString);
@@ -333,7 +343,10 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen3,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks3,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad3,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad3,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad3,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run3Text,'String',OutString);
@@ -415,7 +428,10 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen4,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks4,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad4,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad4,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad4,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run4Text,'String',OutString);
@@ -491,7 +507,10 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen5,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks5,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad5,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad5,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad5,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run5Text,'String',OutString);
@@ -572,7 +591,10 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen6,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks6,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad6,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad6,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad6,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run6Text,'String',OutString);
@@ -649,7 +671,10 @@ try
         
         NumLen = str2num(char(handles.NumList(get(handles.NumLen7,'Value'))));
         NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks7,'Value'))));
-        LetLoad = str2num(char(handles.LetList(get(handles.LetLoad7,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad7,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad7,'Value'))));
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run7Text,'String',OutString);
@@ -1490,10 +1515,24 @@ function InterferencePilot_Callback(hObject, eventdata, handles)
 % hObject    handle to InterferencePilot (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.InterferencePilot,'Checked','on')
-set(handles.Montpellier,'Checked','off')
-set(handles.PILOT,'Checked','off')
+
+s='';
+eval('s=which(''RuniLSv4'');');
+% check top make sure the output file is there, if not then create it
+ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
+
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
 DefaultInterferenceDIR(handles)
+set(handles.PILOT,'Checked','on')
+% This function modifies the handles structure by loading up a different
+% onfig file. In order to passthis information back tp the main GUI the
+% following function is required.
+guidata(handles.figure1,handles)
+
+
 
 % --------------------------------------------------------------------
 function Montpellier_Callback(hObject, eventdata, handles)
@@ -1505,15 +1544,34 @@ DefaultMontpellierDIR(handles)
 set(handles.Montpellier,'Checked','on')
 set(handles.InterferencePilot,'Checked','off')
 set(handles.PILOT,'Checked','off')
+
 % --------------------------------------------------------------------
 function PILOT_Callback(hObject, eventdata, handles)
 % hObject    handle to PILOT (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 DefaultPILOTDIR(handles)
-set(handles.Montpellier,'Checked','off')
+%set(handles.Montpellier,'Checked','off')
 set(handles.InterferencePilot,'Checked','off')
 set(handles.PILOT,'Checked','on')
+
+s='';
+eval('s=which(''RuniLSv4'');');
+% check top make sure the output file is there, if not then create it
+ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
+
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_PILOTConfig.txt'),handles);
+DefaultPILOTDIR(handles)
+set(handles.PILOT,'Checked','on')
+set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
+
+% This function modifies the handles structure by loading up a different
+% onfig file. In order to passthis information back tp the main GUI the
+% following function is required.
+guidata(handles.figure1,handles)
 
 % --------------------------------------------------------------------
 function ZeroAll_Callback(hObject, eventdata, handles)
@@ -1522,7 +1580,7 @@ function ZeroAll_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 DefaultZeroValues(handles)
 set(handles.InterferencePilot,'Checked','off')
-set(handles.Montpellier,'Checked','off')
+%set(handles.Montpellier,'Checked','off')
 
 
 
