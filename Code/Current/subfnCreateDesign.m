@@ -120,7 +120,7 @@ while flagDesign == 1 && DesignCount < 10000
     DesignCount = DesignCount + 1;
 end
 if DesignCount == 10000
-    errordlg('Tried permuting the design matrix 1000 times and could not find a good trial order.')
+    %errordlg('Tried permuting the design matrix 1000 times and could not find a good trial order.')
     Design = [];
     return
 end
