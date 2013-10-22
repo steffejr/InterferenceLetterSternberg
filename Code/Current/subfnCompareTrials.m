@@ -20,7 +20,7 @@ end
 if PreviousTrialOneStep.LetProbe == (tempTrialPick.LetProbe)
     flag = 0;
 end
-if sum(PreviousTrialOneStep.NumList == tempTrialPick.NumList)>0 & sum(str2num(tempTrialPick.NumList))>0
+if sum(PreviousTrialOneStep.NumList == tempTrialPick.NumList)>0 & sum(tempTrialPick.NumList)>0
     % shuffle the numbers 
     tempTrialPick.NumList = tempTrialPick.NumList(randperm(length(tempTrialPick.NumList)));
     fprintf('Shuffling the numbers.\n');

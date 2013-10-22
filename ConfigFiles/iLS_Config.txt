@@ -20,11 +20,11 @@ Courier New
 [Buttons_NumberNo]
 1234z
 [Buttons_NumberYes]
-5678/
+5678m
 [Buttons_LetterNo]
 1234z
 [Buttons_LetterYes]
-5678/
+5678m
 [IntroDelay]       
 7.000
 [EncodeTime]

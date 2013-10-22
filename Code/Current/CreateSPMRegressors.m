@@ -1,9 +1,9 @@
-function [names onsets durations] = CreateSPMRegressors(Trials,LetLoad,DurTimes)
-if nargin == 2;
+function [names onsets durations] = CreateSPMRegressors(Trials,DurTimes)
+if nargin == 1;
     DurTimes = [3 7 -1 3];
 end
 Phases = {'Stm' 'Ret' 'Pro'};
-%LetLoad = {'1' '2'  '3' '6'};
+LetLoad = {'1' '2'  '3' '6'};
 NumLoad = {'Low' 'High'};
 %NumLoad = {'Low'};
 Response = {'Cor' 'Inc'};
@@ -21,7 +21,7 @@ names = {};
 count = 1;
 % Stimulus
 for i = 1:NLetLoad
-    names{count} = [Phases{1} num2str(LetLoad(i))];
+    names{count} = [Phases{1} LetLoad{i}];
     count = count + 1;
 end
 % Retention
@@ -29,7 +29,7 @@ end
 for i = 1:NProbeType
     for j = 1:NNumLoad
         for k = 1:NLetLoad
-            names{count} = [Phases{2} num2str(LetLoad(k)) NumLoad{j} ProbeType{i}];
+            names{count} = [Phases{2} LetLoad{k} NumLoad{j} ProbeType{i}];
             count = count + 1;
         end
     end
@@ -38,7 +38,7 @@ end
 for i = 1:NProbeType
     for j = 1:NNumLoad
         for k = 1:NLetLoad
-            names{count} = [Phases{3} num2str(LetLoad(k)) NumLoad{j} ProbeType{i}];
+            names{count} = [Phases{3} LetLoad{k} NumLoad{j} ProbeType{i}];
             count = count + 1;
         end
     end
