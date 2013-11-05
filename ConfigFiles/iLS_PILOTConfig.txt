@@ -38,7 +38,7 @@ Courier New
 [ProbeTime]
 3.000
 [FinalDelay]
-10.23
+13.1
 [WaitTime]% Wait time for instructions
 6.000
 [LetToExclude] % Letters to exclude

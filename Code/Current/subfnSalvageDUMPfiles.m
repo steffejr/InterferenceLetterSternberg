@@ -51,19 +51,21 @@ EP.RunConditions.MRITrigger = handles.Trigger2;
 EP.Trials = Trials;
 EP.Results = Results;
 ExperimentParameters = EP;
-
-FileName = FileName(6:end);
 FindUnders = findstr(FileName,'_');
 subid = FileName(FindUnders(2)+1:FindUnders(3)-1);
 Run = FileName(FindUnders(3)+1:FindUnders(4)-1);
 DateTime = FileName(FindUnders(4)+1:FindUnders(6)-1);
 
+
+FileName = FileName(6:end);
+
 Str = sprintf('save %s ExperimentParameters',fullfile(PathName, FileName));
 eval(Str)
 DurTimes = [9 3 -1 3];
 LetLoad = [1:8];
+%%
 [names onsets durations] = CreateSPMRegressors_xLS(ExperimentParameters.Trials,LetLoad,DurTimes);
-Str = sprintf('save %s names onsets durations',fullfile(PathName,sprintf('SPM_%s_%s_%s',subid,Run,DateTime)));
+Str = sprintf('save %s names onsets durations',fullfile(PathName,sprintf('SPM_ALL_%s_%s_%s',subid,Run,DateTime)));
 eval(Str)
 
 

@@ -194,7 +194,16 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 % Setup Experiment
 % --------------------------------------------------------
-[Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
+
+% If this is the PILOT test then use the prespecified designs
+if strcmp(handles.Location, 'PILOT')
+    % load up the optimal trials 
+    clear Trials Design
+    load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
+else
+    [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
+end
+
 if isempty(Design)
     errordlg('CANNOT MAKE DESIGN');
     ExperimentParameters =[];
@@ -257,6 +266,8 @@ if exist(OptimalITIs)
     tempITI = load(OptimalITIs);
     ITI = tempITI.OptimalITI;
     clear tempITI
+elseif strcmp(handles.Location, 'PILOT')
+    load(fullfile(ProgramPath,'OptimalDesigns','xLS_ITI'))
 else
     ITI = subfnCreateITI(NTrials);
     %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
