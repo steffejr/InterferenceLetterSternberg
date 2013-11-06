@@ -167,6 +167,9 @@ try
         letList = get(handles.LetLoad1,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad1,'Value'))));
         %LetLoad = str2num(char(handles.LetList(get(handles.LetLoad1,'Value'))));
+        % I need some way to say which run this is. I am using the demog
+        % structure since it already exists.
+        demog.RunNumber = 'Training1';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run1Text,'String',OutString);
@@ -260,6 +263,7 @@ try
         % config files
         letList = get(handles.LetLoad2,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad2,'Value'))));
+        demog.RunNumber = 'Training2';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run2Text,'String',OutString);
@@ -347,6 +351,7 @@ try
         % config files
         letList = get(handles.LetLoad3,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad3,'Value'))));
+        demog.RunNumber = 'Training3';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run3Text,'String',OutString);
@@ -432,6 +437,7 @@ try
         % config files
         letList = get(handles.LetLoad4,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad4,'Value'))));
+        demog.RunNumber = 'Training4';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run4Text,'String',OutString);
@@ -511,6 +517,7 @@ try
         % config files
         letList = get(handles.LetLoad5,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad5,'Value'))));
+        demog.RunNumber = 'MRI1';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run5Text,'String',OutString);
@@ -595,6 +602,7 @@ try
         % config files
         letList = get(handles.LetLoad6,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad6,'Value'))));
+        demog.RunNumber = 'MRI2';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run6Text,'String',OutString);
@@ -675,6 +683,7 @@ try
         % config files
         letList = get(handles.LetLoad7,'String');
         LetLoad = str2num(char(letList(get(handles.LetLoad7,'Value'))));
+        demog.RunNumber = 'MRI3';
         [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
             Instr,FB,NumLen,NumBlocks,LetLoad,handles);
         set(handles.Run7Text,'String',OutString);

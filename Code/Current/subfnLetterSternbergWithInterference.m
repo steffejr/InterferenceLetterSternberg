@@ -197,11 +197,23 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 
 % If this is the PILOT test then use the prespecified designs
 if strcmp(handles.Location, 'PILOT')
-    % load up the optimal trials 
-    clear Trials Design
-    load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
+    if ~isempty(findstr(demog.RunNumber,'MRI1'))
+        % load up the optimal trials
+        clear Trials Design
+        load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
+    elseif ~isempty(findstr(demog.RunNumber,'MRI2'))
+        % load up the optimal trials
+        clear Trials Design
+        load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials2'))
+    elseif ~isempty(findstr(demog.RunNumber,'MRI3'))
+        % load up the optimal trials
+        clear Trials Design
+        load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials3'))
+    else
+        [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
+    end
 else
-    [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
+    [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
 end
 
 if isempty(Design)
@@ -261,13 +273,18 @@ WaitTime = handles.WaitTime;
 % See if an optimal set of ITIs is included for this run
 OptimalITIName = ['iLS_' handles.Location '_' demog.Tag '_Trials.mat'];
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
+
 if exist(OptimalITIs)
     clear ITI
     tempITI = load(OptimalITIs);
     ITI = tempITI.OptimalITI;
     clear tempITI
 elseif strcmp(handles.Location, 'PILOT')
-    load(fullfile(ProgramPath,'OptimalDesigns','xLS_ITI'))
+    if ~isempty(findstr(demog.RunNumber,'MRI'))
+        load(fullfile(ProgramPath,'OptimalDesigns','xLS_ITI'))
+    else
+        ITI = subfnCreateITI(NTrials);
+    end
 else
     ITI = subfnCreateITI(NTrials);
     %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
