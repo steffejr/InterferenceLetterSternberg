@@ -28,6 +28,8 @@ try
             Design(i,3) = -1;
         end
         Design(i,4) = 1;
+    end
+        
         Trials{i}.EncodeStartTime       = TrialTimes(i + 2,1) - TrialTimes(1,1);
         Trials{i}.PreRetStartTime       = TrialTimes(i + 2,2) - TrialTimes(1,1);
         Trials{i}.RetentionStartTime    = TrialTimes(i + 2,3) - TrialTimes(1,1);
