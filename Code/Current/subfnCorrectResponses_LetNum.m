@@ -121,15 +121,34 @@ for trialIndex = 1:NTrials
     
     for j = 1:length(Trials{trialIndex}.LetterResponseButton)
         if ~isempty(Trials{trialIndex}.LetterResponseButton{j})
-            ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}(1));
-            % See if the button was Yes
-            if isempty(strfind(ThisTrialLetterResponse,EP.RunConditions.MRITrigger))
-                if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
-                    Trials{trialIndex}.LetterResponseCode = 'Y';
-                elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
-                    Trials{trialIndex}.LetterResponseCode = 'N';
-                else
-                    Trials{trialIndex}.LetterResponseCode = '?';
+            % account for two buttons pressed at the EXACT same time
+            % The following is not very efficient but it works
+            if iscell(Trials{trialIndex}.LetterResponseButton{j})
+                for k = 1:length(Trials{trialIndex}.LetterResponseButton{j})
+                    ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}{k}(1));
+                    
+                    % See if the button was Yes
+                    if isempty(strfind(ThisTrialLetterResponse,EP.RunConditions.MRITrigger))
+                        if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
+                            Trials{trialIndex}.LetterResponseCode = 'Y';
+                        elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
+                            Trials{trialIndex}.LetterResponseCode = 'N';
+                        else
+                            Trials{trialIndex}.LetterResponseCode = '?';
+                        end
+                    end
+                end
+            else
+                ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}(1));
+                % See if the button was Yes
+                if isempty(strfind(ThisTrialLetterResponse,EP.RunConditions.MRITrigger))
+                    if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
+                        Trials{trialIndex}.LetterResponseCode = 'Y';
+                    elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
+                        Trials{trialIndex}.LetterResponseCode = 'N';
+                    else
+                        Trials{trialIndex}.LetterResponseCode = '?';
+                    end
                 end
             end
         else
