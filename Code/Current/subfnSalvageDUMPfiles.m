@@ -15,9 +15,10 @@ Buttons.NumberYes        = handles.Buttons_NumberYes;
 Buttons.LetterNo       = handles.Buttons_LetterNo;
 Buttons.LetterYes        = handles.Buttons_LetterYes;
 
-NTrials = 48;
+NTrials = 64;
 Design = zeros(NTrials,4);
 count = 0;
+Trials = ExperimentParameters.Trials
 try
     for i = 1:NTrials
         Design(i,1) = str2num(Trials{i}.LetType(1));
@@ -44,6 +45,7 @@ end
 NTrials = count;
 Design = Design(1:NTrials,:);
 
+EP = ExperimentParameters
 
 EP.Trials = Trials(1:NTrials);
 EP.Design = Design;
@@ -54,9 +56,12 @@ EP.Trials = Trials;
 EP.Results = Results;
 ExperimentParameters = EP;
 FindUnders = findstr(FileName,'_');
-subid = FileName(FindUnders(2)+1:FindUnders(3)-1);
+
+subid = EP.subid;
+DateTime = EP.date;
+%subid = FileName(FindUnders(2)+1:FindUnders(3)-1);
 Run = FileName(FindUnders(3)+1:FindUnders(4)-1);
-DateTime = FileName(FindUnders(4)+1:FindUnders(6)-1);
+%DateTime = FileName(FindUnders(4)+1:FindUnders(6)-1);
 
 
 FileName = FileName(6:end);

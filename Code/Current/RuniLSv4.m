@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 15-Oct-2013 16:07:51
+% Last Modified by GUIDE v2.5 14-Mar-2014 09:42:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2040,3 +2040,11 @@ function DisplayResultsTraining_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     subfnDisplayAllResults('Train')
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over exit.
+function exit_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to exit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

@@ -10,10 +10,21 @@ if iscell(EP)
         Design = [Design; EP{j}.ExperimentParameters.Design];
     end
     Buttons = EP{1}.ExperimentParameters.Buttons;
+    if isfield(EP{1}.ExperimentParameters.RunConditions,'MRITrigger')
+        MRITrigger = EP{1}.ExperimentParameters.RunConditions.MRITrigger;
+    else
+        MRITrigger = 't';
+    end
+    
 elseif isstruct(EP)
     Trials = EP.Trials;
     Design = EP.Design;
     Buttons = EP.Buttons;
+    if isfield(EP.RunConditions,'MRITrigger')
+        MRITrigger = EP.RunConditions.MRITrigger;
+    else
+        MRITrigger = 't';
+    end
 end
 
 % Written by Jason Steffener
@@ -46,7 +57,7 @@ for j = 1:length(LoadLevels)
     Results{i}.Let_All_Cor_MedRT_HighNum = [];
     Results{i}.Let_Pos_Cor_MedRT_HighNum = [];
     Results{i}.Let_Neg_Cor_MedRT_HighNum = [];
-
+    
     Results{i}.Let_All_Inc_MedRT = [];
     Results{i}.Let_Pos_Inc_MedRT = [];
     Results{i}.Let_Neg_Inc_MedRT = [];
@@ -66,33 +77,48 @@ for j = 1:length(LoadLevels)
     Results{i}.Let_All_Count_HighNum = 0;
     Results{i}.Let_Pos_Count_HighNum = 0;
     Results{i}.Let_Neg_Count_HighNum = 0;
-
+    
     Results{i}.Let_All_propTO = 0;
     Results{i}.Let_Pos_propTO = 0;
-    Results{i}.Let_Neg_propTO = 0;    
+    Results{i}.Let_Neg_propTO = 0;
     Results{i}.Let_All_propTO_LowNum = 0;
     Results{i}.Let_Pos_propTO_LowNum = 0;
-    Results{i}.Let_Neg_propTO_LowNum = 0;    
+    Results{i}.Let_Neg_propTO_LowNum = 0;
     Results{i}.Let_All_propTO_HighNum = 0;
     Results{i}.Let_Pos_propTO_HighNum = 0;
-    Results{i}.Let_Neg_propTO_HighNum = 0;    
-
+    Results{i}.Let_Neg_propTO_HighNum = 0;
+    
 end
 Results{99}.Num_Low_All_Acc = 0;
+Results{99}.Let2_Num_Low_All_Acc = 0;
+Results{99}.Let6_Num_Low_All_Acc = 0;
+
 Results{99}.Num_Low_Pos_Acc = 0;
 Results{99}.Num_Low_Neg_Acc = 0;
 Results{99}.Num_High_All_Acc = 0;
+Results{99}.Let2_Num_High_All_Acc = 0;
+Results{99}.Let6_Num_High_All_Acc = 0;
+
 Results{99}.Num_High_Pos_Acc = 0;
 Results{99}.Num_High_Neg_Acc = 0;
 
 Results{99}.Num_Low_All_Count = 0;
+Results{99}.Let2_Num_Low_All_Count = 0;
+Results{99}.Let6_Num_Low_All_Count = 0;
+
 Results{99}.Num_Low_Pos_Count = 0;
 Results{99}.Num_Low_Neg_Count = 0;
 Results{99}.Num_High_All_Count = 0;
+Results{99}.Let2_Num_High_All_Count = 0;
+Results{99}.Let6_Num_High_All_Count = 0;
+
 Results{99}.Num_High_Pos_Count = 0;
 Results{99}.Num_High_Neg_Count = 0;
 
 Results{99}.Num_Low_All_Cor_MedRT = [];
+Results{99}.Let2_Num_Low_All_Cor_MedRT = [];
+Results{99}.Let6_Num_Low_All_Cor_MedRT = [];
+
 Results{99}.Num_Low_Pos_Cor_MedRT = [];
 Results{99}.Num_Low_Neg_Cor_MedRT = [];
 Results{99}.Num_Low_All_Inc_MedRT = [];
@@ -100,16 +126,25 @@ Results{99}.Num_Low_Pos_Inc_MedRT = [];
 Results{99}.Num_Low_Neg_Inc_MedRT = [];
 
 Results{99}.Num_High_All_Cor_MedRT = [];
+Results{99}.Let2_Num_High_All_Cor_MedRT = [];
+Results{99}.Let6_Num_High_All_Cor_MedRT = [];
+
 Results{99}.Num_High_Pos_Cor_MedRT = [];
 Results{99}.Num_High_Neg_Cor_MedRT = [];
 Results{99}.Num_High_All_Inc_MedRT = [];
 Results{99}.Num_High_Pos_Inc_MedRT = [];
-Results{99}.Num_High_Neg_Inc_MedRT = []; 
+Results{99}.Num_High_Neg_Inc_MedRT = [];
 
 Results{99}.Num_Low_All_propTO = 0;
+Results{99}.Let2_Num_Low_All_propTO = 0;
+Results{99}.Let6_Num_Low_All_propTO = 0;
+
 Results{99}.Num_Low_Pos_propTO = 0;
 Results{99}.Num_Low_Neg_propTO = 0;
 Results{99}.Num_High_All_propTO = 0;
+Results{99}.Let2_Num_High_All_propTO = 0;
+Results{99}.Let6_Num_High_All_propTO = 0;
+
 Results{99}.Num_High_Pos_propTO = 0;
 Results{99}.Num_High_Neg_propTO = 0;
 
@@ -121,34 +156,15 @@ for trialIndex = 1:NTrials
     
     for j = 1:length(Trials{trialIndex}.LetterResponseButton)
         if ~isempty(Trials{trialIndex}.LetterResponseButton{j})
-            % account for two buttons pressed at the EXACT same time
-            % The following is not very efficient but it works
-            if iscell(Trials{trialIndex}.LetterResponseButton{j})
-                for k = 1:length(Trials{trialIndex}.LetterResponseButton{j})
-                    ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}{k}(1));
-                    
-                    % See if the button was Yes
-                    if isempty(strfind(ThisTrialLetterResponse,EP.RunConditions.MRITrigger))
-                        if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
-                            Trials{trialIndex}.LetterResponseCode = 'Y';
-                        elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
-                            Trials{trialIndex}.LetterResponseCode = 'N';
-                        else
-                            Trials{trialIndex}.LetterResponseCode = '?';
-                        end
-                    end
-                end
-            else
-                ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}(1));
-                % See if the button was Yes
-                if isempty(strfind(ThisTrialLetterResponse,EP.RunConditions.MRITrigger))
-                    if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
-                        Trials{trialIndex}.LetterResponseCode = 'Y';
-                    elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
-                        Trials{trialIndex}.LetterResponseCode = 'N';
-                    else
-                        Trials{trialIndex}.LetterResponseCode = '?';
-                    end
+            ThisTrialLetterResponse = char(Trials{trialIndex}.LetterResponseButton{j}(1));
+            % See if the button was Yes
+            if isempty(strfind(ThisTrialLetterResponse,MRITrigger))
+                if (~isempty(strfind(char(Buttons.LetterYes),ThisTrialLetterResponse)))
+                    Trials{trialIndex}.LetterResponseCode = 'Y';
+                elseif ~isempty(strfind(char(Buttons.LetterNo),ThisTrialLetterResponse))
+                    Trials{trialIndex}.LetterResponseCode = 'N';
+                else
+                    Trials{trialIndex}.LetterResponseCode = '?';
                 end
             end
         else
@@ -156,7 +172,7 @@ for trialIndex = 1:NTrials
         end
     end
     % find the index of the LAST response recorded for this trial
-    tempLet = max(Trials{trialIndex}.LetterResponseTime>-99);
+    tempLet = max(find(Trials{trialIndex}.LetterResponseTime>-99));
     % check for accuracy of LETTER responses
     % YES and POS   = hit
     if strcmp(Trials{trialIndex}.LetterResponseCode, 'Y') && Design(trialIndex,3)== 1
@@ -251,7 +267,7 @@ for trialIndex = 1:NTrials
         Trials{trialIndex}.LetterResponseAcc = 'TO';
         index = str2num(Trials{trialIndex}.LetType(1));
         Results{index}.Let_All_propTO = Results{index}.Let_All_propTO + 1;
-        Results{index}.Let_Pos_propTO = Results{index}.Let_Pos_propTO + 1;       
+        Results{index}.Let_Pos_propTO = Results{index}.Let_Pos_propTO + 1;
         if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
             Results{index}.Let_All_propTO_LowNum = Results{index}.Let_All_propTO_LowNum + 1;
             Results{index}.Let_Pos_propTO_LowNum = Results{index}.Let_Pos_propTO_LowNum + 1;
@@ -264,7 +280,7 @@ for trialIndex = 1:NTrials
         Trials{trialIndex}.LetterResponseAcc = 'TO';
         index = str2num(Trials{trialIndex}.LetType(1));
         Results{index}.Let_All_propTO = Results{index}.Let_All_propTO + 1;
-        Results{index}.Let_Neg_propTO = Results{index}.Let_Neg_propTO + 1;    
+        Results{index}.Let_Neg_propTO = Results{index}.Let_Neg_propTO + 1;
         if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
             Results{index}.Let_All_propTO_LowNum = Results{index}.Let_All_propTO_LowNum + 1;
             Results{index}.Let_Neg_propTO_LowNum = Results{index}.Let_Neg_propTO_LowNum + 1;
@@ -274,14 +290,15 @@ for trialIndex = 1:NTrials
         end
     end
     
-    tempNum = max(Trials{trialIndex}.NumberResponseTime>-99);
+    tempNum = max(find(Trials{trialIndex}.NumberResponseTime>-99));
     % NUMBERS
-    
+    foundResponseFlag = 0;
     for j = 1:length(Trials{trialIndex}.NumberResponseButton)
-        
-        if ~isempty(Trials{trialIndex}.NumberResponseButton{j})
+        % Only break once a response has been made or all 10 possibilities
+        % are checked
+        if ~isempty(Trials{trialIndex}.NumberResponseButton{j}) & ~foundResponseFlag
             ThisTrialNumberResponse = char(Trials{trialIndex}.NumberResponseButton{j}(1));
-            if isempty(strfind(ThisTrialNumberResponse,EP.RunConditions.MRITrigger))
+            if isempty(strfind(ThisTrialNumberResponse,MRITrigger))
                 % See if the button was Yes
                 if ~isempty(strfind(char(Buttons.NumberYes),ThisTrialNumberResponse))
                     Trials{trialIndex}.NumberResponseCode = 'Y';
@@ -291,8 +308,10 @@ for trialIndex = 1:NTrials
                     Trials{trialIndex}.NumberResponseCode = '?';
                 end
             end
-        else
+            
+        elseif ~isempty(Trials{trialIndex}.NumberResponseButton{j}) & foundResponseFlag
             break;
+            
         end
     end
     
@@ -383,13 +402,147 @@ for trialIndex = 1:NTrials
             Results{99}.Num_High_Neg_propTO = Results{99}.Num_High_Neg_propTO + 1;
         end
     end
+    %% Number accuracy for 2 letters
+    if Design(trialIndex,1) == 2
+        if strcmp(Trials{trialIndex}.NumberResponseCode, 'Y') && Design(trialIndex,4)== 1
+            Trials{trialIndex}.NumberResponseAcc = 'HT';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let2_Num_Low_All_Count = Results{99}.Let2_Num_Low_All_Count + 1;
+                Results{99}.Let2_Num_Low_All_Acc = Results{99}.Let2_Num_Low_All_Acc + 1;
+                Results{99}.Let2_Num_Low_All_Cor_MedRT(length(Results{99}.Let2_Num_Low_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
+                Results{99}.Let2_Num_High_All_Acc = Results{99}.Let2_Num_High_All_Acc + 1;
+                Results{99}.Let2_Num_High_All_Cor_MedRT(length(Results{99}.Let2_Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            end
+            % YES and NEG   = false alarm
+        elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'Y') && Design(trialIndex,4)== -1
+            Trials{trialIndex}.NumberResponseAcc = 'FA';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let2_Num_Low_All_Count = Results{99}.Let2_Num_Low_All_Count + 1;
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
+            end
+            % NO and NEG    = correct rejection
+        elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== -1
+            Trials{trialIndex}.NumberResponseAcc = 'CR';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let2_Num_Low_All_Count = Results{99}.Let2_Num_Low_All_Count + 1;
+                Results{99}.Let2_Num_Low_All_Acc = Results{99}.Let2_Num_Low_All_Acc + 1;
+                Results{99}.Let2_Num_Low_All_Cor_MedRT(length(Results{99}.Let2_Num_Low_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
+                Results{99}.Let2_Num_High_All_Acc = Results{99}.Let2_Num_High_All_Acc + 1;
+                Results{99}.Let2_Num_High_All_Cor_MedRT(length(Results{99}.Let2_Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+                % NO and POS    = miss
+            elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
+                Trials{trialIndex}.NumberResponseAcc = 'MS';
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                    Results{99}.Let2_Num_Low_All_Count = Results{99}.Let2_Num_Low_All_Count + 1;
+                    Results{99}.Let2_Num_Low_All_Inc_MedRT(length(Results{99}.Let2_Num_Low_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+                elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                    Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
+                    Results{99}.Let2_Num_High_All_Inc_MedRT(length(Results{99}.Let2_Num_High_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+                end
+                % Time Out And POS
+            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== 1
+                Trials{trialIndex}.NumberResponseAcc = 'TO';
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                    Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO + 1;
+                end
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                    Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO  + 1;
+                end
+                % Time Out and Neg
+            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== -1
+                Trials{trialIndex}.NumberResponseAcc = 'TO';
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                    Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO + 1;
+                end
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                    Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO + 1;
+                end
+            end
+        end
+        
+    end
+    %% Number accuracy for 6 letters
+    if Design(trialIndex,1) == 6
+        if strcmp(Trials{trialIndex}.NumberResponseCode, 'Y') && Design(trialIndex,4)== 1
+            Trials{trialIndex}.NumberResponseAcc = 'HT';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let6_Num_Low_All_Count = Results{99}.Let6_Num_Low_All_Count + 1;
+                Results{99}.Let6_Num_Low_All_Acc = Results{99}.Let6_Num_Low_All_Acc + 1;
+                Results{99}.Let6_Num_Low_All_Cor_MedRT(length(Results{99}.Let6_Num_Low_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
+                Results{99}.Let6_Num_High_All_Acc = Results{99}.Let6_Num_High_All_Acc + 1;
+                Results{99}.Let6_Num_High_All_Cor_MedRT(length(Results{99}.Let6_Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            end
+            % YES and NEG   = false alarm
+        elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'Y') && Design(trialIndex,4)== -1
+            Trials{trialIndex}.NumberResponseAcc = 'FA';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let6_Num_Low_All_Count = Results{99}.Let6_Num_Low_All_Count + 1;
+                
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
+            end
+            % NO and NEG    = correct rejection
+        elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== -1
+            Trials{trialIndex}.NumberResponseAcc = 'CR';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let6_Num_Low_All_Count = Results{99}.Let6_Num_Low_All_Count + 1;
+                Results{99}.Let6_Num_Low_All_Acc = Results{99}.Let6_Num_Low_All_Acc + 1;
+                Results{99}.Let6_Num_Low_All_Cor_MedRT(length(Results{99}.Let6_Num_Low_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
+                Results{99}.Let6_Num_High_All_Acc = Results{99}.Let6_Num_High_All_Acc + 1;
+                Results{99}.Let6_Num_High_All_Cor_MedRT(length(Results{99}.Let6_Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+                % NO and POS    = miss
+            elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
+                Trials{trialIndex}.NumberResponseAcc = 'MS';
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                    Results{99}.Let6_Num_Low_All_Count = Results{99}.Let6_Num_Low_All_Count + 1;
+                    Results{99}.Let6_Num_Low_All_Inc_MedRT(length(Results{99}.Let6_Num_Low_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+                elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                    Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
+                    Results{99}.Let6_Num_High_All_Inc_MedRT(length(Results{99}.Let6_Num_High_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+                end
+                % Time Out And POS
+            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== 1
+                Trials{trialIndex}.NumberResponseAcc = 'TO';
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                    Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO + 1;
+                end
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                    Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO  + 1;
+                end
+                % Time Out and Neg
+            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== -1
+                Trials{trialIndex}.NumberResponseAcc = 'TO';
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                    Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO + 1;
+                end
+                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                    Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO + 1;
+                end
+            end
+        end
+        
+    end
 end
 % Calculate percentage accuracy
 for k = 1:length(LoadLevels)
-    j = LoadLevels(k);    
+    j = LoadLevels(k);
     Results{j}.Let_All_Acc = Results{j}.Let_All_Acc/Results{j}.Let_All_Count;
     Results{j}.Let_Pos_Acc = Results{j}.Let_Pos_Acc/Results{j}.Let_Pos_Count;
     Results{j}.Let_Neg_Acc = Results{j}.Let_Neg_Acc/Results{j}.Let_Neg_Count;
+    
+    Results{j}.Let_All_Cor_stdRT = std(Results{j}.Let_All_Cor_MedRT);
+    Results{j}.Let_All_Cor_MnRT = mean(Results{j}.Let_All_Cor_MedRT);
+    Results{j}.Let_All_Cor_CVRT = Results{j}.Let_All_Cor_stdRT/Results{j}.Let_All_Cor_MnRT;
+    
     Results{j}.Let_All_Cor_MedRT = median(Results{j}.Let_All_Cor_MedRT);
     Results{j}.Let_Pos_Cor_MedRT = median(Results{j}.Let_Pos_Cor_MedRT);
     Results{j}.Let_Neg_Cor_MedRT = median(Results{j}.Let_Neg_Cor_MedRT);
@@ -402,11 +555,17 @@ for k = 1:length(LoadLevels)
     Results{j}.Let_All_propTO = Results{j}.Let_All_propTO/(Results{j}.Let_All_TO_Count + Results{j}.Let_All_Count);
     Results{j}.Let_Pos_propTO = Results{j}.Let_Pos_propTO/(Results{j}.Let_Pos_TO_Count + Results{j}.Let_Pos_Count);
     Results{j}.Let_Neg_propTO = Results{j}.Let_Neg_propTO/(Results{j}.Let_Neg_TO_Count + Results{j}.Let_Neg_Count);
-
     Results{j}.Let_All_Acc_LowNum = Results{j}.Let_All_Acc_LowNum/Results{j}.Let_All_Count_LowNum;
+    
     Results{j}.Let_Pos_Acc_LowNum = Results{j}.Let_Pos_Acc_LowNum/Results{j}.Let_Pos_Count_LowNum;
     Results{j}.Let_Neg_Acc_LowNum = Results{j}.Let_Neg_Acc_LowNum/Results{j}.Let_Neg_Count_LowNum;
+    
+    Results{j}.Let_All_Cor_stdRT_LowNum = std(Results{j}.Let_All_Cor_MedRT_LowNum);
+    Results{j}.Let_All_Cor_MnRT_LowNum = mean(Results{j}.Let_All_Cor_MedRT_LowNum);
+    Results{j}.Let_All_Cor_CVRT_LowNum = Results{j}.Let_All_Cor_stdRT_LowNum/Results{j}.Let_All_Cor_MnRT_LowNum;
+    
     Results{j}.Let_All_Cor_MedRT_LowNum = median(Results{j}.Let_All_Cor_MedRT_LowNum);
+    
     Results{j}.Let_Pos_Cor_MedRT_LowNum = median(Results{j}.Let_Pos_Cor_MedRT_LowNum);
     Results{j}.Let_Neg_Cor_MedRT_LowNum = median(Results{j}.Let_Neg_Cor_MedRT_LowNum);
     Results{j}.Let_All_Inc_MedRT_LowNum = median(Results{j}.Let_All_Inc_MedRT_LowNum);
@@ -418,11 +577,16 @@ for k = 1:length(LoadLevels)
     Results{j}.Let_All_propTO_LowNum = Results{j}.Let_All_propTO_LowNum/(Results{j}.Let_All_TO_Count_LowNum + Results{j}.Let_All_Count_LowNum);
     Results{j}.Let_Pos_propTO_LowNum = Results{j}.Let_Pos_propTO_LowNum/(Results{j}.Let_Pos_TO_Count_LowNum + Results{j}.Let_Pos_Count_LowNum);
     Results{j}.Let_Neg_propTO_LowNum = Results{j}.Let_Neg_propTO_LowNum/(Results{j}.Let_Neg_TO_Count_LowNum + Results{j}.Let_Neg_Count_LowNum);
-
+    
     Results{j}.Let_All_Acc_HighNum = Results{j}.Let_All_Acc_HighNum/Results{j}.Let_All_Count_HighNum;
     Results{j}.Let_Pos_Acc_HighNum = Results{j}.Let_Pos_Acc_HighNum/Results{j}.Let_Pos_Count_HighNum;
     Results{j}.Let_Neg_Acc_HighNum = Results{j}.Let_Neg_Acc_HighNum/Results{j}.Let_Neg_Count_HighNum;
+    
+    Results{j}.Let_All_Cor_stdRT_HighNum = std(Results{j}.Let_All_Cor_MedRT_HighNum);
+    Results{j}.Let_All_Cor_MnRT_HighNum = mean(Results{j}.Let_All_Cor_MedRT_HighNum);
+    Results{j}.Let_All_Cor_CVRT_HighNum = Results{j}.Let_All_Cor_stdRT_HighNum/Results{j}.Let_All_Cor_MnRT_HighNum;
     Results{j}.Let_All_Cor_MedRT_HighNum = median(Results{j}.Let_All_Cor_MedRT_HighNum);
+    
     Results{j}.Let_Pos_Cor_MedRT_HighNum = median(Results{j}.Let_Pos_Cor_MedRT_HighNum);
     Results{j}.Let_Neg_Cor_MedRT_HighNum = median(Results{j}.Let_Neg_Cor_MedRT_HighNum);
     Results{j}.Let_All_Inc_MedRT_HighNum = median(Results{j}.Let_All_Inc_MedRT_HighNum);
@@ -450,47 +614,75 @@ for k = 1:length(LoadLevels)
     Results{j}.cL = 0.5*log10((1-Results{j}.propHT*(1-Results{j}.propFA))/(Results{j}.propHT*Results{j}.propFA));
     Results{j}.cL_LowNum = 0.5*log10((1-Results{j}.propHT_LowNum*(1-Results{j}.propFA_LowNum))/(Results{j}.propHT_LowNum*Results{j}.propFA_LowNum));
     Results{j}.cL_HighNum = 0.5*log10((1-Results{j}.propHT_HighNum*(1-Results{j}.propFA_HighNum))/(Results{j}.propHT_HighNum*Results{j}.propFA_HighNum));
-
+    
 end
 %% Calculate dL
-    %    propHT(i,j) = (HT(i,j)+0.5)/(PosOT(i,j)+1);
-    %         propFA(i,j) = 1-(CR(i,j)+0.5)/(NegOT(i,j)+1);
-    %                  DL(i,j) = log10((propHT(i,j)*(1-propFA(i,j)))/((1-propHT(i,j))*propFA(i,j)));
-    %         CL(i,j) = 0.5*(log10(((1-propHT(i,j))*(1-propFA(i,j)))/(propHT(i,j)*propFA(i,j))));
+%    propHT(i,j) = (HT(i,j)+0.5)/(PosOT(i,j)+1);
+%         propFA(i,j) = 1-(CR(i,j)+0.5)/(NegOT(i,j)+1);
+%                  DL(i,j) = log10((propHT(i,j)*(1-propFA(i,j)))/((1-propHT(i,j))*propFA(i,j)));
+%         CL(i,j) = 0.5*(log10(((1-propHT(i,j))*(1-propFA(i,j)))/(propHT(i,j)*propFA(i,j))));
 
 Results{99}.Num_Low_All_Acc = Results{99}.Num_Low_All_Acc/Results{99}.Num_Low_All_Count;
+Results{99}.Let2_Num_Low_All_Acc = Results{99}.Let2_Num_Low_All_Acc/Results{99}.Let2_Num_Low_All_Count;
+Results{99}.Let6_Num_Low_All_Acc = Results{99}.Let6_Num_Low_All_Acc/Results{99}.Let6_Num_Low_All_Count;
+
 Results{99}.Num_Low_Pos_Acc = Results{99}.Num_Low_Pos_Acc/Results{99}.Num_Low_Pos_Count;
 Results{99}.Num_Low_Neg_Acc = Results{99}.Num_Low_Neg_Acc/Results{99}.Num_Low_Neg_Count;
+
 Results{99}.Num_High_All_Acc = Results{99}.Num_High_All_Acc/Results{99}.Num_High_All_Count;
+Results{99}.Let2_Num_High_All_Acc = Results{99}.Let2_Num_High_All_Acc/Results{99}.Let2_Num_High_All_Count;
+Results{99}.Let6_Num_High_All_Acc = Results{99}.Let6_Num_High_All_Acc/Results{99}.Let6_Num_High_All_Count;
+
 Results{99}.Num_High_Pos_Acc = Results{99}.Num_High_Pos_Acc/Results{99}.Num_High_Pos_Count;
 Results{99}.Num_High_Neg_Acc = Results{99}.Num_High_Neg_Acc/Results{99}.Num_High_Neg_Count;
 
 Results{99}.Num_Low_All_Cor_MedRT = median(Results{99}.Num_Low_All_Cor_MedRT);
+Results{99}.Let2_Num_Low_All_Cor_MedRT = median(Results{99}.Let2_Num_Low_All_Cor_MedRT);
+Results{99}.Let6_Num_Low_All_Cor_MedRT = median(Results{99}.Let6_Num_Low_All_Cor_MedRT);
+
 Results{99}.Num_Low_Pos_Cor_MedRT = median(Results{99}.Num_Low_Pos_Cor_MedRT);
 Results{99}.Num_Low_Neg_Cor_MedRT = median(Results{99}.Num_Low_Neg_Cor_MedRT);
+
 Results{99}.Num_High_All_Cor_MedRT = median(Results{99}.Num_High_All_Cor_MedRT);
+Results{99}.Let2_Num_High_All_Cor_MedRT = median(Results{99}.Let2_Num_High_All_Cor_MedRT);
+Results{99}.Let6_Num_High_All_Cor_MedRT = median(Results{99}.Let6_Num_High_All_Cor_MedRT);
+
 Results{99}.Num_High_Pos_Cor_MedRT = median(Results{99}.Num_High_Pos_Cor_MedRT);
 Results{99}.Num_High_Neg_Cor_MedRT = median(Results{99}.Num_High_Neg_Cor_MedRT);
 
 Results{99}.Num_Low_All_Inc_MedRT = median(Results{99}.Num_Low_All_Inc_MedRT);
 Results{99}.Num_Low_Pos_Inc_MedRT = median(Results{99}.Num_Low_Pos_Inc_MedRT);
 Results{99}.Num_Low_Neg_Inc_MedRT = median(Results{99}.Num_Low_Neg_Inc_MedRT);
+
 Results{99}.Num_High_All_Inc_MedRT = median(Results{99}.Num_High_All_Inc_MedRT);
+
 Results{99}.Num_High_Pos_Inc_MedRT = median(Results{99}.Num_High_Pos_Inc_MedRT);
 Results{99}.Num_High_Neg_Inc_MedRT = median(Results{99}.Num_High_Neg_Inc_MedRT);
 
 
 Results{99}.Num_Low_All_TO_Count = Results{99}.Num_Low_All_propTO;
+Results{99}.Let2_Num_Low_All_TO_Count = Results{99}.Let2_Num_Low_All_propTO;
+Results{99}.Let6_Num_Low_All_TO_Count = Results{99}.Let6_Num_Low_All_propTO;
+
 Results{99}.Num_Low_Pos_TO_Count = Results{99}.Num_Low_Pos_propTO;
 Results{99}.Num_Low_Neg_TO_Count = Results{99}.Num_Low_Neg_propTO;
 Results{99}.Num_High_All_TO_Count = Results{99}.Num_High_All_propTO;
+Results{99}.Let2_Num_High_All_TO_Count = Results{99}.Let2_Num_High_All_propTO;
+Results{99}.Let6_Num_High_All_TO_Count = Results{99}.Let6_Num_High_All_propTO;
+
 Results{99}.Num_High_Pos_TO_Count = Results{99}.Num_High_Pos_propTO;
 Results{99}.Num_High_Neg_TO_Count = Results{99}.Num_High_Neg_propTO;
 
 Results{99}.Num_Low_All_propTO = Results{99}.Num_Low_All_propTO/(Results{99}.Num_Low_All_Count + Results{99}.Num_Low_All_TO_Count);
+Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO/(Results{99}.Let2_Num_Low_All_Count + Results{99}.Let2_Num_Low_All_TO_Count);
+Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO/(Results{99}.Let6_Num_Low_All_Count + Results{99}.Let6_Num_Low_All_TO_Count);
+
 Results{99}.Num_Low_Pos_propTO = Results{99}.Num_Low_Pos_propTO/(Results{99}.Num_Low_Pos_Count + Results{99}.Num_Low_Pos_TO_Count);
 Results{99}.Num_Low_Neg_propTO = Results{99}.Num_Low_Neg_propTO/(Results{99}.Num_Low_Neg_Count + Results{99}.Num_Low_Neg_TO_Count);
 Results{99}.Num_High_All_propTO = Results{99}.Num_High_All_propTO/(Results{99}.Num_High_All_Count + Results{99}.Num_High_All_TO_Count);
+Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO/(Results{99}.Let2_Num_High_All_Count + Results{99}.Let2_Num_High_All_TO_Count);
+Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO/(Results{99}.Let6_Num_High_All_Count + Results{99}.Let6_Num_High_All_TO_Count);
+
 Results{99}.Num_High_Pos_propTO = Results{99}.Num_High_Neg_propTO/(Results{99}.Num_High_Neg_Count + Results{99}.Num_High_Neg_TO_Count);
 Results{99}.Num_High_Neg_propTO = Results{99}.Num_High_Neg_propTO/(Results{99}.Num_High_Neg_Count + Results{99}.Num_High_Neg_TO_Count);
 

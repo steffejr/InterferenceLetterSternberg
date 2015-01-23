@@ -1,7 +1,9 @@
-function [names onsets durations] = CreateSPMRegressors_xLS(Trials,LetLoad,DurTimes)
+function [names onsets durations] = CreateSPMRegressors_xLS_WithErrors(Trials,LetLoad,DurTimes,PropErrors)
 if nargin == 2;
     DurTimes = [-1 7 -1 3];
+    
 end
+
 Phases = {'Load'};
 %LetLoad = {'1' '2'  '3' '6'};
 NumLoad = {''};
@@ -50,6 +52,7 @@ names = [names 'Inc' 'TO'];
 % end
 
 %%
+
 NCond = length(names);
 NTrials = length(Trials);
 DUR = zeros(NTrials,NCond);

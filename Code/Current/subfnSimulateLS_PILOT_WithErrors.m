@@ -22,11 +22,11 @@ NScan = 320;
 
 
 NTrials = 48;
-NDesigns = 10;
+NDesigns = 20;
 NITIs = 1;
 
 NumberListLength = 0;
-LoadLevels = [1 2 3 4 5 6 7 8];
+LoadLevels = [1 2 3 4 5 6 7];
 NRepeats = 4;
 
 OptimalITI = zeros(NTrials,1);
@@ -40,15 +40,21 @@ AllOptimalTrials = cell(NDesigns,1);
 AllOptimalITI = cell(NDesigns,1);
 %Filters = [32:32:256];
 Filters = 128;
-ITIGamma = [0.5:0.2:4]
+ITIGamma = [0.5:0.2:4];
 ITIGamma = 2.7;
 NSess = 1;
 AllOptimalEff = zeros(NITIs,length(ITIGamma),length(Filters),8);
-ProbError = zeros(size(LoadLevels));
-ProbError(8) = 0.8;
+ErrorList = 0;%[0:0.1:0.5];
+Nerrors = length(ErrorList);
+ProbError = zeros(Nerrors,length(LoadLevels));
+
+ProbError(:,8) = ErrorList;
 %
-DurEff = zeros(NDesigns*NITIs,length(LoadLevels));
-NTrialsPerLoad = zeros(NDesigns*NITIs,length(LoadLevels) + 1);
+DurEff = zeros(NDesigns,Nerrors,length(LoadLevels));
+BoldEff = zeros(NDesigns,Nerrors,length(LoadLevels));
+
+NTrialsPerLoad = zeros(NDesigns,Nerrors,length(LoadLevels) + 1);
+
 for j = 1:NDesigns
     fprintf(1,'Working on Design %d of %d\n',j,NDesigns);
     % Make sure that a good design is made
@@ -60,7 +66,7 @@ for j = 1:NDesigns
             BadDesignFlag = 0;
         end
     end
-    for k = 1:NITIs
+    for k = 1:Nerrors
         for gg = 1:length(ITIGamma)
             GG = ITIGamma(gg);
             R = round(randg(ones(NTrials,1))*GG*10)/10;
@@ -81,7 +87,13 @@ for j = 1:NDesigns
                 Trials{i}.ITIDuration = ITI(i);
                 StartTrialTime = Trials{i}.ITIStartTime + ITI(i);
                 % Add some probability of error
-                INCORRECT = rand < ProbError(str2num(Trials{i}.LetType(1)));
+                if ProbError(k,str2num(Trials{i}.LetType(1))) < 1
+                    INCORRECT = rand < ProbError(k,str2num(Trials{i}.LetType(1)));
+                else
+                    INCORRECT = 1;
+                end
+                
+                
                 if ~INCORRECT
                     Trials{i}.LetterResponseTime = SimRT(i,1);
                     if ~isempty(strfind(Trials{i}.LetType,'NEG'))
@@ -160,7 +172,7 @@ for j = 1:NDesigns
             TotalTime = NTrials*TrialTime + sum(ITI) + IntroDelay;
             % add ten then round up to the nearest 6
             FinalDelay = 10 + 6 - mod(TotalTime,6);
-            TotalTime = TotalTime + FinalDelay;
+            TotalTime = TotalTime + FinalDelay
             NScan = TotalTime / TR;
             
             matlabbatch{1}.spm.stats.fmri_design.sess(1).nscan = NScan;
@@ -178,21 +190,22 @@ for j = 1:NDesigns
             [m n] = size(SPM.xX.X);
             [SPM] = subfnCreateContrats_xLS(SPM,LoadLevels);
             [eff VRF BoldEffect] = subfnCalcModelEfficiency_iLS(SPM);
-            DurEff(j,:) = eff;
+            DurEff(j,k,:) = eff;
+            BoldEff(j,k,:) = BoldEffect;
             for kk = 1:length(onsets)
-                NTrialsPerLoad(j,kk) = length(onsets{kk});
+                NTrialsPerLoad(j,k,kk) = length(onsets{kk});
             end
             
-            if sum(eff) > sum(OptimalEff)
-                OptimalEff = eff;
-                OptimalITI = ITI;
-                OptimalFilter = hpf;
-                OptimalGamma = GG;
-                OptimalTrials = Trials;
-                OptimalDesign = Design;
-                OptimalNScan = NScan;
-            end
-            AllOptimalEff(k,gg,j,:) = eff;
+%             if sum(eff) > sum(OptimalEff)
+%                 OptimalEff = eff;
+%                 OptimalITI = ITI;
+%                 OptimalFilter = hpf;
+%                 OptimalGamma = GG;
+%                 OptimalTrials = Trials;
+%                 OptimalDesign = Design;
+%                 OptimalNScan = NScan;
+%             end
+%             AllOptimalEff(k,gg,j,:) = eff;
             
         end
     end
