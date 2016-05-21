@@ -103,6 +103,7 @@ for i = 1:NList
     LetLists{i}(8).LetList = LetList8;
     LetLists{i}(8).LetListPOS = LetList8Pos;
     LetLists{i}(8).LetListNEG = LetList8Neg;
+    LetLists{i}(9).LetList = LetList9;
     LetLists{i}(9).LetListPOS = LetList9Pos;
     LetLists{i}(9).LetListNEG = LetList9Neg;
 end
