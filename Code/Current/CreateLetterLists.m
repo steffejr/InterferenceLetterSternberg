@@ -1,7 +1,7 @@
 function [LetLists] = CreateLetterLists(handles)
 % Create list of letters for letter sternberg
-% I am thinkiong that this should be modified so that it does not create a
-% full structure containing all the diffewrent letter list lengths. It
+% I am thinking that this should be modified so that it does not create a
+% full structure containing all the different letter list lengths. It
 % would be nice if this was a matrix of structures. So that index 1 = list
 % length 1, index 3 = list length 3, et cetera.
 % Create the full alphabet

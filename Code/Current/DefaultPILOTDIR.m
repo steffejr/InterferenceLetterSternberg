@@ -4,6 +4,7 @@ function DefaultPILOTDIR(handles)
 % choose from. Therefore, only 7 letters can be used or more letters need
 % to be added to the elibile letters list.
 LetValues = {'[1 2 3 4]';'[1 2 3 4 5]';'[1 2 3 4 5 6]';'[1 2 3 4 5 6 7]';'[1 2 3 4 5 6 7 8]'};
+LetValues = {'[1 2 3 4]';'[1 2 3 4 5]';'[1 2 3 4 5 6]';'[1 2 3 4 5 6 7]';'[1 2 3 4 5 6 7 8]';'[1 2 3 4 5 6 7 8 9]'};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set up the initial values

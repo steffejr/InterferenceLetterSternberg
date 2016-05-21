@@ -154,7 +154,7 @@ for j = 1:length(SubFolders)
         %             end
         fprintf(fid,'\n');
     catch me
-        me
+        
     end
 end
     

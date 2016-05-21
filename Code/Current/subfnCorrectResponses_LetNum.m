@@ -364,7 +364,8 @@ for trialIndex = 1:NTrials
             Results{99}.Num_High_Neg_Count = Results{99}.Num_High_Neg_Count + 1;
             Results{99}.Num_High_Neg_Acc = Results{99}.Num_High_Neg_Acc + 1;
             Results{99}.Num_High_All_Cor_MedRT(length(Results{99}.Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-            Results{99}.Num_High_Neg_Cor_MedRT(length(Results{99}.Num_High_Neg_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);        end
+            Results{99}.Num_High_Neg_Cor_MedRT(length(Results{99}.Num_High_Neg_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+        end
         % NO and POS    = miss
     elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
         Trials{trialIndex}.NumberResponseAcc = 'MS';
@@ -434,38 +435,39 @@ for trialIndex = 1:NTrials
                 Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
                 Results{99}.Let2_Num_High_All_Acc = Results{99}.Let2_Num_High_All_Acc + 1;
                 Results{99}.Let2_Num_High_All_Cor_MedRT(length(Results{99}.Let2_Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-                % NO and POS    = miss
-            elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
-                Trials{trialIndex}.NumberResponseAcc = 'MS';
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
-                    Results{99}.Let2_Num_Low_All_Count = Results{99}.Let2_Num_Low_All_Count + 1;
-                    Results{99}.Let2_Num_Low_All_Inc_MedRT(length(Results{99}.Let2_Num_Low_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-                elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
-                    Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
-                    Results{99}.Let2_Num_High_All_Inc_MedRT(length(Results{99}.Let2_Num_High_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-                end
-                % Time Out And POS
-            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== 1
-                Trials{trialIndex}.NumberResponseAcc = 'TO';
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
-                    Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO + 1;
-                end
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
-                    Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO  + 1;
-                end
-                % Time Out and Neg
-            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== -1
-                Trials{trialIndex}.NumberResponseAcc = 'TO';
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
-                    Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO + 1;
-                end
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
-                    Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO + 1;
-                end
+            end
+            % NO and POS    = miss
+        elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
+            Trials{trialIndex}.NumberResponseAcc = 'MS';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let2_Num_Low_All_Count = Results{99}.Let2_Num_Low_All_Count + 1;
+                %Results{99}.Let2_Num_Low_All_Inc_MedRT(length(Results{99}.Let2_Num_Low_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let2_Num_High_All_Count = Results{99}.Let2_Num_High_All_Count + 1;
+                %Results{99}.Let2_Num_High_All_Inc_MedRT(length(Results{99}.Let2_Num_High_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            end
+            % Time Out And POS
+        elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== 1
+            Trials{trialIndex}.NumberResponseAcc = 'TO';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO + 1;
+            end
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO  + 1;
+            end
+            % Time Out and Neg
+        elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== -1
+            Trials{trialIndex}.NumberResponseAcc = 'TO';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let2_Num_Low_All_propTO = Results{99}.Let2_Num_Low_All_propTO + 1;
+            end
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let2_Num_High_All_propTO = Results{99}.Let2_Num_High_All_propTO + 1;
             end
         end
-        
     end
+    
+    
     %% Number accuracy for 6 letters
     if Design(trialIndex,1) == 6
         if strcmp(Trials{trialIndex}.NumberResponseCode, 'Y') && Design(trialIndex,4)== 1
@@ -499,37 +501,36 @@ for trialIndex = 1:NTrials
                 Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
                 Results{99}.Let6_Num_High_All_Acc = Results{99}.Let6_Num_High_All_Acc + 1;
                 Results{99}.Let6_Num_High_All_Cor_MedRT(length(Results{99}.Let6_Num_High_All_Cor_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-                % NO and POS    = miss
-            elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
-                Trials{trialIndex}.NumberResponseAcc = 'MS';
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
-                    Results{99}.Let6_Num_Low_All_Count = Results{99}.Let6_Num_Low_All_Count + 1;
-                    Results{99}.Let6_Num_Low_All_Inc_MedRT(length(Results{99}.Let6_Num_Low_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-                elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
-                    Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
-                    Results{99}.Let6_Num_High_All_Inc_MedRT(length(Results{99}.Let6_Num_High_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
-                end
-                % Time Out And POS
-            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== 1
-                Trials{trialIndex}.NumberResponseAcc = 'TO';
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
-                    Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO + 1;
-                end
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
-                    Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO  + 1;
-                end
-                % Time Out and Neg
-            elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== -1
-                Trials{trialIndex}.NumberResponseAcc = 'TO';
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
-                    Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO + 1;
-                end
-                if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
-                    Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO + 1;
-                end
+            end
+            % NO and POS    = miss
+        elseif strcmp(Trials{trialIndex}.NumberResponseCode, 'N') && Design(trialIndex,4)== 1
+            Trials{trialIndex}.NumberResponseAcc = 'MS';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let6_Num_Low_All_Count = Results{99}.Let6_Num_Low_All_Count + 1;
+                %Results{99}.Let6_Num_Low_All_Inc_MedRT(length(Results{99}.Let6_Num_Low_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            elseif (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let6_Num_High_All_Count = Results{99}.Let6_Num_High_All_Count + 1;
+                %Results{99}.Let6_Num_High_All_Inc_MedRT(length(Results{99}.Let6_Num_High_All_Inc_MedRT)+1) = Trials{trialIndex}.NumberResponseTime(tempNum);
+            end
+            % Time Out And POS
+        elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== 1
+            Trials{trialIndex}.NumberResponseAcc = 'TO';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO + 1;
+            end
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO  + 1;
+            end
+            % Time Out and Neg
+        elseif Trials{trialIndex}.NumberResponseTime(1) == -99 && Design(trialIndex,4)== -1
+            Trials{trialIndex}.NumberResponseAcc = 'TO';
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'Low')))
+                Results{99}.Let6_Num_Low_All_propTO = Results{99}.Let6_Num_Low_All_propTO + 1;
+            end
+            if (~isempty(strfind(Trials{trialIndex}.NumType,'High')))
+                Results{99}.Let6_Num_High_All_propTO = Results{99}.Let6_Num_High_All_propTO + 1;
             end
         end
-        
     end
 end
 % Calculate percentage accuracy
