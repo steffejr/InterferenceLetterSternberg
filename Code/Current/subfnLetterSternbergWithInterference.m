@@ -196,25 +196,25 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 
 % If this is the PILOT test then use the prespecified designs
-if strcmp(handles.Location, 'PILOT')
-    if ~isempty(findstr(demog.RunNumber,'MRI1'))
-        % load up the optimal trials
-        clear Trials Design
-        load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
-    elseif ~isempty(findstr(demog.RunNumber,'MRI2'))
-        % load up the optimal trials
-        clear Trials Design
-        load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials2'))
-    elseif ~isempty(findstr(demog.RunNumber,'MRI3'))
-        % load up the optimal trials
-        clear Trials Design
-        load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials3'))
-    else
-        [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
-    end
-else
+% if strcmp(handles.Location, 'PILOT')
+%     if ~isempty(findstr(demog.RunNumber,'MRI1'))
+%         % load up the optimal trials
+%         clear Trials Design
+%         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
+%     elseif ~isempty(findstr(demog.RunNumber,'MRI2'))
+%         % load up the optimal trials
+%         clear Trials Design
+%         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials2'))
+%     elseif ~isempty(findstr(demog.RunNumber,'MRI3'))
+%         % load up the optimal trials
+%         clear Trials Design
+%         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials3'))
+%     else
+%         [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
+%     end
+% else
     [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
-end
+% end
 
 if isempty(Design)
     errordlg('CANNOT MAKE DESIGN');
@@ -350,7 +350,6 @@ c=computer;
 if strcmpi(c,'PCWIN')>0 || strcmpi(c,'PCWIN64')>0
     sysDefault=0;
 elseif ~isempty(strfind(c,'MAC'))
-    
     sysDefault=1;
 else
     disp('System type unknown')

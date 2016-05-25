@@ -21,7 +21,7 @@ function [Trials Design] = subfnCreateDesign(NRepeats, NumberListLength, LoadLev
 % If the number list length is zero this factor is set to ONE as well as
 % the Number probe.
 
-NumberAttemptsToCreateDesign = 15;
+NumberAttemptsToCreateDesign = 100;
 
 fprintf(1,'\n\nMaking the experimental design. Please wait.')
 LetTemp = length(LoadLevels);
@@ -119,6 +119,7 @@ while flagDesign == 1 && DesignCount < 10000
     end
     DesignCount = DesignCount + 1;
 end
+DesignCount
 if DesignCount == 10000
     %errordlg('Tried permuting the design matrix 1000 times and could not find a good trial order.')
     Design = [];
