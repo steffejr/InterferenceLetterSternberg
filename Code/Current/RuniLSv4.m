@@ -22,7 +22,7 @@ function varargout = RuniLSv4(varargin)
 
 % Edit the above text to modify the response to help Runirt///zzzzLSv2
 
-% Last Modified by GUIDE v2.5 14-Mar-2014 09:42:16
+% Last Modified by GUIDE v2.5 01-Jun-2016 19:33:19
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -715,6 +715,7 @@ NumTrials7 = sufnCalcNumberOfTrials(handles,handles.LetLoad7,...
 
 set(handles.NumTrials7,'String',num2str(NumTrials7));
 % --- Executes on selection change in LetLoad7.
+
 function LetLoad7_Callback(hObject, eventdata, handles)
 % hObject    handle to LetLoad7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -725,8 +726,8 @@ function LetLoad7_Callback(hObject, eventdata, handles)
 NumTrials7 = sufnCalcNumberOfTrials(handles,handles.LetLoad7,...
     get(handles.NumLen7,'Value'),...
     get(handles.NumBlocks7,'Value'));
-
 set(handles.NumTrials7,'String',num2str(NumTrials7));
+
 % --- Executes on selection change in NumLen7.
 function NumLen7_Callback(hObject, eventdata, handles)
 % hObject    handle to NumLen7 (see GCBO)
@@ -1581,6 +1582,34 @@ set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
 % onfig file. In order to passthis information back tp the main GUI the
 % following function is required.
 guidata(handles.figure1,handles)
+% --------------------------------------------------------------------
+function Modified_Callback(hObject, eventdata, handles)
+% hObject    handle to PILOT (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+DefaultPILOTDIR(handles)
+%set(handles.Montpellier,'Checked','off')
+set(handles.InterferencePilot,'Checked','off')
+set(handles.PILOT,'Checked','off')
+
+
+s='';
+eval('s=which(''RuniLSv4'');');
+% check top make sure the output file is there, if not then create it
+ProgramPath = fileparts(s);
+ProgramPath = fileparts(ProgramPath);
+ProgramPath = fileparts(ProgramPath);
+
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_ModifiedConfig.txt'),handles);
+DefaultModifiedDIR(handles)
+set(handles.Modified,'Checked','on')
+set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
+
+% This function modifies the handles structure by loading up a different
+% onfig file. In order to passthis information back tp the main GUI the
+% following function is required.
+guidata(handles.figure1,handles)
 
 % --------------------------------------------------------------------
 function ZeroAll_Callback(hObject, eventdata, handles)
@@ -1590,9 +1619,6 @@ function ZeroAll_Callback(hObject, eventdata, handles)
 DefaultZeroValues(handles)
 set(handles.InterferencePilot,'Checked','off')
 %set(handles.Montpellier,'Checked','off')
-
-
-
 
 
 % --- Executes on selection change in LetLoad5.
@@ -2048,3 +2074,201 @@ function exit_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to exit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+function LetLoad8_Callback(hObject, eventdata, handles)
+% hObject    handle to LetLoad7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns LetLoad7 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from LetLoad7
+NumTrials8 = sufnCalcNumberOfTrials(handles,handles.LetLoad8,...
+    get(handles.NumLen8,'Value'),...
+    get(handles.NumBlocks8,'Value'));
+set(handles.NumTrials8,'String',num2str(NumTrials8));
+
+
+
+% --- Executes during object creation, after setting all properties.
+function LetLoad8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to LetLoad8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in NumBlocks8.
+function NumBlocks8_Callback(hObject, eventdata, handles)
+% hObject    handle to NumBlocks8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks8 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from NumBlocks8
+
+
+% --- Executes during object creation, after setting all properties.
+function NumBlocks8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to NumBlocks8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in FB8.
+function FB8_Callback(hObject, eventdata, handles)
+% hObject    handle to FB8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of FB8
+
+
+% --- Executes on button press in Instr8.
+function Instr8_Callback(hObject, eventdata, handles)
+% hObject    handle to Instr8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Instr8
+
+
+% --- Executes on button press in Run8.
+function Run8_Callback(hObject, eventdata, handles)
+% hObject    handle to Run7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+try
+    % try to run the experiment
+    demog = {};
+    demog.subid = get(handles.subidText,'String');
+    demog.Age = CalculateAge(handles);
+    demog.Sex = handles.SexList{get(handles.Sex,'Value')};
+    demog.dob = returnDOB(handles);
+    demog.Tag = 'MRI4';
+    if ~isempty(demog.subid)
+        set(handles.MessageBox,'String','');
+        set(handles.Run8Text,'String','');
+        Instr = get(handles.Instr8,'Value');
+        FB = get(handles.FB8,'Value');
+        
+        NumLen = str2num(char(handles.NumList(get(handles.NumLen8,'Value'))));
+        NumBlocks = str2num(char(handles.BlockList(get(handles.NumBlocks8,'Value'))));
+        % This allows for dynamic updating of the letter lists from the
+        % config files
+        letList = get(handles.LetLoad8,'String');
+        LetLoad = str2num(char(letList(get(handles.LetLoad8,'Value'))));
+        demog.RunNumber = 'MRI4';
+        [ExperimentParameters OutString] = subfnLetterSternbergWithInterference(demog, ...
+            Instr,FB,NumLen,NumBlocks,LetLoad,handles);
+        set(handles.Run8Text,'String',OutString);
+        % if all goes well, report a summary of performance and update the push button
+        set(handles.run8Success,'Value',1);
+    else
+        warndlg('Please enter a subject ID.')
+    end
+catch me
+    if strcmp(me.message,'ESCAPE Pressed');
+        set(handles.MessageBox,'String','Escape pressed, user exit');
+    else
+        ErrorString = ['Internal error: ' me.identifier ' : ' me.message];
+        set(handles.MessageBox,'String',ErrorString);
+    end
+    handles.output = me.message;
+end
+
+
+
+
+function Run8Text_Callback(hObject, eventdata, handles)
+% hObject    handle to Run8Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Run8Text as text
+%        str2double(get(hObject,'String')) returns contents of Run8Text as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Run8Text_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Run8Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function NumTrials8_Callback(hObject, eventdata, handles)
+% hObject    handle to NumTrials8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of NumTrials8 as text
+%        str2double(get(hObject,'String')) returns contents of NumTrials8 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function NumTrials8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to NumTrials8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in NumLen8.
+function NumLen8_Callback(hObject, eventdata, handles)
+% hObject    handle to NumLen8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns NumLen8 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from NumLen8
+
+
+% --- Executes during object creation, after setting all properties.
+function NumLen8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to NumLen8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+% --- Executes during object creation, after setting all properties.
+function Run8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Run8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function Run7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Run7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
