@@ -4,13 +4,14 @@ There will also be a branch off of this where edits will take place to the modif
 
 
 Create the settings file for this version of the task
-Update the GUI to make this an option
-Keep the letters to exclude as: AEIOUCSVWXZ
+Update the GUI to make this an option << Done
+Keep the letters to exclude as: AEIOUCSVWXZ << Done
 Load letters of : 1 3 5 7 9
 Decide on a set of ITI for the MRI runs and save them.  Create at least three lists.
 
 Make a condition so that load levels may not be consecutive in either direction.
-i.e. 3 5 CANNOT occur and 5 3 cannot occur
+i.e. 3 5 CANNOT occur and 5 3 cannot occur <<< TO DO. Currently a design might not be able to be made due to the number of letters.
+<<< Restrictions to the trial order need to be made.
 
 Timings: 3 sec STIM
 3 second RET
