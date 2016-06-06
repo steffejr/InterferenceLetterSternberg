@@ -106,21 +106,41 @@ Design = Design(randperm(NTrials),:);
 %LeftOverLetters = AvailableLetters - NeededLettersPerTrial;
 %[Design(2:end,1) LeftOverLetters(1:end-1) NeededLettersPerTrial(2:end)]
 flagDesign = 1;
+flagDesignOrder = 1;
+BothflagDesign = 1;
 DesignCount = 1;
-while flagDesign == 1 && DesignCount < 10000
+while BothflagDesign == 1 && DesignCount < 100000
     Design = Design(randperm(NTrials),:);
+    % check to see if the current trial is consecutive in
+    % either direction with the previous trial
+    % Map the design loads to their position in the load level list
+    LoadListMapDesign = zeros(NTrials,1);
+    for i = 1:LetTemp
+       LoadListMapDesign(find(Design(:,1) == LoadLevels(i))) = i;
+    end
+    % the absolute value of the difference has to be greater then one.
+%    if sum(abs(diff(LoadListMapDesign)) < 2) > 0 ;
+%        flagDesignOrder = 1;
+%    else 
+        flagDesignOrder = 0;
+%    end
     AvailableLetters = 26 - length(handles.LetToExclude);
+    % The number of letters needed for the current trial
     NeededLettersPerTrial = Design(:,1) + 1;
+    % But extra letters are needed because soem letters were used in the
+    % previous trial and are therefore exlcuded.
     LeftOverLetters = AvailableLetters - NeededLettersPerTrial;
-
-
+    
     if ~sum(([LeftOverLetters(1:end-1) - NeededLettersPerTrial(2:end)])<0)>0
         flagDesign = 0;
+    end
+    if flagDesign == 0 && flagDesignOrder == 0
+        BothflagDesign = 0;
     end
     DesignCount = DesignCount + 1;
 end
 DesignCount
-if DesignCount == 10000
+if DesignCount == 100000
     %errordlg('Tried permuting the design matrix 1000 times and could not find a good trial order.')
     Design = [];
     return
@@ -164,6 +184,9 @@ while madeDesignFlag
               % This next line causes the error which triggers the end of
               % this attempt and to create a new list of letters.
                 tempTrialPick = subfnFillInDesignWithTrial(Design(trial,:), LetLists{count}, NumLists{count});
+
+                
+                % This checks the letters of the current and previous trial
                 flag = subfnCompareTrials(PreviousTrialOneStep, tempTrialPick);
                 if flag
                     % remove this trial from the list

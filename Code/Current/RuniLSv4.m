@@ -1601,7 +1601,7 @@ ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
 %[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
-[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_ModifiedConfig.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Modified_Config.txt'),handles);
 DefaultModifiedDIR(handles)
 set(handles.Modified,'Checked','on')
 set(handles.figure1,'Name',[handles.Location ':' handles.Function]);

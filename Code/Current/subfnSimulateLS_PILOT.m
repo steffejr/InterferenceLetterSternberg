@@ -1,9 +1,9 @@
 clear
 BaseDir = 'C:\Users\steffener\Dropbox\SteffenerColumbia\Scripts\InterferenceLetterSternberg'
 %BaseDir = '/Users/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg';
-BaseDir = '/home/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg'
+BaseDir = '/Users/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg'
 
-ConfigFile = fullfile(BaseDir,'ConfigFiles','iLS_PILOTConfig.txt')
+ConfigFile = fullfile(BaseDir,'ConfigFiles','iLS_Modified_Config.txt')
 DesignDir = fullfile(BaseDir,'SPMDesignJobs');
 [handles] = subfnReadConfigFile(ConfigFile);
 
@@ -21,12 +21,12 @@ TrialTime = EncodeTime + PreRetTime + RetentionTime + PostRetTime + ProbeTime;
 NScan = 320;
 
 
-NTrials = 48;
-NDesigns = 10;
-NITIs = 1;
+NTrials = 40;
+NDesigns = 100;
+NITIs = 100;
 
 NumberListLength = 0;
-LoadLevels = [1 2 3 4 5 6 7 8];
+LoadLevels = [1 3 5 7 9];
 NRepeats = 4;
 
 OptimalITI = zeros(NTrials,1);
@@ -43,9 +43,9 @@ Filters = 128;
 ITIGamma = [0.5:0.2:4]
 ITIGamma = 2.7;
 NSess = 1;
-AllOptimalEff = zeros(NITIs,length(ITIGamma),length(Filters),8);
-ProbError = zeros(size(LoadLevels));
-ProbError(8) = 0.8;
+AllOptimalEff = zeros(NITIs,length(ITIGamma),length(Filters),length(LoadLevels));
+ProbError = zeros(1,max(LoadLevels));
+%ProbError(8) = 0.8;
 %
 DurEff = zeros(NDesigns*NITIs,length(LoadLevels));
 NTrialsPerLoad = zeros(NDesigns*NITIs,length(LoadLevels) + 1);
