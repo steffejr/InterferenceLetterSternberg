@@ -85,12 +85,13 @@ ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
 %[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
-[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
-DefaultInterferenceDIR(handles)
-set(handles.InterferencePilot,'Checked','on')
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Modified_Config.txt'),handles);
+DefaultModifiedDIR(handles)
+set(handles.InterferencePilot,'Checked','off')
 set(handles.PILOT,'Checked','off')
 set(handles.ZeroAll,'Checked','off')
-         
+set(handles.Modified,'Checked','on')   
+   
 guidata(hObject, handles);
 % Set up the initial values
 % switch handles.Location
