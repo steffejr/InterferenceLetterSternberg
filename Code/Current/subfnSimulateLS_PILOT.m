@@ -1,7 +1,7 @@
 clear
 BaseDir = 'C:\Users\steffener\Dropbox\SteffenerColumbia\Scripts\InterferenceLetterSternberg'
 %BaseDir = '/Users/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg';
-BaseDir = '/Users/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg'
+BaseDir = '/home/jason/Dropbox/SteffenerColumbia/Scripts/InterferenceLetterSternberg'
 
 ConfigFile = fullfile(BaseDir,'ConfigFiles','iLS_Modified_Config.txt')
 DesignDir = fullfile(BaseDir,'SPMDesignJobs');
@@ -40,15 +40,20 @@ AllOptimalTrials = cell(NDesigns,1);
 AllOptimalITI = cell(NDesigns,1);
 %Filters = [32:32:256];
 Filters = 128;
-ITIGamma = [0.5:0.2:4]
+ITIGamma = [0.5:0.2:4];
 ITIGamma = 2.7;
 NSess = 1;
 AllOptimalEff = zeros(NITIs,length(ITIGamma),length(Filters),length(LoadLevels));
+AllOptimalBOLD = zeros(NITIs,length(ITIGamma),length(Filters),length(LoadLevels));
 ProbError = zeros(1,max(LoadLevels));
 %ProbError(8) = 0.8;
 %
 DurEff = zeros(NDesigns*NITIs,length(LoadLevels));
 NTrialsPerLoad = zeros(NDesigns*NITIs,length(LoadLevels) + 1);
+
+
+UpperLimitITI = 205;
+LowerLimitITI = 195;
 for j = 1:NDesigns
     fprintf(1,'Working on Design %d of %d\n',j,NDesigns);
     % Make sure that a good design is made
@@ -62,11 +67,23 @@ for j = 1:NDesigns
     end
     for k = 1:NITIs
         for gg = 1:length(ITIGamma)
+            
             GG = ITIGamma(gg);
-            R = round(randg(ones(NTrials,1))*GG*10)/10;
-            ITI = R + 1;
-            %ITI = subfnCreateITI_iLS(NTrials);
-            ITI(1) = 0;
+            % Pick ITIs that are within a reasonable amount of time so that
+            % all designs are the same length.
+            ITIflag = 1;
+            count = 1;
+            while ITIflag == 1
+                R = round(randg(ones(NTrials,1))*GG*10)/10;
+                ITI = R + 1;
+                %ITI = subfnCreateITI_iLS(NTrials);
+                ITI(1) = 0;
+                if (sum(ITI) > LowerLimitITI) && (sum(ITI) < UpperLimitITI)
+                    ITIflag = 0;
+                end
+                count = count + 1;
+            end
+
             ExpectedMeanITI = mean(ITI);
             SimRT = gamrnd(2,0.2*ones(NTrials,2))+0.4;
             StartTrialTime = IntroDelay;
@@ -115,7 +132,7 @@ for j = 1:NDesigns
             % for i = 1:length(RetDur)
             %Dur = [3 5 3];
             %Dur = [EncodeTime  RetentionTime+PreRetTime+PostRetTime ProbeTime];
-            Dur = [-1 3 3];
+            Dur = [3 3 3];
             subid = 'TEST';
             
             %[names onsets durations] = CreateSPMRegressors(ExperimentParameters.Trials,LoadLevels,Dur);
@@ -192,6 +209,10 @@ for j = 1:NDesigns
                 OptimalDesign = Design;
                 OptimalNScan = NScan;
             end
+            
+%            AllOptimalEff = zeros(NITIs,length(ITIGamma),length(Filters),length(LoadLevels));
+            % ITIs, Gammas, Designs, Contrasts
+            AllOptimalBOLD(k,gg,j,:) = BoldEffect;
             AllOptimalEff(k,gg,j,:) = eff;
             
         end
@@ -201,9 +222,51 @@ for j = 1:NDesigns
     AllOptimalTrials{j} = Trials;
     
 end
+%% Find the top five designs
+BestITI = zeros(size(OptimalITI,1),5);
+BestTrials  = cell(5,1);
+count = 2;
+BestITI(:,1) = AllOptimalITI{NITIs};
+BestTrials{1} = AllOptimalTrials{NITIs};
+for i = NITIs-1:-1:1
+    if sum(AllOptimalITI{i} == BestITI(:,count - 1)) < size(BestITI,1)
+        % Found another unique one
+        BestITI(:,count) = AllOptimalITI{i};
+        BestTrials{count} = AllOptimalTrials{i};
+        count = count + 1;
+    end
+end
+count
+%% Summary Figures
+% Pick a Design
+CurDes = 1;
+figure(101)
+clf
+for i = 1:5
+    subplot(1,5,i)
+    hist(squeeze(AllOptimalBOLD(:,1,CurDes,i)))
+    title(sprintf('Load %d',LoadLevels(i)))
+    axis([0.5 0.65 0 28])
+end
+subplot(1,5,1)
+xlabel('BOLD Percent Signal Change')
+ylabel('Variable ITIs')
+%
+CurITI = 1;
+figure(102)
+clf
+for i = 1:5
+    subplot(1,5,i)
+    hist(squeeze(AllOptimalBOLD(CurITI,1,:,i)))
+    title(sprintf('Load %d',LoadLevels(i)))
+    axis([0.5 0.65 0 28])
+end
+subplot(1,5,1)
+xlabel('BOLD Percent Signal Change')
+ylabel('Variable Design Order')
 
 
-
+%%
 %             SumEff(kk,mm,jj,1)=sum(eff([7 8 9 10 11 18 19 20 21 22]));
 %             SumEff(kk,mm,jj,2)=sum(eff);
 %             SumBE(kk,mm,jj,1) = sum(BoldEffect([7 8 9 10 11 18 19 20 21 22]));
@@ -212,4 +275,28 @@ end
 
 
 sum(Dur)*NTrials+sum(OptimalITI)+IntroDelay+FinalDelay
-OptimalEff
+sum(Dur)*NTrials+sum(BestITI)+IntroDelay+FinalDelay
+
+
+
+%% Save the top five designs
+for j = 1:5
+    ITI = BestITI(:,j);
+    Trials = BestTrials{j};
+    Design = zeros(NTrials,4);
+    Design(:,2) = ones(NTrials,1);
+    Design(:,4) = ones(NTrials,1);
+    for i = 1:NTrials
+        Design(i,1) = length(Trials{i}.LetList);
+        if ~isempty(strfind(Trials{i}.LetType,'POS'))
+            Design(i,3) = 1;
+        elseif ~isempty(strfind(Trials{i}.LetType,'NEG'))
+            Design(i,3) = -1;
+        end
+    end
+    
+    Str = sprintf('save(''ModLetStern_%d.mat'',''ITI'',''Trials'',''Design'')',j);
+    eval(Str)
+end
+
+

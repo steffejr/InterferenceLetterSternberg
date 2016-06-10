@@ -1587,11 +1587,6 @@ function Modified_Callback(hObject, eventdata, handles)
 % hObject    handle to PILOT (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-DefaultPILOTDIR(handles)
-%set(handles.Montpellier,'Checked','off')
-set(handles.InterferencePilot,'Checked','off')
-set(handles.PILOT,'Checked','off')
-
 
 s='';
 eval('s=which(''RuniLSv4'');');
@@ -1603,6 +1598,10 @@ ProgramPath = fileparts(ProgramPath);
 %[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
 [handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Modified_Config.txt'),handles);
 DefaultModifiedDIR(handles)
+
+set(handles.PILOT,'Checked','off')
+set(handles.InterferencePilot,'Checked','off')
+set(handles.ZeroAll,'Checked','off')
 set(handles.Modified,'Checked','on')
 set(handles.figure1,'Name',[handles.Location ':' handles.Function]);
 
@@ -1654,6 +1653,7 @@ function NumLen4_CreateFcn(hObject, eventdata, handles)
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+
     set(hObject,'BackgroundColor','white');
 end
 

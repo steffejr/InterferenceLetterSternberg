@@ -196,25 +196,51 @@ OutFilePath  = fullfile(OutPath,OutFileName);
 % --------------------------------------------------------
 
 % If this is the PILOT test then use the prespecified designs
-% if strcmp(handles.Location, 'PILOT')
-%     if ~isempty(findstr(demog.RunNumber,'MRI1'))
-%         % load up the optimal trials
-%         clear Trials Design
-%         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
-%     elseif ~isempty(findstr(demog.RunNumber,'MRI2'))
-%         % load up the optimal trials
-%         clear Trials Design
-%         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials2'))
-%     elseif ~isempty(findstr(demog.RunNumber,'MRI3'))
-%         % load up the optimal trials
-%         clear Trials Design
-%         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials3'))
-%     else
-%         [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
-%     end
-% else
-    [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
-% end
+ switch handles.Location
+     case 'PILOT'
+     if ~isempty(findstr(demog.RunNumber,'MRI1'))
+         % load up the optimal trials
+         clear Trials Design
+         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials1'))
+     elseif ~isempty(findstr(demog.RunNumber,'MRI2'))
+         % load up the optimal trials
+         clear Trials Design
+         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials2'))
+     elseif ~isempty(findstr(demog.RunNumber,'MRI3'))
+         % load up the optimal trials
+         clear Trials Design
+         load(fullfile(ProgramPath,'OptimalDesigns','xLS_Trials3'))
+     else
+         [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);    
+     end
+     case 'Modified'
+     switch demog.RunNumber
+         case 'MRI1'
+             clear Trials Design ITI
+             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'))
+         case 'MRI2'
+             clear Trials Design ITI
+             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_2'))
+         case 'MRI3'
+             clear Trials Design ITI
+             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_3'))
+         case 'MRI4'
+             clear Trials Design ITI
+             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_4'))
+         case 'MRI5'
+             clear Trials Design ITI
+             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_5'))
+         otherwise
+             [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
+     end
+     otherwise
+        [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
+ end
 
 if isempty(Design)
     errordlg('CANNOT MAKE DESIGN');
@@ -261,6 +287,7 @@ PreRetTime =        handles.PreRetTime;
 RetentionTime =     handles.RetentionTime;
 PostRetTime =       handles.PostRetTime;
 ProbeTime =         handles.ProbeTime;
+% The final delay will be updated later
 FinalDelay =        handles.FinalDelay;
 % Wait time for instructions
 WaitTime = handles.WaitTime;
@@ -274,20 +301,25 @@ WaitTime = handles.WaitTime;
 OptimalITIName = ['iLS_' handles.Location '_' demog.Tag '_Trials.mat'];
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
 
-if exist(OptimalITIs)
-    clear ITI
-    tempITI = load(OptimalITIs);
-    ITI = tempITI.OptimalITI;
-    clear tempITI
-elseif strcmp(handles.Location, 'PILOT')
-    if ~isempty(findstr(demog.RunNumber,'MRI'))
-        load(fullfile(ProgramPath,'OptimalDesigns','xLS_ITI'))
+% The following should be updated and the optimal ITIs should be loaded
+% with the optimal deesigns. For now an if staement if used.
+
+if handles.Location ~= 'Modified'
+    if exist(OptimalITIs)
+        clear ITI
+        tempITI = load(OptimalITIs);
+        ITI = tempITI.OptimalITI;
+        clear tempITI
+    elseif strcmp(handles.Location, 'PILOT')
+        if ~isempty(findstr(demog.RunNumber,'MRI'))
+            load(fullfile(ProgramPath,'OptimalDesigns','xLS_ITI'))
+        else
+            ITI = subfnCreateITI(NTrials);
+        end
     else
         ITI = subfnCreateITI(NTrials);
+        %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
     end
-else
-    ITI = subfnCreateITI(NTrials);
-    %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
 end
 % Set ITI{1} equal to zero
 ITI(1) = 0;
@@ -334,7 +366,12 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % --------------------------------------------------------
 % The end period will be set based on the expected ITI values and the number of
 % trials.
-ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay
+% The final delay input is an approximate. The actual will be calculated so
+% that all runs are the same duration and so the total experimental
+% duration is the same.
+FinalDelay = handles.ExpectedDuration - (IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)));
+
+ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
 % ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
 % ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
 % % Check to make sure that the ITI parameters were not changed without
@@ -351,6 +388,8 @@ if strcmpi(c,'PCWIN')>0 || strcmpi(c,'PCWIN64')>0
     sysDefault=0;
 elseif ~isempty(strfind(c,'MAC'))
     sysDefault=1;
+elseif ~isempty(strfind(c,'LNX'))
+    sysDefault = 1;
 else
     disp('System type unknown')
     return

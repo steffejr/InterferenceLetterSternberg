@@ -21,7 +21,7 @@ function [Trials Design] = subfnCreateDesign(NRepeats, NumberListLength, LoadLev
 % If the number list length is zero this factor is set to ONE as well as
 % the Number probe.
 
-NumberAttemptsToCreateDesign = 100;
+NumberAttemptsToCreateDesign = 1000;
 
 fprintf(1,'\n\nMaking the experimental design. Please wait.')
 LetTemp = length(LoadLevels);

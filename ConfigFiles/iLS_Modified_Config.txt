@@ -8,7 +8,7 @@ Press r\nthen t to start
 [TriggerText2]
 Waiting for \n t to start
 [Location]% Options are: Columbia/Montpellier
-PILOT
+Modified
 [Function]% Options are: Training/MRI/All
 All
 [Font1]% Courier New/Cursif
@@ -38,7 +38,9 @@ Courier New
 [ProbeTime]
 3.000
 [FinalDelay]
-13.1
+10
+[ExpectedDuration]
+580
 [WaitTime]% Wait time for instructions
 6.000
 [LetToExclude] % Letters to exclude AEIOUCSVWXZ
