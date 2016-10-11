@@ -44,7 +44,7 @@ Courier New
 [WaitTime]% Wait time for instructions
 6.000
 [LetToExclude] % Letters to exclude AEIOUCSVWXZ
-AEIOU
+AEIOUW
 [ScreenResolution]%expected screen resolution. Set this to -1 to ignore
 1280 800
 [FeedbackNumbersCorrect]

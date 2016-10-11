@@ -217,23 +217,23 @@ OutFilePath  = fullfile(OutPath,OutFileName);
      switch demog.RunNumber
          case 'MRI1'
              clear Trials Design ITI
-             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             fprintf(1,'Loading optimal design in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetCase1'));
              load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'))
          case 'MRI2'
              clear Trials Design ITI
-             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             fprintf(1,'Loading optimal design in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetCase2'));
              load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_2'))
          case 'MRI3'
              clear Trials Design ITI
-             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             fprintf(1,'Loading optimal design in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetCase3'));
              load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_3'))
          case 'MRI4'
              clear Trials Design ITI
-             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             fprintf(1,'Loading optimal design in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetCase4'));
              load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_4'))
          case 'MRI5'
              clear Trials Design ITI
-             fprintf(1,'Loading optimal deesign in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
+             fprintf(1,'Loading optimal design in file:\n\t%s\n',fullfile(ProgramPath,'OptimalDesigns','ModLetStern_1'));
              load(fullfile(ProgramPath,'OptimalDesigns','ModLetStern_5'))
          otherwise
              [Trials Design] = subfnCreateDesign(NRepeats,NumberListLength, LoadLevels, handles);
@@ -422,7 +422,7 @@ TopLeft = [30 30];
 WindowSize = [600 500];
 
 MainWindowRect = []; % Full screen
-%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 
 [mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 
