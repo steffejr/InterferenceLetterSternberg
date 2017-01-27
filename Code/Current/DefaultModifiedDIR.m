@@ -7,13 +7,13 @@ LetValues = {'[1 3]';'[1 3 5]';'[1 3 5 7]';'[1 3 5 7 9]'};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set up the initial values
-set(handles.LetLoad1,'value',3)
+set(handles.LetLoad1,'value',4)
 set(handles.LetLoad1,'string',LetValues)
 
 set(handles.NumLen1,'Value',1);
 set(handles.NumBlocks1,'Value',1);
 set(handles.FB1,'Value',1);
-set(handles.Instr1,'Value',1);
+set(handles.Instr1,'Value',0);
 set(handles.run1Success,'Value',0);
 NumTrials1 = sufnCalcNumberOfTrials(handles,handles.LetLoad1,...
     get(handles.NumLen1,'Value'),...
@@ -21,12 +21,12 @@ NumTrials1 = sufnCalcNumberOfTrials(handles,handles.LetLoad1,...
 set(handles.NumTrials1,'String',num2str(NumTrials1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-set(handles.LetLoad2,'value',3)
+set(handles.LetLoad2,'value',4)
 set(handles.LetLoad2,'string',LetValues)
 
 set(handles.NumLen2,'Value',1);
-set(handles.NumBlocks2,'Value',1);
-set(handles.FB2,'Value',1);
+set(handles.NumBlocks2,'Value',4);
+set(handles.FB2,'Value',0);
 set(handles.Instr2,'Value',0);
 set(handles.run2Success,'Value',0);
 NumTrials2 = sufnCalcNumberOfTrials(handles,handles.LetLoad2,...
@@ -34,11 +34,11 @@ NumTrials2 = sufnCalcNumberOfTrials(handles,handles.LetLoad2,...
     get(handles.NumBlocks2,'Value'));
 set(handles.NumTrials2,'String',num2str(NumTrials2));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-set(handles.LetLoad3,'value',3)
+set(handles.LetLoad3,'value',4)
 set(handles.LetLoad3,'string',LetValues)
 
 set(handles.NumLen3,'Value',1);
-set(handles.NumBlocks3,'Value',1);
+set(handles.NumBlocks3,'Value',4);
 set(handles.FB3,'Value',0);
 set(handles.Instr3,'Value',0);
 set(handles.run3Success,'Value',0);
@@ -47,11 +47,11 @@ NumTrials3 = sufnCalcNumberOfTrials(handles,handles.LetLoad3,...
     get(handles.NumBlocks3,'Value'));
 set(handles.NumTrials3,'String',num2str(NumTrials3));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-set(handles.LetLoad4,'Value',3);
+set(handles.LetLoad4,'Value',4);
 set(handles.LetLoad4,'string',LetValues)
 
 set(handles.NumLen4,'Value',1);
-set(handles.NumBlocks4,'Value',3);
+set(handles.NumBlocks4,'Value',4);
 set(handles.FB4,'Value',0);
 set(handles.Instr4,'Value',0);
 set(handles.run4Success,'Value',0);

@@ -426,8 +426,8 @@ mainScreen = 0;
 CharactersBetweenNumbers = '  '; % for the number list display, either spaces or PLUS signs
 CharBetLet = '  '; % for the number list display, either spaces or PLUS signs
 
-%rect = [ScreenPos ScreenSize]; % USE THIS FOR JUST A WINDOW
-rect = []; %    USE THSI FOR THE FULL SCREEN
+rect = [ScreenPos ScreenSize]; % USE THIS FOR JUST A WINDOW
+rect = []; %    USE THIS FOR THE FULL SCREEN
 screenNumber = max(Screen('Screens'));
 
 TopLeft = [30 30];
@@ -493,6 +493,9 @@ if PresentInstructionsFlag
             subfnInstructionsEnglish(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharBetLet,mainWindow,handles,LoadLevels);
         case 'Montpellier'
             subfnInstructionsFrench(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharBetLet,mainWindow,handles,LoadLevels);
+        case 'Modified'
+            subfnInstructionsEnglish(WaitTime,ScreenSize,NumberListLength,CharactersBetweenNumbers,CharBetLet,mainWindow,handles,LoadLevels);
+            fprintf(1,'Hello\n');
     end
 end
 % --------------------------------------------------------
