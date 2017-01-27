@@ -90,7 +90,7 @@ set(handles.LetLoad7,'Value',4);
 set(handles.LetLoad7,'string',LetValues)
 
 set(handles.NumLen7,'Value',1);
-set(handles.NumBlocks7,'Value',3);
+set(handles.NumBlocks7,'Value',4);
 set(handles.FB7,'Value',0);
 set(handles.Instr7,'Value',0);
 set(handles.run7Success,'Value',0);
@@ -104,7 +104,7 @@ set(handles.LetLoad8,'Value',4);
 set(handles.LetLoad8,'string',LetValues)
 
 set(handles.NumLen8,'Value',1);
-set(handles.NumBlocks8,'Value',3);
+set(handles.NumBlocks8,'Value',4);
 set(handles.FB8,'Value',0);
 set(handles.Instr8,'Value',0);
 set(handles.run8Success,'Value',0);

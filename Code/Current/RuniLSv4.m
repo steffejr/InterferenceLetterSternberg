@@ -2112,6 +2112,12 @@ function NumBlocks8_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns NumBlocks8 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from NumBlocks8
+NumTrials8 = sufnCalcNumberOfTrials(handles,handles.LetLoad8,...
+    get(handles.NumLen8,'Value'),...
+    get(handles.NumBlocks8,'Value'));
+set(handles.NumTrials8,'String',num2str(NumTrials8));
+
+
 
 
 % --- Executes during object creation, after setting all properties.
