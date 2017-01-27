@@ -302,9 +302,9 @@ OptimalITIName = ['iLS_' handles.Location '_' demog.Tag '_Trials.mat'];
 OptimalITIs = fullfile(ProgramPath,'OptimalDesigns',OptimalITIName);
 
 % The following should be updated and the optimal ITIs should be loaded
-% with the optimal deesigns. For now an if staement if used.
+% with the optimal deesigns. For now an if statement if used.
 
-if handles.Location ~= 'Modified'
+if ~strcmp(handles.Location,'Modified')
     if exist(OptimalITIs)
         clear ITI
         tempITI = load(OptimalITIs);
@@ -319,6 +319,11 @@ if handles.Location ~= 'Modified'
     else
         ITI = subfnCreateITI(NTrials);
         %(round(((randg(ones(NTrials,1))*2) + 1)*100)/100);
+    end
+else
+    if ~isempty(strfind(demog.Tag,'Train'))
+        % Set the ITI and the Total duration
+         ITI = subfnCreateITI(NTrials);
     end
 end
 % Set ITI{1} equal to zero
@@ -369,9 +374,16 @@ TotalTrialTime = ExpectedWithinTrialElaspsedTimes(6,1);
 % The final delay input is an approximate. The actual will be calculated so
 % that all runs are the same duration and so the total experimental
 % duration is the same.
-FinalDelay = handles.ExpectedDuration - (IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)));
+if ~isempty(strfind(demog.Tag,'MRI'))
+    FinalDelay = handles.ExpectedDuration - (IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)));
 
-ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
+    
+elseif ~isempty(strfind(demog.Tag,'Train'))
+    FinalDelay = handles.FinalDelay
+    % For the training trials the duration is not that important
+    
+end
+    ExpectedDuration = IntroDelay + NTrials*TotalTrialTime + sum(ITI(1:NTrials)) + FinalDelay;
 % ActualDuration = NTrials*TotalTrialTime + sum(ITI(1:NTrials));
 % ExpectedDuration = NTrials*(TotalTrialTime + ExpectedMeanITI) + FinalDelay;
 % % Check to make sure that the ITI parameters were not changed without
@@ -422,7 +434,7 @@ TopLeft = [30 30];
 WindowSize = [600 500];
 
 MainWindowRect = []; % Full screen
-MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
+%MainWindowRect = [TopLeft(1), TopLeft(2), TopLeft(1) + WindowSize(1), TopLeft(2)+WindowSize(2)];
 
 [mainWindow,rect]=Screen(mainScreen,'OpenWindow',[grey],[MainWindowRect]);  	% mainWindow is a window pointer to main screen.  mainRect = [0,0,1280,1024]
 
