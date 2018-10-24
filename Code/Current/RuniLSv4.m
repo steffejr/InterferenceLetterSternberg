@@ -85,7 +85,9 @@ ProgramPath = fileparts(ProgramPath);
 ProgramPath = fileparts(ProgramPath);
 
 %[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
-[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+%[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config.txt'),handles);
+[handles] = subfnReadConfigFile(fullfile(ProgramPath,'ConfigFiles','iLS_Config_Columbia.txt'),handles);
+
 DefaultInterferenceDIR(handles)
 set(handles.InterferencePilot,'Checked','on')
 set(handles.PILOT,'Checked','off')
